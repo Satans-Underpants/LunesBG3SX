@@ -1,0 +1,5 @@
+new entry "SEX_ACTOR"
+type "StatusData"
+data "StatusType" "BOOST"
+data "StatusPropertyFlags" "DisableOverhead;DisableCombatlog;DisablePortraitIndicator"
+data "DynamicAnimationTag" "fb124671-bc4c-4ba4-a3a9-5707b4dfc8f7"
