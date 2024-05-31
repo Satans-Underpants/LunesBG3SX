@@ -9,11 +9,13 @@ function OnSessionLoaded()
         local party = Osi.DB_PartyMembers:Get(nil)
         for i = #party, 1, -1 do
             AddMainSexSpells(party[i][1])
+            AddGenitalIfHasNone(party[i][1])
         end
     end)
 
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(actor)
         AddMainSexSpells(actor)
+        AddGenitalIfHasNone(actor)
     end)
 
     ------------------------------------------------------------------------------------------------------------------------------------------
@@ -133,6 +135,8 @@ function AddMainSexSpells(actor)
     then
         TryAddSpell(actor, "StartSexContainer")
         TryAddSpell(actor, "SexOptions")
+        TryAddSpell(actor, "Change_Genitals")
+        TryAddSpell(actor, "BG3SXOptions")
     end
 end
 
@@ -145,7 +149,7 @@ local function ResolveEntityArg(entityArg)
     if entityArg and type(entityArg) == "string" then
         local e = Ext.Entity.Get(entityArg)
         if not e then
-            _P("ResolveEntityArg: failed resolve entity from string '" .. entityArg .. "'")
+            -- _P("[BG3SX.lua] ResolveEntityArg: failed resolve entity from string '" .. entityArg .. "'")
         end
         return e
     end
@@ -182,6 +186,7 @@ end
 --     TryGetEntityValue(actor, "ServerCharacter", "PlayerData", "HelmetOption")
 function TryGetEntityValue(entity, component, field1, field2, field3)
     local v, doStop
+    
 
     v = ResolveEntityArg(entity)
     if not v then
@@ -269,8 +274,8 @@ function TryCopyEntityComponent(srcEntity, dstEntity, componentName)
     else
         local serializeResult = TryToReserializeObject(srcComponent, dstComponent)
         if serializeResult then
-            _P("TryCopyEntityComponent, component '" .. componentName .. "': serialization fail:")
-            _P("    " .. serializeResult)
+            -- _P("[BG3SX.lua] TryCopyEntityComponent, component '" .. componentName .. "': serialization fail:")
+            -- _P("[BG3SX.lua]     " .. serializeResult)
         end
     end
 

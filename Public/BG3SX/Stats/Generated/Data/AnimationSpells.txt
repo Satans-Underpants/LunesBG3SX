@@ -206,8 +206,6 @@ data "Icon" "statIcons_Dazed"
 data "StillAnimationType" "None"
 data "TickType" "EndTurn"
 data "StillAnimationPriority" "None"
-  
-
 
 new entry "LesbianAnimationsContainer"
 type "SpellData"
@@ -222,7 +220,6 @@ data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "Temporary;IsLinkedSpellContainer"
     
-
 new entry "FemaleMasturbationContainer"
 type "SpellData"
 data "SpellType" "Shout"
@@ -236,7 +233,6 @@ data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "Temporary;IsLinkedSpellContainer"
     
-
 new entry "MaleMasturbationContainer"
 type "SpellData"
 data "SpellType" "Shout"
@@ -264,6 +260,18 @@ data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "Temporary;IsLinkedSpellContainer"
     
+new entry "GayAnimationsContainer"
+type "SpellData"
+data "SpellType" "Shout"
+data "ContainerSpells" "Doggy;Missionary;Cowgirl;Milking"
+data "Icon" "Spell_Enchantment_Hex"
+data "DisplayName" "h818a9789g4007g46c6gacd4g27e42b08b4ee;1"
+data "Description" "hdf32ca9bg81bag4282gbd97g92124556b2e4;1"
+data "PrepareSound" "Instrument_Bard_Silence"
+data "CastSound" "Instrument_Bard_Silence"
+data "TargetSound" "Instrument_Bard_Silence"
+data "AIFlags" "CanNotUse"
+data "SpellFlags" "Temporary;IsLinkedSpellContainer"
 
 new entry "StartSexContainer"
 type "SpellData"

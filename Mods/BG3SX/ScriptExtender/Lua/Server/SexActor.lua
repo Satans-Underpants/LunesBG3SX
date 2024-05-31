@@ -4,6 +4,7 @@ local FLAG_COMPANION_IN_CAMP = "161b7223-039d-4ebe-986f-1dcd9a66733f"
 local function RemoveSexPositionSpells(actor)
     TryRemoveSpell(actor, "StraightAnimationsContainer")
     TryRemoveSpell(actor, "LesbianAnimationsContainer")
+    TryRemoveSpell(actor, "GayAnimationsContainer")
     TryRemoveSpell(actor, "FemaleMasturbationContainer")
     TryRemoveSpell(actor, "MaleMasturbationContainer")
     TryRemoveSpell(actor, "zzzEndSex")
@@ -62,6 +63,9 @@ function SexActor_Init(actor, needsProxy, vocalTimerName, animProperties)
     Osi.DetachFromPartyGroup(actor)
 
     TryRemoveSpell(actor, "StartSexContainer")
+    TryRemoveSpell(actor, "SexOptions")
+    TryRemoveSpell(actor, "Change_Genitals")
+    TryRemoveSpell(actor, "BG3SXOptions")
     RemoveSexPositionSpells(actor) -- Just in case
 
     -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening
@@ -165,14 +169,17 @@ function SexActor_SubstituteProxy(actorData, proxyData)
 
     local actorEntity = Ext.Entity.Get(actorData.Actor)
 
+    -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
+    -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
+    local visTemplate = TryGetEntityValue(actorEntity, "GameObjectVisual", "RootTemplateId")
+    local origTemplate = TryGetEntityValue(actorEntity, "OriginalTemplate", "OriginalTemplate")
+    
     actorData.Proxy = Osi.CreateAtObject(Osi.GetTemplate(actorData.Actor), proxyData.Marker, 1, 0, "", 1)
 
     -- Copy the actor's looks to the proxy (does not copy transforms)
     local lookTemplate = actorData.Actor
     -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
     -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
-    local visTemplate = TryGetEntityValue(actorEntity, "GameObjectVisual", "RootTemplateId")
-    local origTemplate = TryGetEntityValue(actorEntity, "OriginalTemplate", "OriginalTemplate")
     if visTemplate then
         if origTemplate then
             if origTemplate ~= visTemplate then
@@ -185,6 +192,7 @@ function SexActor_SubstituteProxy(actorData, proxyData)
             end
         end
     end
+
     Osi.Transform(actorData.Proxy, lookTemplate, "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
 
     Osi.SetDetached(actorData.Proxy, 1)
@@ -261,8 +269,10 @@ function SexActor_StartAnimation(actorData, animProperties)
 
     local animActor = actorData.Proxy or actorData.Actor
     if animProperties["Loop"] == true then
+        -- _P("[SexActor.lua] Begin playing looping animation: ", actorData.Animation)
         Osi.PlayLoopingAnimation(animActor, "", actorData.Animation, "", "", "", "", "")
     else
+        -- _P("[SexActor.lua] Begin playing animation: ", actorData.Animation)
         Osi.PlayAnimation(animActor, actorData.Animation)
     end
 
@@ -442,7 +452,7 @@ function SexActor_DressProxy(actorData)
 
             Osi.Equip(actorData.Proxy, item)
         else
-            _P("SexActor_DressProxy: couldn't find an item of template " .. itemTemplate .. " in the proxy")
+            -- _P("[SexActor.lua] SexActor_DressProxy: couldn't find an item of template " .. itemTemplate .. " in the proxy")
         end
     end
 

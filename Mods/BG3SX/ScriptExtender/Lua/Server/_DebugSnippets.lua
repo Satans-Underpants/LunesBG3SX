@@ -9,7 +9,7 @@ local TestSounds = {
 local TestSoundIndex = 1
 
 function PlayTestSound(actor)
-    _P("TEST SOUND " .. TestSoundIndex .. "/" .. #TestSounds .. ": " .. TestSounds[TestSoundIndex])
+    -- _P("[_DebugSnippets.lua] TEST SOUND " .. TestSoundIndex .. "/" .. #TestSounds .. ": " .. TestSounds[TestSoundIndex])
     Osi.PlaySound(actor, TestSounds[TestSoundIndex])
     TestSoundIndex = TestSoundIndex + 1
     if TestSoundIndex > #TestSounds then

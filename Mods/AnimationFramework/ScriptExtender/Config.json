@@ -1,5 +1,0 @@
-{
-    "RequiredVersion": 10,
-    "ModTable": "AnimationFramework",
-    "FeatureFlags": ["Lua"]
-}

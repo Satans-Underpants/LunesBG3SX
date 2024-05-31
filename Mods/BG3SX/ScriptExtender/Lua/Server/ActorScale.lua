@@ -75,7 +75,7 @@ function ActorScale_GetBodyType(actor)
             return bodyType
         end
     end
-    _P("failed BodyType check")
+    -- _P("[ActorScale.lua] Failed BodyType check on actor: ", actor)
     return BodyTypes['HumanMale']
 end
 
@@ -85,6 +85,6 @@ function ActorScale_GetHeightClass(actorBody)
             return height
         end
     end
-    _P("failed height check")
+    -- _P("[ActorScale.lua] Failed Height check on actor: ", actorBody)
     return "Med"
 end
