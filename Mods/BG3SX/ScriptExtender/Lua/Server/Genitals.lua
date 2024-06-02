@@ -117,31 +117,52 @@ end
 --@param            - ModName (FolderName)
 ---return           - list of CharacterCreationAppearaceVisual IDs genitals
 local function getModGenitals(modName)
-	_P("BG3SX - modName ", modName)
+	-- _P("[Genitals.lua] -------------------------------------------------------")
+	-- _P("[Genitals.lua] - getModGenitals for ", modName)
     local modGenitals = {}
     local allGenitals = getAllGenitals()
-
-    for _, genital in pairs(allGenitals) do
-		_P("BG3SX - genital ", genital)
+	local genitalIndex = 1
+	-- _P("[Genitals.lua] - Now iterating over every Genital to find :")
+    for _, genital in pairs(allGenitals) do -- Rens Aasimar contains a Vulva without a linked VisualResource which might cause problems since it outputs nil
+		-- _P("[Genitals.lua] -------------------------------------------------------")
+		-- _P("[Genitals.lua] - Checking Entry " .. genitalIndex .. " Genital: ", genital)
         local visualResource = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").VisualResource
-		_P("BG3SX - visualResource ", visualResource)
+		-- _P("[Genitals.lua] - Genitals Visualresource: ", visualResource)
+
+		-- local displayName = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").DisplayName.Handle.Handle
+		-- local name = Ext.Loca.GetTranslatedString(displayName)
+		-- _P("[Genitals.lua] - DisplayName is: ", name)
 		
-		local resource = Ext.Resource.Get(visualResource, "Visual")
-		_P("BG3SX - resource ", resource)
+		local resource = Ext.Resource.Get(visualResource, "Visual") -- Visualbank
+		-- _P("[Genitals.lua] - That resources VisualBank:  ", resource)
 
        -- local sourceFile = Ext.Resource.Get(visualResource, "Visual").SourceFile
 	   local sourceFile = GetPropertyOrDefault(resource, "SourceFile", nil)
-		_P("BG3SX - sourcefile ", sourceFile)
-
+		-- _P("[Genitals.lua] - The VisualBanks SourceFile: ", sourceFile)
 		if sourceFile then 
 			if stringContains(sourceFile, modName) then
+				-- _P("[Genitals.lua] - Adding current Genital to list of modGenitals since SourceFile path contains ", modName)
 				table.insert(modGenitals, genital)
+				-- _D(Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual")) -- Dump of the added Genital
 			end
 		end
+
+		-- if resource == nil then
+			-- _P("[Genitals.lua] -------------------------------------------------------")
+			-- _P("[Genitals.lua] -------------------------------------------------------")
+			-- _D(Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual"))
+			-- _P("[Genitals.lua] -------------------------------------------------------")
+			-- _P("[Genitals.lua] -------------------------------------------------------")
+		-- end
+
+		genitalIndex = genitalIndex+1
     end
 
     -- Failsafe for CC
     if modName ~= "SimpleErections" then
+		-- _P("[Genitals.lua] -------------------------------------------------------")
+		-- _P("[Genitals.lua] - FAILSAVE TRIGGERED")
+		-- _P("[Genitals.lua] -------------------------------------------------------")
         local additionalGenitals = getAdditionalGenitals(allGenitals)
         for _, genital in ipairs(additionalGenitals) do
             table.insert(modGenitals, genital)
