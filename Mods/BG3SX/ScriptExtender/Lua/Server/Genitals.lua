@@ -117,12 +117,16 @@ end
 --@param            - ModName (FolderName)
 ---return           - list of CharacterCreationAppearaceVisual IDs genitals
 local function getModGenitals(modName)
+	_P("BG3SX - modName ", modName)
     local modGenitals = {}
     local allGenitals = getAllGenitals()
 
     for _, genital in pairs(allGenitals) do
+		_P("BG3SX - genital ", genital)
         local visualResource = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").VisualResource
+		_P("BG3SX - visualResource ", visualResource)
         local sourceFile = Ext.Resource.Get(visualResource, "Visual").SourceFile
+		_P("BG3SX - sourcefile ", sourceFile)
 
         if stringContains(sourceFile, modName) then
             table.insert(modGenitals, genital)
