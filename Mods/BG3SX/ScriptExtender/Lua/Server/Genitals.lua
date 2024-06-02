@@ -125,12 +125,19 @@ local function getModGenitals(modName)
 		_P("BG3SX - genital ", genital)
         local visualResource = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").VisualResource
 		_P("BG3SX - visualResource ", visualResource)
-        local sourceFile = Ext.Resource.Get(visualResource, "Visual").SourceFile
+		
+		local resource = Ext.Resource.Get(visualResource, "Visual")
+		_P("BG3SX - resource ", resource)
+
+       -- local sourceFile = Ext.Resource.Get(visualResource, "Visual").SourceFile
+	   local sourceFile = GetPropertyOrDefault(resource, "SourceFile", nil)
 		_P("BG3SX - sourcefile ", sourceFile)
 
-        if stringContains(sourceFile, modName) then
-            table.insert(modGenitals, genital)
-        end
+		if sourceFile then 
+			if stringContains(sourceFile, modName) then
+				table.insert(modGenitals, genital)
+			end
+		end
     end
 
     -- Failsafe for CC
