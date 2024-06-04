@@ -6,7 +6,7 @@
 BODYTYPE = {
 	MALE = 0,
 	FEMALE = 1
-} 
+}
 
 -- Strong is only for humanoids
 BODYSHAPE = {
@@ -14,12 +14,10 @@ BODYSHAPE = {
 	STRONG = 1,
 }
 
-
 GENITALS = {
     ["VULVA"] = "a0738fdf-ca0c-446f-a11d-6211ecac3291",
     ["PENIS"] = "d27831df-2891-42e4-b615-ae555404918b"
 }
-
 
 -- Define RACES dictionary
 RACES = {
@@ -52,7 +50,6 @@ RACETAGS = {
     ["02e5e9ed-b6b2-4524-99cd-cb2bc84c754a"] = "DRAGONBORN",
 
 }
-
 
 --TODO: overhaul modded races support with new race and bodytype system 
 
@@ -1483,4 +1480,305 @@ PENIS = {
         raceID = "9c61a74a-20df-4119-89c5-d996956b6c66",
         visualID = "61f59a7e-ced5-ee43-86af-a8a87deefcad"
     }
+}
+
+---------------------------------------------------------------------------------------------------------
+
+--                                        MrFunSize Erections
+
+---------------------------------------------------------------------------------------------------------
+
+FUNERECTION = {
+
+    -- Dwarves
+    {   index = 1, name = "Erect", race = "Dwarf", visual = "DWR_F_Erect",
+        genitalID = "c1d4ead2-7e4c-4b52-a42e-e3c0f60dd913",
+        raceID = "0ab2874d-cfdc-405e-8a97-d37bfbb23c52",
+        visualID = "d20a9468-2a47-48c5-b9d9-c65d34442115"
+    },
+    {   index = 2, name = "Hairy Erect", race = "Dwarf", visual = "DWR_F_Hairy_Erect",
+        genitalID = "661a538b-c01b-4ba4-a01c-5ac5fd5b4e70",
+        raceID = "0ab2874d-cfdc-405e-8a97-d37bfbb23c52",
+        visualID = "58327c1b-250d-4257-a4eb-df5d483f03eb"
+    },
+    {   index = 3, name = "Erect", race = "Dwarf", visual = "DWR_M_Erect",
+        genitalID = "428cbaa8-3546-4789-bc15-6cb4d62f2d63",
+        raceID = "0ab2874d-cfdc-405e-8a97-d37bfbb23c52",
+        visualID = "5cefcbb0-66d5-4847-b02a-8ac792319f57"
+    },
+    {   index = 4, name = "Hairy Erect", race = "Dwarf", visual = "DWR_M_Hairy_Erect",
+        genitalID = "cf220afd-496e-401c-8dab-f5716f3a49f0",
+        raceID = "0ab2874d-cfdc-405e-8a97-d37bfbb23c52",
+        visualID = "ab93d695-a60a-40e0-a765-2d93cd194e63"
+    },
+
+    -- Elves
+    {   index = 5, name = "Erect", race = "Elf", visual = "DWR_F_Erect",
+        genitalID = "38e7bb58-27fa-48be-97dc-8ee5625a385d",
+        raceID = "6c038dcb-7eb5-431d-84f8-cecfaf1c0c5a",
+        visualID = "6083b52b-db30-48f0-8246-268e27810613"
+    },
+    {   index = 6, name = "Erect", race = "Elf", visual = "DWR_FS_Erect",
+        genitalID = "d8172b73-6d5f-43d7-8423-7e3b130e0527",
+        raceID = "6c038dcb-7eb5-431d-84f8-cecfaf1c0c5a",
+        visualID = "f0b47c1c-cb52-44b4-aae5-5c65622948ce"
+    },
+    {   index = 7, name = "Erect", race = "Elf", visual = "DWR_M_Erect",
+        genitalID = "4bd0c847-a2b9-49fb-b7cd-b439cb22a3c1",
+        raceID = "6c038dcb-7eb5-431d-84f8-cecfaf1c0c5a",
+        visualID = "947dbb2e-ba7e-4b24-a359-772a19770df6"
+    },
+    {   index = 8, name = "Erect", race = "Elf", visual = "DWR_MS_Erect",
+        genitalID = "df9a5499-504a-4822-90bf-40e46d1a058d",
+        raceID = "6c038dcb-7eb5-431d-84f8-cecfaf1c0c5a",
+        visualID = "dd51a3b8-0f0b-42ef-a3fa-f5909f25572f"
+    },
+
+    -- Drow
+    {   index = 9, name = "Erect", race = "Drow", visual = "DRW_F_Erect",
+        genitalID = "d685f0b9-54b0-4aa2-a1c9-07de00cc2808",
+        raceID = "4f5d1434-5175-4fa9-b7dc-ab24fba37929",
+        visualID = "6083b52b-db30-48f0-8246-268e27810613"
+    },
+    {   index = 10, name = "Erect", race = "Drow", visual = "DRW_FS_Erect",
+        genitalID = "6f923f44-2e89-41e4-8ccb-13890cdb6db4",
+        raceID = "4f5d1434-5175-4fa9-b7dc-ab24fba37929",
+        visualID = "f0b47c1c-cb52-44b4-aae5-5c65622948ce"
+    },
+    {   index = 11, name = "Erect", race = "Drow", visual = "DRW_M_Erect",
+        genitalID = "505b9a2a-f673-475b-823e-dd09fd334a8d",
+        raceID = "4f5d1434-5175-4fa9-b7dc-ab24fba37929",
+        visualID = "947dbb2e-ba7e-4b24-a359-772a19770df6"
+    },
+    {   index = 12, name = "Erect", race = "Drow", visual = "DRW_MS_Erect",
+        genitalID = "f8715972-6e0f-46bf-ac3b-ee6e5d4b0c0a",
+        raceID = "4f5d1434-5175-4fa9-b7dc-ab24fba37929",
+        visualID = "dd51a3b8-0f0b-42ef-a3fa-f5909f25572f"
+    },
+
+    -- Gnomes
+    {   index = 13, name = "Erect", race = "Gnome", visual = "GNO_F_Erect",
+        genitalID = "63203eda-c550-47f5-8d4a-52455f50a860",
+        raceID = "f1b3f884-4029-4f0f-b158-1f9fe0ae5a0d",
+        visualID = "27048a8c-25d1-4f5b-a247-1d8442dd1c53"
+    },
+    {   index = 14, name = "Hairy Erect", race = "Gnome", visual = "GNO_F_Hairy_Erect",
+        genitalID = "c2d870c4-4ddf-43e1-8a57-914120c85985",
+        raceID = "f1b3f884-4029-4f0f-b158-1f9fe0ae5a0d",
+        visualID = "17463836-9501-49c5-9377-98a417fbe967"
+    },
+    {   index = 15, name = "Erect", race = "Gnome", visual = "GNO_M_Erect",
+        genitalID = "83c2b026-6314-4a58-88f2-318f4e82d954",
+        raceID = "f1b3f884-4029-4f0f-b158-1f9fe0ae5a0d",
+        visualID = "d2ab77ca-63ec-4b75-a72a-417ac98fecd6"
+    },
+    {   index = 16, name = "Hairy Erect", race = "Gnome", visual = "GNO_M_Hairy_Erect",
+        genitalID = "ce451147-0023-4cee-b526-080a8b94c01b",
+        raceID = "f1b3f884-4029-4f0f-b158-1f9fe0ae5a0d",
+        visualID = "32775b67-220b-4872-b73e-eb5453c69f12"
+    },
+
+    -- Githyanki
+    {   index = 17, name = "Erect", race = "Githyanki", visual = "GTY_F_Erect",
+        genitalID = "8d80cf10-2b4c-4be2-8a3c-2c64c2a09546",
+        raceID = "bdf9b779-002c-4077-b377-8ea7c1faa795",
+        visualID = "61a5f54e-238e-48eb-ba86-72642972c6c7"
+    },
+    {   index = 18, name = "Hairy Erect", race = "Githyanki", visual = "GTY_F_Hairy_Erect",
+        genitalID = "bb8f199e-6d7f-4db8-938d-0be9e375fda7",
+        raceID = "bdf9b779-002c-4077-b377-8ea7c1faa795",
+        visualID = "225b5184-bc78-412b-8f0b-30bd7624311f"
+    },
+    {   index = 19, name = "Erect", race = "Githyanki", visual = "GTY_M_Erect",
+        genitalID = "afddee7a-7178-449b-a297-933ff5e8a236",
+        raceID = "bdf9b779-002c-4077-b377-8ea7c1faa795",
+        visualID = "0ec5d550-afe5-4f8f-ab36-f1282c7529e1"
+    },
+    {   index = 20, name = "Hairy Erect", race = "Githyanki", visual = "GTY_M_Hairy_Erect",
+        genitalID = "984b242e-2413-4b12-9cc8-848303dda089",
+        raceID = "bdf9b779-002c-4077-b377-8ea7c1faa795",
+        visualID = "0718f8d8-3ec3-465b-b528-b4fed59e7b87"
+    },
+
+    -- Halflings
+    {   index = 21, name = "Erect", race = "Halfling", visual = "HFL_F_Erect",
+        genitalID = "d4a4cd06-5a26-4933-856c-ced1c789b170",
+        raceID = "78cd3bcc-1c43-4a2a-aa80-c34322c16a04",
+        visualID = "03567bfe-6b27-4138-8a8c-5f3f922759e5"
+    },
+    {   index = 22, name = "Hairy Erect", race = "Halfling", visual = "HFL_F_Hairy_Erect",
+        genitalID = "4937ebec-ce4e-4500-b6e0-46c8be705f74",
+        raceID = "78cd3bcc-1c43-4a2a-aa80-c34322c16a04",
+        visualID = "600f5737-3420-4cea-bfac-ec5243851ab3"
+    },
+    {   index = 23, name = "Erect", race = "Halfling", visual = "HFL_M_Erect",
+        genitalID = "138e251e-3576-4cef-b076-7d22313ba1a7",
+        raceID = "78cd3bcc-1c43-4a2a-aa80-c34322c16a04",
+        visualID = "7811d53b-b997-4889-bca5-7c501c2d6a4d"
+    },
+    {   index = 24, name = "Hairy Erect", race = "Halfling", visual = "HFL_M_Hairy_Erect",
+        genitalID = "0365f7f4-0143-4683-a0b0-e5bdf27b65d0",
+        raceID = "78cd3bcc-1c43-4a2a-aa80-c34322c16a04",
+        visualID = "667ea820-e84c-4410-9a54-89e9a0c79d95"
+    },
+
+    -- Half-Orcs
+    {   index = 25, name = "Erect", race = "Half-Orc", visual = "HRC_F_Erect",
+        genitalID = "de21ebff-cade-40b5-b490-a5e426ca9a0d",
+        raceID = "5c39a726-71c8-4748-ba8d-f768b3c11a91",
+        visualID = "f59535e7-85a8-4009-be6d-1dcb118686a9"
+    },
+    {   index = 26, name = "Hairy Erect", race = "Half-Orc", visual = "HRC_F_Hairy_Erect",
+        genitalID = "64008bde-9f18-4cab-abea-e794edb2324c",
+        raceID = "5c39a726-71c8-4748-ba8d-f768b3c11a91",
+        visualID = "67f40cbc-7921-464f-ad01-3e4c30a49d6e"
+    },
+    {   index = 27, name = "Erect", race = "Half-Orc", visual = "HRC_M_Erect",
+        genitalID = "6344de9d-1bf6-49e9-bd90-c5db11091dbe",
+        raceID = "5c39a726-71c8-4748-ba8d-f768b3c11a91",
+        visualID = "547b6e81-b1bb-46fc-a7e5-1966dcc41bbd"
+    },
+    {   index = 28, name = "Hairy Erect", race = "Half-Orc", visual = "HRC_M_Hairy_Erect",
+        genitalID = "28a52e54-5653-4c01-b713-1f0f1457e778",
+        raceID = "5c39a726-71c8-4748-ba8d-f768b3c11a91",
+        visualID = "2135e5b4-a64f-4c16-9674-bcbf02158643"
+    },
+
+    -- Human
+    {   index = 29, name = "Erect", race = "Human", visual = "HUM_F_Erect",
+        genitalID = "b50f6bea-ca4a-42d2-9f0f-58855be570df",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "13ff0e60-69b6-444e-8b38-2d34cfff06f3"
+    },
+    {   index = 30, name = "Hairy Erect", race = "Human", visual = "HUM_F_Hairy_Erect",
+        genitalID = "af7952b7-9405-49a1-b0f9-5e8864a926b1",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "437a4487-ef4a-4771-b62b-1eff41977ac6"
+    },
+    {   index = 31, name = "Erect", race = "Human", visual = "HUM_FS_Erect",
+        genitalID = "df64c112-0eb3-4d27-9367-df88959e907f",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "18064e63-f226-4b1a-b76c-7255f82da234"
+    },
+    {   index = 32, name = "Hairy Erect", race = "Human", visual = "HUM_FS_Hairy_Erect",
+        genitalID = "6aae16ff-0cfc-4baf-843f-74bb7bd92b4c",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "5fb024ae-61dc-4bd1-a38b-45246ba9c408"
+    },
+    {   index = 33, name = "Erect", race = "Human", visual = "HUM_M_Erect",
+        genitalID = "beb19008-1fee-4abb-a15d-5c89247e751a",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "58607abf-b2c0-460b-9ec8-2af178b9d263"
+    },
+    {   index = 34, name = "Hairy Erect", race = "Human", visual = "HUM_M_Hairy_Erect",
+        genitalID = "8d84422a-a9a6-4801-96c4-f7d94ac6ff01",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "7bd9c112-8507-4d6a-a36a-7c62350dc73d"
+    },
+    {   index = 35, name = "Erect", race = "Human", visual = "HUM_MS_Erect",
+        genitalID = "77880485-52d7-4c7e-a972-e38a9cfc28d7",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "b3e1e3c7-7c75-4945-be0e-454499276b88"
+    },
+    {   index = 36, name = "Hairy Erect", race = "Human", visual = "HUM_MS_Hairy_Erect",
+        genitalID = "ad524dee-b817-4f7c-bd3e-80900bc14240",
+        raceID = "0eb594cb-8820-4be6-a58d-8be7a1a98fba",
+        visualID = "f6ec1a50-4b10-4d93-b17d-b3593ab2762e"
+    },
+
+    -- Half-Elves
+    {   index = 37, name = "Erect", race = "Half-Elf", visual = "HEL_F_Erect",
+        genitalID = "4eac75b6-7271-4b28-aadd-0e322ea5391b",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "13ff0e60-69b6-444e-8b38-2d34cfff06f3"
+    },
+    {   index = 38, name = "Hairy Erect", race = "Half-Elf", visual = "HEL_F_Hairy_Erect",
+        genitalID = "a9253cba-e3bb-4b74-91b2-50d08c7354f4",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "437a4487-ef4a-4771-b62b-1eff41977ac6"
+    },
+    {   index = 39, name = "Erect", race = "Half-Elf", visual = "HEL_FS_Erect",
+        genitalID = "c7591733-9a79-4f4a-a775-0bae6f129c5c",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "18064e63-f226-4b1a-b76c-7255f82da234"
+    },
+    {   index = 40, name = "Hairy Erect", race = "Half-Elf", visual = "HEL_FS_Hairy_Erect",
+        genitalID = "0583a5ea-99f3-47a7-bf7b-e0ac8e04a390",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "5fb024ae-61dc-4bd1-a38b-45246ba9c408"
+    },
+    {   index = 41, name = "Erect", race = "Half-Elf", visual = "HEL_M_Erect",
+        genitalID = "83b2f999-5e8e-49d9-a42c-191eac5e3e89",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "58607abf-b2c0-460b-9ec8-2af178b9d263"
+    },
+    {   index = 42, name = "Hairy Erect", race = "Half-Elf", visual = "HEL_M_Hairy_Erect",
+        genitalID = "8b164b83-f3b7-44df-99d4-f375c181aa6c",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "7bd9c112-8507-4d6a-a36a-7c62350dc73d"
+    },
+    {   index = 43, name = "Erect", race = "Half-Elf", visual = "HEL_MS_Erect",
+        genitalID = "14ba64b2-fdac-47a9-beac-b408360f2244",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "b3e1e3c7-7c75-4945-be0e-454499276b88"
+    },
+    {   index = 44, name = "Hairy Erect", race = "Half-Elf", visual = "HEL_MS_Hairy_Erect",
+        genitalID = "9bf57322-616d-43b7-a9e9-8393fe9bd12f",
+        raceID = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0",
+        visualID = "f6ec1a50-4b10-4d93-b17d-b3593ab2762e"
+    },
+
+    -- Tieflings
+    {   index = 45, name = "Erect", race = "Tiefling", visual = "TIF_F_Erect",
+        genitalID = "b4a9b624-f2e0-4382-bb09-0388a97f2366",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "5befe221-41b2-4db5-a816-a68516e455e9"
+    },
+    {   index = 46, name = "Hairy Erect", race = "Half-Elf", visual = "TIF_F_Hairy_Erect",
+        genitalID = "fd4c161a-c267-4b67-86f8-014532f55e56",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "c17513df-8093-41f8-9f05-f6f3e0bb6dfb"
+    },
+    {   index = 47, name = "Erect", race = "Half-Elf", visual = "TIF_FS_Erect",
+        genitalID = "c92b5626-bdbf-4498-8759-6404b223191d",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "d1427cf9-470f-4199-bdf2-f9efbb75cbb9"
+    },
+    {   index = 48, name = "Hairy Erect", race = "Half-Elf", visual = "TIF_FS_Hairy_Erect",
+        genitalID = "306fb48f-9563-4161-a4aa-018a2b1011ac",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "26dcfea5-3a3d-4f0b-820e-94bcd98f0f1c"
+    },
+    {   index = 49, name = "Erect", race = "Half-Elf", visual = "TIF_M_Erect",
+        genitalID = "8ebab11f-e8d9-42d3-a110-2dcaf4bbef3c",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "cded95c0-30c6-4412-a528-26932fa9516b"
+    },
+    {   index = 50, name = "Hairy Erect", race = "Half-Elf", visual = "TIF_M_Hairy_Erect",
+        genitalID = "59e10a67-97ec-4039-a2a8-612d3c8ea24a",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "99186a62-f8c4-4a5c-9f08-2525c128f18b"
+    },
+    {   index = 51, name = "Erect", race = "Half-Elf", visual = "TIF_MS_Erect",
+        genitalID = "2e3ad1fa-2881-4bc9-8c7a-56f47d83be16",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "95a6bb67-e057-4b89-9e12-c7bbaf094abc"
+    },
+    {   index = 52, name = "Hairy Erect", race = "Half-Elf", visual = "TIF_MS_Hairy_Erect",
+        genitalID = "bb920a89-a1ac-46eb-8d2e-4aee8a1d60ff",
+        raceID = "b6dccbed-30f3-424b-a181-c4540cf38197",
+        visualID = "6513f718-7b57-4120-b1e8-5c0ed0212104"
+    },
+
+    --Dragonborn
+    {   index = 53, name = "Erect", race = "Dragonborn", visual = "DGB_M_Erect_Genital_B",
+        genitalID = "34016c0c-36d3-4696-9c28-9398936a3c1a",
+        raceID = "9c61a74a-20df-4119-89c5-d996956b6c66",
+        visualID = "0a271d44-cddf-47de-8b02-2edf8753b3f3"
+    },
+    {   index = 54, name = "Erect", race = "Dragonborn", visual = "DGB_F_Erect_Genital_B",
+        genitalID = "02e09af7-eb15-4e40-99f6-4575b4b7defd",
+        raceID = "9c61a74a-20df-4119-89c5-d996956b6c66",
+        visualID = "274508c8-30ee-43f4-964f-6a264fae13c2"
+    },
 }
