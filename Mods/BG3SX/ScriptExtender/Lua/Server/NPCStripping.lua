@@ -259,6 +259,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 		end
 
         if target ~= "" and IsNPC(target) then
+            _P("Is NPC ", target)
             removeGenitals(target)
             redress(target)
             -- Remove Hair if necessary? 

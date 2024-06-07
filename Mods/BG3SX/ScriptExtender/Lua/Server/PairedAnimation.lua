@@ -232,6 +232,8 @@ function UpdatePairedAnimationVars(pairData)
 
     if topData.HasPenis == false and btmData.HasPenis == false then
         pairData.AnimContainer = "LesbianAnimationsContainer"
+    elseif topData.HasPenis == true and btmData.HasPenis == true then
+        pairData.AnimContainer = "GayAnimationsContainer"
     else
         pairData.AnimContainer = "StraightAnimationsContainer"
     end

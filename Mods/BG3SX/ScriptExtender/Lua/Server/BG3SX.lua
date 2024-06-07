@@ -134,9 +134,10 @@ function AddMainSexSpells(actor)
         and Osi.IsTagged(actor, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
     then
         TryAddSpell(actor, "StartSexContainer")
-        TryAddSpell(actor, "SexOptions")
         TryAddSpell(actor, "Change_Genitals")
         TryAddSpell(actor, "BG3SXOptions")
+        -- we switched to another spell
+        TryRemoveSpell(actor, "SexOptions")
     end
 end
 

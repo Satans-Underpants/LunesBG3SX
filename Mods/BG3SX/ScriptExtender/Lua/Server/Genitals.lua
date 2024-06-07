@@ -1,14 +1,76 @@
 ----------------------------------------------------------------------------------------------------
 -- 
--- 	Dynamic Genital Modification -  based on MrFunSize's implementation of Genitals [Folder Structure]
+-- 									Dynamic Genital Modification
 -- 
 ----------------------------------------------------------------------------------------------------
+
+
+-- Saved genitals for better performance
+local allGenitals = {}
+local setVanillaVulvas = {}
+local setVanillaPenises = {}
+local setFunErections = {}
+local additionalGenitals = {}
+
+----------------------------------------------------------------------------------------------------
+-- 
+-- 									Getters and Setters
+-- 
+----------------------------------------------------------------------------------------------------
+
+-- Setters
+local function setAllGenitals(genitals)
+	allGenitals = genitals 
+end 
+
+local function setVanillaVulvas(vulvas)
+	setVanillaVulvas = vulvas
+end
+
+local function setVanillaPenises(penises)
+	setVanillaPenises = penises
+end
+
+local function setFunErections(erections)
+	setFunErections = erections
+end
+
+local function setAdditionalGenitals(genitals)
+	additionalGenitals = genitals
+end
+
+-- Getters
+local function getAllGenitals()
+	return allGenitals
+end
+
+local function getVanillaVulvas()
+	return setVanillaVulvas
+end
+
+local function getVanillaPenises()
+	return setVanillaPenises
+end
+
+local function getFunErections()
+	return setFunErections
+end
+
+local function getAdditionalGenitals()
+	return additionalGenitals
+end
+
+
 
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 									Shorthands and Helpers
 -- 
 ----------------------------------------------------------------------------------------------------
+
+
+-- TODO: Move to Utils 
+
 --- Checks if an item is present in a list.
 -- @param list table	- The table to be searched.
 -- @param item any		- The item to search for in the table.
@@ -78,7 +140,7 @@ end
 
 -- Get all CharacterCreationAppearaceVisuals of type Private Parts loaded in the game
 ---return 				- list of CharacterCreationAppearaceVisual IDs for all genitals
-local function getAllGenitals()
+local function collectAllGenitals()
 	local allGenitals = {}
 	local allCCAV = Ext.StaticData.GetAll("CharacterCreationAppearanceVisual")
 	for _, CCAV in pairs(allCCAV)do
@@ -113,65 +175,47 @@ local function getVanillaGenitals(TYPE, default)
     return result
 end
 
+
+local function collectFunErections()
+
+    local result = {}
+
+    -- Collect all genitalIDs from the selected table
+    for _, entry in ipairs(FUNERECTION) do
+        table.insert(result, entry.genitalID)
+    end
+
+    return result
+end
+
+
 -- Get Mod Specific Genitals
+-- Mostly unfinished for now - if Norbyte implements a way to get Mod ID from genitals it can be simplified a lot
 --@param            - ModName (FolderName)
 ---return           - list of CharacterCreationAppearaceVisual IDs genitals
 local function getModGenitals(modName)
-	-- _P("[Genitals.lua] -------------------------------------------------------")
-	-- _P("[Genitals.lua] - getModGenitals for ", modName)
-    local modGenitals = {}
     local allGenitals = getAllGenitals()
+	local modGenitals = {}
 	local genitalIndex = 1
-	-- _P("[Genitals.lua] - Now iterating over every Genital to find :")
     for _, genital in pairs(allGenitals) do -- Rens Aasimar contains a Vulva without a linked VisualResource which might cause problems since it outputs nil
-		-- _P("[Genitals.lua] -------------------------------------------------------")
-		-- _P("[Genitals.lua] - Checking Entry " .. genitalIndex .. " Genital: ", genital)
         local visualResource = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").VisualResource
-		-- _P("[Genitals.lua] - Genitals Visualresource: ", visualResource)
-
-		-- local displayName = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").DisplayName.Handle.Handle
-		-- local name = Ext.Loca.GetTranslatedString(displayName)
-		-- _P("[Genitals.lua] - DisplayName is: ", name)
-		
 		local resource = Ext.Resource.Get(visualResource, "Visual") -- Visualbank
-		-- _P("[Genitals.lua] - That resources VisualBank:  ", resource)
-
-       -- local sourceFile = Ext.Resource.Get(visualResource, "Visual").SourceFile
-	   local sourceFile = GetPropertyOrDefault(resource, "SourceFile", nil)
-		-- _P("[Genitals.lua] - The VisualBanks SourceFile: ", sourceFile)
+	    local sourceFile = GetPropertyOrDefault(resource, "SourceFile", nil)
 		if sourceFile then 
 			if stringContains(sourceFile, modName) then
-				-- _P("[Genitals.lua] - Adding current Genital to list of modGenitals since SourceFile path contains ", modName)
 				table.insert(modGenitals, genital)
-				-- _D(Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual")) -- Dump of the added Genital
 			end
 		end
-
-		-- if resource == nil then
-			-- _P("[Genitals.lua] -------------------------------------------------------")
-			-- _P("[Genitals.lua] -------------------------------------------------------")
-			-- _D(Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual"))
-			-- _P("[Genitals.lua] -------------------------------------------------------")
-			-- _P("[Genitals.lua] -------------------------------------------------------")
-		-- end
 
 		genitalIndex = genitalIndex+1
     end
 
     -- Failsafe for CC
-    if modName ~= "SimpleErections" then
-		-- _P("[Genitals.lua] -------------------------------------------------------")
-		-- _P("[Genitals.lua] - FAILSAVE TRIGGERED")
-		-- _P("[Genitals.lua] -------------------------------------------------------")
-        local additionalGenitals = getAdditionalGenitals(allGenitals)
-        for _, genital in ipairs(additionalGenitals) do
-            table.insert(modGenitals, genital)
-        end
-    end
 
-    if #modGenitals == 0 then
-        -- print("No genitals found for this mod")
-    end
+	local additionalGenitals = getAdditionalGenitals(allGenitals)
+	for _, genital in ipairs(additionalGenitals) do
+		table.insert(modGenitals, genital)
+	end
 
     return modGenitals
 end
@@ -185,7 +229,7 @@ function getAdditionalGenitals(allGenitals)
         listToSet(getVanillaGenitals("PENIS", false)),
         listToSet(getVanillaGenitals("VULVA", true)),
         listToSet(getVanillaGenitals("PENIS", true)),
-        listToSet(getModGenitals("SimpleErections"))
+        listToSet(getFunErections())
     }
 
     local additionalGenitals = {}
@@ -284,7 +328,6 @@ end
 -- Add Genital containers - Vanilla & MrFunSize are always added
 function OnSessionLoaded()
 
-	-- _P("ADDING GENITAL SPELLS ")
 
     -- Purge all Containers (this solves a lot of issues)
     purgeObjectSpells()
@@ -293,19 +336,22 @@ function OnSessionLoaded()
 	InitializeChangeGenitals()
 
 	-- Default gentials that come with BG3SX
-	local allGenitals = getAllGenitals()
-	local setVanillaVulvas = listToSet(getVanillaGenitals("VULVA"))
-	local setVanillaPenises = listToSet(getVanillaGenitals("PENIS"))
-	local setFunErections = listToSet(getModGenitals("SimpleErections"))
 
-	local additionalGenitals = {}
+	setAllGenitals(collectAllGenitals())
+	setVanillaVulvas(getVanillaGenitals("VULVA"))
+	setVanillaPenises(getVanillaGenitals("PENIS"))
+	setFunErections(collectFunErections())
+
+	local modGenitals = {}
 
 	-- Filter allGenitals to find additional genitals
 	for _, genital in ipairs(allGenitals) do
 		if not setVanillaVulvas[genital] and not setVanillaPenises[genital] and not setFunErections[genital] then
-				table.insert(additionalGenitals, genital)
+				table.insert(modGenitals, genital)
 		end
 	end
+
+	setAdditionalGenitals = modGenitals
 
 	-- TODO - will be moved to UI, thus the uselessness 
 	local spell = "Other_Genitals"
@@ -360,7 +406,6 @@ function getRaceAndBody(originalRace)
 end
 
 
--- TODO : test Githzerai again
 
 -- Get all allowed genitals for entity (Ex: all vulva for human)
 -- @param spell		- Name of the spell by which the genitals are filtered (vulva, penis, erection)
@@ -441,11 +486,14 @@ local function getFilteredGenitals(spell, listOfGenitals)
 
 	-- Vanilla Spells
 	if spell == "Vanilla_Vulva" then
-		spellGenitals = getVanillaGenitals("VULVA")
+		spellGenitals = getVanillaVulvas()
 	elseif spell == "Vanilla_Flaccid" then
-		spellGenitals = getVanillaGenitals("PENIS")
+		spellGenitals = getVanillaPenises()
 	-- Modded Dicks (including MrFunSize)	
-	else 
+	elseif spell == "SimpleErections" then
+		spellGenitals = getFunErections()
+	-- Modded Dicks		
+	else
 		spellGenitals = getModGenitals(spell)
 	end
 
@@ -466,7 +514,6 @@ end
 
 
 
--- TODO - Halsin is special, give him human genitals
 
 -- TODO - currently resets on Saveload. Make into uservariable
 -- allows to cycle through a list of genitals instead of choosing a random one
@@ -478,7 +525,6 @@ local genitalChoice = {}
 ---return 			- ID of CharacterCreationAppearaceVisual
 function getNextGenital(spell, uuid)
 
-	-- TODO - Shart only has 2 vulvas to choose from instead of 3 after filtering for defailts: issue in the lib? 
     local permittedGenitals = getPermittedGenitals(uuid)
     local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
 
@@ -489,8 +535,8 @@ function getNextGenital(spell, uuid)
         genitalChoice = {uuid = uuid, spell = spell, index = 1}
     end
 
-    if #filteredGenitals == 0 then
-        -- print("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
+    if  not filteredGenitals then
+        print("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
         return nil
     else
         local selectedGenital = filteredGenitals[genitalChoice.index]
@@ -527,11 +573,14 @@ function overrideGenital(newGenital, uuid)
 	local currentGenital = getCurrentGenital(uuid)
 
 	-- Origins don't have genitals - We have to add one before we can remove it
-	if currentGenital and not (currentGenital == newGenital) then
-		-- Note: This is not a typo, It's actually called Ovirride
-		Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
-	end
+	-- if currentGenital and not (currentGenital == newGenital) then
+	-- 	-- Note: This is not a typo, It's actually called Ovirride
+	-- 	Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
+	-- end
 	if newGenital then
+		if currentGenital then
+			Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
+		end
 		Osi.AddCustomVisualOverride(uuid, newGenital)
 	end
 end
@@ -592,13 +641,7 @@ end)
 
 
 -- TODO - timers might be better, but we'll need to implement a way to receive
--- pairData in other classes, also I hate timers 
-
--- Ext.Osiris.RegisterListener("ObjectTimerFinished", 2, "after", function(actor, timer)
--- 	if timer == "PairedSexFade.Start" then
--- 		print("Sex Start")
--- 	end 
--- end)
+-- pairData in other classes, -> refractor code 
 
 
 -- TODO - instead access pairData
@@ -706,112 +749,3 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 		masturbators[caster] = nil
 	end
 end)
-
-
-
-
-
-
-
-
-
-
---  -- Read in spells and uuid
---  for _,genital in pairs(additionalGenitals)do
-
--- 	local modName = getModByGenital(genital)
--- 	-- failsafe in case genitals don't have the correct structure
--- 	if not (modName == "Other_Genitals") then
-
--- 	local spellsInContainer = container.ContainerSpells
--- 	print(spellsInContainer)
-
--- 	-- only add spell if it isn't already in container
--- 	if modName and string.find(spellsInContainer, modName, 1, true) == nil then   
--- 		print("[BG3SX] Adding", modName," to chosen container.")
-
--- 		-- If it already exists, just add it (I don't know how to delete spells,except for reloading the game)
--- 		if not Ext.Stats.Get(modName) then
--- 			print("Creating spell, ", modName)
--- 			-- TODO - backup plan is to do the same thing focus did for miraculous dyes and create dummy entries that will be changed
--- 			createSpell(modName)
--- 		else
--- 			print(modName, " already exists as spell")
--- 		end
-		
--- 		container.ContainerSpells = spellsInContainer..";" .. modName
--- 		container:Sync()
--- 		print(container.ContainerSpells)
--- 	end
--- end
--- end
-
-
-
-
-
-
--- function createSpell(modName)
-
-
--- 	function AddCustomSpell(character)
-		
--- 	local newSpell = Ext.Stats.Create(modName, "SpellData", "Template")
--- 	newSpell:Sync()
-		
--- 	-- I don't know why delay
--- -- DelayCall(600, 
--- -- function() 
--- -- 	local baseSpell = Ext.Stats.Get("Container_Spell")
--- -- 	local containerList = baseSpell.ContainerSpells
--- -- 	containerList = containerList .. ";New_Spell_Name"
--- -- 	baseSpell.ContainerSpells = containerList
--- -- 	baseSpell:Sync()
--- -- 	_P("containerList: " .. containerList)
--- -- 	if Osi.HasSpell(character, 'Container_Spell') ~= 0 then
--- -- 		Osi.RemoveSpell(character, 'Container_Spell', 1)
--- -- 	end
--- -- 	Osi.AddSpell(character, 'Container_Spell', 0, 1) 
--- -- end
--- -- )
--- end
-
-
-
-
-
-	-- -- Create spell
-	-- local spell = Ext.Stats.Create(modName, "SpellData")
-	-- spell.SpellType = "Shout"
-	-- --spell.SpellProperties = "GROUND"
-	-- spell.SpellProperties = "CanNotUse"
-	-- spell.SpellContainerID = "Change_Genitals"
-	-- spell.Icon = "WPN_HUM_Salami_A"
-	-- spell.DisplayName = "" -- TODO - change, se if we can either create one or pull one from the mod
-	-- spell.Description = ""
-	-- spell.TargetConditions = ""
-	-- spell.PrepareSound = "Instrument_Bard_Silence"
-	-- spell.CastSound = "Instrument_Bard_Silence"
-	-- spell.TargetSound = "Instrument_Bard_Silence"
-	-- spell.SpellFlags = "ImmediateCast"
-	-- spell.SpellFlags = "IsLinkedSpellContainer"
-	-- spell.AIFlags = "CanNotUse"
-
-	-- ??????? Crashes
-	-- Ext.Stats.Get(modName):Sync()
-
-	
-	--end
-
-
-
-
-
-
-
-
-
-
-
-
-

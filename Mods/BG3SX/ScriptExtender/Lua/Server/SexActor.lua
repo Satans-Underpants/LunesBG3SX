@@ -63,7 +63,6 @@ function SexActor_Init(actor, needsProxy, vocalTimerName, animProperties)
     Osi.DetachFromPartyGroup(actor)
 
     TryRemoveSpell(actor, "StartSexContainer")
-    TryRemoveSpell(actor, "SexOptions")
     TryRemoveSpell(actor, "Change_Genitals")
     TryRemoveSpell(actor, "BG3SXOptions")
     RemoveSexPositionSpells(actor) -- Just in case
