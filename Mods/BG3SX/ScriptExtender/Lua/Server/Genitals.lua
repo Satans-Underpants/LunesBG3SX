@@ -157,7 +157,7 @@ local function getVanillaGenitals(TYPE, default)
     local tableToSearch = (TYPE == "PENIS" and PENIS) or (TYPE == "VULVA" and VULVA)
 
     if not tableToSearch then
-        -- print("Invalid type specified. Please use 'PENIS', 'VULVA'.")
+           print("Invalid type specified. Please use 'PENIS', 'VULVA'.")
         return {}
     end
 
@@ -196,7 +196,6 @@ end
 local function getModGenitals(modName)
     local allGenitals = getAllGenitals()
 	local modGenitals = {}
-	local genitalIndex = 1
     for _, genital in pairs(allGenitals) do -- Rens Aasimar contains a Vulva without a linked VisualResource which might cause problems since it outputs nil
         local visualResource = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").VisualResource
 		local resource = Ext.Resource.Get(visualResource, "Visual") -- Visualbank
@@ -206,8 +205,6 @@ local function getModGenitals(modName)
 				table.insert(modGenitals, genital)
 			end
 		end
-
-		genitalIndex = genitalIndex+1
     end
 
     -- Failsafe for CC
@@ -370,43 +367,6 @@ Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 ----------------------------------------------------------------------------------------------------
 
 
--- Get allowed race based on input race (modded races support)
--- @param originalRace		- actual race of the entity
----return 					- raceOverride in case of unsupported modded race / race
----return           		- bodyshapeOverride in case of modded race / bodyshape
-function getRaceAndBody(originalRace)
-
-	local bodyShapeOverride = false
-	local race = originalRace
-	
-	-- Check for supported modded races
-	for _, allowedRace in ipairs(MODDED_RACES) do
-		if allowedRace.uuid == race then
-
-			print(allowedRace.name, " is a supported race")
-			-- if modded race uses the body of vanilla, choose that
-			if allowedRace.useDefault then
-				race = allowedRace.default
-				print(allowedRace.name, " will use ", allowedRace.defaultName ," presets ")
-			end
-
-			-- choose different bodyshape preset [for now has to be manually configured]
-			if (allowedRace.bs3) or allGenitals.bs4 then
-				bodyShapeOverride = true
-				-- print("Using bodyshape override")
-			end
-
-		else
-			-- print(race, " is not supported using default human genitals")
-			race = "0eb594cb-8820-4be6-a58d-8be7a1a98fba"
-		end
-	end
-
-	return race, bodyShapeOverride
-end
-
-
-
 -- Get all allowed genitals for entity (Ex: all vulva for human)
 -- @param spell		- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 -- @param uuis 	    - uuid of entity that will receive the genital
@@ -442,12 +402,21 @@ local function getPermittedGenitals(uuid)
 	-- failsafe for modded races - assign human race
 	-- TODO - add support for modded genitals for modded races
 
+	if not RACES[race] then
+		print(race, " is not Vanilla and does not have a Vanilla parent, " ..  
+		" these custom races are currently not supported")
+		print("using default human genitals")
+		race = "0eb594cb-8820-4be6-a58d-8be7a1a98fba"
+	end
+
+
+	-- Special Cases
+
+	-- specific Githzerai feature (T3 and T4 are not strong, but normal)
 	local bodyShapeOverride = false
 
-	if not RACES[race] then
-		-- print(race, " is not Vanilla, checking for supported custom races")
-
-		race, bodyShapeOverride = getRaceAndBody(originalRace)
+	if contains(raceTags, "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67") then
+		bodyShapeOverride = true
 	end
 
 	-- Halsin is special boy
@@ -472,6 +441,8 @@ local function getPermittedGenitals(uuid)
 
 	return permittedGenitals
 end
+
+
 
 
 -- Get genitals filteres by used spell (ex: only vulvas, only erections)
@@ -532,7 +503,7 @@ function getNextGenital(spell, uuid)
 	if  not filteredGenitals then
         print("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
         return nil
-		
+
     else
 
 		if genitalChoice.uuid == uuid and genitalChoice.spell == spell then
