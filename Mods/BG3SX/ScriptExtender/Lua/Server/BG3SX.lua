@@ -13,12 +13,18 @@ function OnSessionLoaded()
         end
     end)
 
+
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(actor)
-        AddMainSexSpells(actor)
-        AddGenitalIfHasNone(actor)
+
+        if string.find(actor, "CharacterCreationDummy") == nil then
+            AddMainSexSpells(actor)
+            AddGenitalIfHasNone(actor)
+        end
+        
     end)
 
-    ------------------------------------------------------------------------------------------------------------------------------------------
+
+    -----------------------------------------------------------------------------------------------------------------------------------------
                                                 ---- Animation Functions ----
     ------------------------------------------------------------------------------------------------------------------------------------------
 

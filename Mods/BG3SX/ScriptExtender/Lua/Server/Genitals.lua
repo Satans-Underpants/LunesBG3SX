@@ -528,20 +528,24 @@ function getNextGenital(spell, uuid)
     local permittedGenitals = getPermittedGenitals(uuid)
     local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
 
-    if genitalChoice.uuid == uuid and genitalChoice.spell == spell then
-        -- Increment the index, wrap around if necessary
-        genitalChoice.index = (genitalChoice.index % #filteredGenitals) + 1
-    else
-        genitalChoice = {uuid = uuid, spell = spell, index = 1}
-    end
 
-    if  not filteredGenitals then
+	if  not filteredGenitals then
         print("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
         return nil
+		
     else
+
+		if genitalChoice.uuid == uuid and genitalChoice.spell == spell then
+			-- Increment the index, wrap around if necessary
+			genitalChoice.index = (genitalChoice.index % #filteredGenitals) + 1
+		else
+			genitalChoice = {uuid = uuid, spell = spell, index = 1}
+		end
+
         local selectedGenital = filteredGenitals[genitalChoice.index]
         return selectedGenital
     end
+
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -625,10 +629,9 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
 	
 	if spell == "Auto_Erections" then
 		SetAutoErection(1)
-		-- _P("Automatic Erections activated")
+
 	elseif spell == "Manual_Erections" then
 		SetAutoErection(0)
-		-- _P("Automatic Erections deactivated")
 	end
 end)
 
