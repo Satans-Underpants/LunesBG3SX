@@ -252,19 +252,19 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 	if spell == "zzzEndSex" then
 
 		local target = ""
-		for _, pairs in ipairs(sexPairs) do
-			if pairs.caster == caster then
-				target = pairs.target
-			end
-		end
+        for i, pair in ipairs(sexPairs) do
+            if pair.caster == caster then
+                target = pair.target
+                table.remove(sexPairs, i)
+                break
+            end
+        end
+
 
         if target ~= "" and IsNPC(target) then
-            _P("Is NPC ", target)
             removeGenitals(target)
             redress(target)
             -- Remove Hair if necessary? 
-            sexPairs[caster] = nil
-
         end
 
 	end

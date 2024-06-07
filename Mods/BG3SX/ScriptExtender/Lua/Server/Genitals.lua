@@ -688,13 +688,16 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 		local prevGenCaster = ""
 		local prevGenTarget = ""
 		local target = ""
-		for _, pairs in ipairs(sexPairs) do
-			if pairs.caster == caster then
-				target = pairs.target
-				prevGenCaster = pairs.casterGenital
-				prevGenTarget = pairs.targetGenital
-			end
-		end
+
+        for i, pair in ipairs(sexPairs) do
+            if pair.caster == caster then
+                target = pair.target
+				prevGenCaster = pair.casterGenital
+				prevGenTarget = pair.targetGenital
+                table.remove(sexPairs, i)
+                break
+            end
+        end
 
 
 		if caster and prevGenCaster then
@@ -705,8 +708,6 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 			overrideGenital(prevGenTarget, target)
 		end
 
-
-		sexPairs[caster] = nil
 		
 	end
 end)
