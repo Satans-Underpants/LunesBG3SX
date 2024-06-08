@@ -1,4 +1,4 @@
-Companions = {
+COMPANIONS = {
     Astarion = "5614c25e-0213-479f-864c-e95895adb30f",
     Shadowheart = "2ac51f22-e357-4639-b81d-022d462c8c6a",
     Gale = "7d427a86-81f0-418d-a32a-3b5676c86bfa",
@@ -10,7 +10,7 @@ Companions = {
     Halsin = "1a3d9848-f86e-4f4c-bba5-125ab605c69e"
 }
 
-BodyTypes = {
+BODYSHAPES = {
     HumanFemale = "71180b76-5752-4a97-b71f-911a69197f58",
     HumanMale = "7d73f501-f65e-46af-a13b-2cacf3985d05",
     HumanStrongFemale = "47c0315c-7dc6-4862-b39b-8bf3a10f8b54",
@@ -38,7 +38,7 @@ BodyTypes = {
     HalforcMale = "6dd3db4f-e2db-4097-b82e-12f379f94c2e",
 }
 
-ActorHeights = {
+ACTORHEIGHTS = {
     HumanStrongFemale = "Tall",
     HumanStrongMale = "Tall",
     TieflingStrongMale = "Tall",
@@ -65,26 +65,3 @@ ActorHeights = {
     GnomeFemale = "Short",
     GnomeMale = "Short",
 }
-
-
-function ActorScale_GetBodyType(actor)
-    local actorEntity = Ext.Entity.Get(actor)
-    local equipmentRace = (actorEntity.ServerCharacter.Template.EquipmentRace)
-    for bodyType, bodyID in pairs(BodyTypes) do
-        if bodyID == equipmentRace then
-            return bodyType
-        end
-    end
-    -- _P("[ActorScale.lua] Failed BodyType check on actor: ", actor)
-    return BodyTypes['HumanMale']
-end
-
-function ActorScale_GetHeightClass(actorBody)
-    for body, height in pairs(ActorHeights) do
-        if body == actorBody then
-            return height
-        end
-    end
-    -- _P("[ActorScale.lua] Failed Height check on actor: ", actorBody)
-    return "Med"
-end

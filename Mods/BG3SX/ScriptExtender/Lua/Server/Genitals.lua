@@ -563,7 +563,7 @@ end
 -- Add a genital to a non NPC if they do not have one (only penises)
 -- @param uuid              - uuid of entity that will receive the genital
 function AddGenitalIfHasNone(uuid)
-    if ActorHasPenis(uuid) and not getCurrentGenital(uuid) then
+    if EntityHasPenis(uuid) and not getCurrentGenital(uuid) then
         Osi.AddCustomVisualOverride(uuid, getNextGenital("Vanilla_Flaccid", uuid))
     end
 end
@@ -639,11 +639,11 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
 			local pair = {caster = caster; casterGenital = casterGenital; target = target, targetGenital = targetGenital}
 			table.insert(sexPairs, pair)
 	
-			if ActorHasPenis(caster) then
+			if EntityHasPenis(caster) then
 				Osi.UseSpell(caster, "SimpleErections", caster)		
 			end
 	
-			if ActorHasPenis(target) then
+			if EntityHasPenis(target) then
 				Osi.UseSpell(target, "SimpleErections", target)		
 			end
 	end
@@ -703,7 +703,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 		local masturbator = {caster = caster; casterGenital = casterGenital}
 		table.insert(masturbators, masturbator)
 
-		if ActorHasPenis(caster) then
+		if EntityHasPenis(caster) then
 			Osi.UseSpell(caster, "SimpleErections", caster)	
 		end	
 	end

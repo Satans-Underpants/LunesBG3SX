@@ -1,7 +1,7 @@
 
 local FLAG_COMPANION_IN_CAMP = "161b7223-039d-4ebe-986f-1dcd9a66733f"
 
-local function RemoveSexPositionSpells(actor)
+local function RemoveSexPositionSpells(actor) -- entity
     TryRemoveSpell(actor, "StraightAnimationsContainer")
     TryRemoveSpell(actor, "LesbianAnimationsContainer")
     TryRemoveSpell(actor, "GayAnimationsContainer")
@@ -19,28 +19,7 @@ local function BlockActorMovement(actor)
     Osi.AddBoosts(actor, "ActionResourceBlock(Movement)", "", "")
 end
 
-local ORGASM_SOUNDS = {
-    "Player_Races_Voice_Combat_Recover",
-    "Player_Races_Voice_Combat_Recover_Chance",
-    "Player_Races_Voice_Combat_Recover_Cinematics",
-    "Player_Races_Voice_Gen_Recover",
-    "Player_Races_Voice_Gen_Recover_Cinematics"
-}
-
 BODY_SCALE_DELAY = 2000
-
-local BODY_SCALE_STATUSES = {
-    -- The list of statuses below was copied from OnApplyFunctors data of ALCH_ELIXIR_ENLARGE entry in
-    -- <unpacked game data>/Gustav/Public/Honour/Stats/Generated/Data/Status_BOOST.txt
-    "ENLARGE",
-    "ENLARGE_DUERGAR",
-    "REDUCE",
-    "REDUCE_DUERGAR",
-    "WYR_POTENTDRINK_SIZE_ENLARGE",
-    "WYR_POTENTDRINK_SIZE_REDUCE",
-    "MAG_COMBAT_QUARTERSTAFF_ENLARGE",
-    "MAG_GIANT_SLAYER_LEGENDARY_ENLRAGE"
-}
 
 
 function SexActor_Init(actor, needsProxy, vocalTimerName, animProperties)
@@ -51,7 +30,7 @@ function SexActor_Init(actor, needsProxy, vocalTimerName, animProperties)
         Animation = "",
         SoundTable = {},
         VocalTimerName = vocalTimerName,
-        HasPenis = ActorHasPenis(actor),
+        HasPenis = EntityHasPenis(actor),
         Strip = (animProperties["Strip"] == true and Osi.HasActiveStatus(actor, "BLOCK_STRIPPING") == 0),
         CameraScaleDown = (needsProxy and Osi.IsPartyMember(actor, 0) == 1),
     }

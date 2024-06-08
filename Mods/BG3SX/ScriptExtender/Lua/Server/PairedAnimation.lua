@@ -5,7 +5,7 @@ end
 function StartPairedAnimation(caster, target, animProperties)
     -- Always create a proxy for targets if they are PCs or companions or some temporary party members. 
     -- It fixes the moan sounds for companions and prevents animation reset on these characters' selection in the party.
-    local targetNeedsProxy = (ActorIsPlayable(target) or Osi.IsPartyMember(target, 1) == 1)
+    local targetNeedsProxy = (EntityIsPlayable(target) or Osi.IsPartyMember(target, 1) == 1)
 
     local pairData = {
         Caster = caster,
