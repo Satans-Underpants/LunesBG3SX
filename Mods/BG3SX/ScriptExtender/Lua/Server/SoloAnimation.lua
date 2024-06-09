@@ -11,7 +11,7 @@ function StartSoloAnimation(actor, animProperties)
         AnimationProp = "",
     }
 
-    local actorScaled = SexActor_PurgeBodyScaleStatuses(soloData.ActorData)
+    local actorScaled = Entity:PurgeBodyScaleStatuses(soloData.ActorData)
 
     UpdateSoloAnimationVars(soloData)
 
@@ -30,7 +30,7 @@ function StartSoloAnimation(actor, animProperties)
     Osi.ObjectTimerLaunch(actor, "SoloSexSetup", setupDelay)
 
     -- Add sex control spells to the caster
-    SexActor_InitCasterSexSpells(soloData)
+    Scene:InitSexSpells(soloData)
     SexActor_RegisterCasterSexSpell(soloData, soloData.AnimContainer)
     SexActor_RegisterCasterSexSpell(soloData, "ChangeLocationSolo")
     if soloData.ActorData.CameraScaleDown then
@@ -69,9 +69,9 @@ function SoloAnimationListeners()
 
         if timer == "SoloSexSetup" then
             if soloData.ActorData.Strip then
-                SexActor_Strip(soloData.ActorData)
+                Entity:UnequipAll(soloData.ActorData)
             end
-            soloData.ProxyData = SexActor_CreateProxyMarker(soloData.Actor)
+            soloData.ProxyData = Helper:CreateLocationMarker(soloData.Actor)
             SexActor_SubstituteProxy(soloData.ActorData, soloData.ProxyData)
             Osi.ObjectTimerLaunch(actor, "SoloAnimStart", 200)
             return

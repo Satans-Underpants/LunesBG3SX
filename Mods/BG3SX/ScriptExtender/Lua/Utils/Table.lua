@@ -4,98 +4,57 @@
 --
 ----------------------------------------------------------------------------------------
 
-Table = {}
-Table.__index = Table
-
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
--- ---@param name string
--- ---@param parent node
--- ---@param children list
--- ---@param IDContext string
--- ---@param bullet boolean
--- function Node:new(name, parent, children, IDContext, bullet)
---     local instance = setmetatable({
---         name = name,
---         parent = parent,
---         children = children,
---         IDContext = IDContext,
---         bullet = bullet,
---     }, Node)
---     return instance
--- end
-
-
--- VARIABLES
---------------------------------------------------------------
-
--- key = Table table
--- value = Content content
-local savedTables = {}
-
-
--- GETTERS AND SETTERS
---------------------------------------------------------------
-
---@return savedTables
-function Table:getSavedTables()
-    return savedTables
-end
+Table = {}
+Table.__index = Table
 
 
 -- METHODS
 --------------------------------------------------------------
 
+-- Checks if an item is present in a list.
+---@param list table	- The table to be searched.
+---@param item any		- The item to search for in the table.
+---@return bool 		- Returns true if the item is found, otherwise returns false.
+function Table:Contains(list, item)
+    for i, object in ipairs(list) do
+        if object == item then
+            return true
+        end
+    end
+    return false
+end
 
 
+-- Helper function to convert a list to a set
+---@param list 		- the list to be converted
+---@return 			- set from list
+function Table:ListToSet(list)
+    local set = {}
+    for _, v in ipairs(list) do
+        set[v] = true
+    end
+    return set
+end
 
 
+-- for maps
+function Table:GetKey(map, item)
+    for key, object in pairs(map) do
+        if object == item then
+            return key
+        end
+    end
+    return nil
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---------------------------------------------------------------------------------------
---
---
---                                      USEFUL FUNCTIONS
---                 
---
----------------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------------------
---                                      CONSTANTS
----------------------------------------------------------------------------------------------
-
--- Options for stringifying
-STRINGIFY_OPTIONS = {
-    StringifyInternalTypes = true,
-    IterateUserdata = true,
-    AvoidRecursion = true
-    }
-
---------------------------------------------------------------------------------------------
---                                      METHODS
----------------------------------------------------------------------------------------------
 
 -- Measures the true size of a table, considering both sequential and non-sequential keys
--- @param table table    -       table to count
--- @return int           -       size of the table
-function TableSize(table)
+---@param table table   - Table to count
+---@return      int     - Size of the table
+function Table:TableSize(table)
     local count = 0
         for _ in pairs(table) do
         count = count + 1
@@ -104,27 +63,29 @@ function TableSize(table)
 end
 
 
--- Perform a deep copy of a table - necessary when lifetime expires
---@param    orig table - orignial table
---@return   copy table - copied table
-function DeepCopy(orig)
-local copy = {}
+-- Important METHODS
+--------------------------------------------------------------
 
+-- Perform a deep copy of a table - necessary when lifetime expires
+---@param orig  table - Original table
+---@return      table - Copied table
+function Table:DeepCopy(orig)
+local copy = {}
     success, iterator = pcall(pairs, orig)
     if success == true and (type(orig) == "table" or type(orig) == "userdata") then
 
         for label, content in pairs(orig) do
 
         if content then
-            copy[DeepCopy(tostring(label))] = DeepCopy(content)
+            copy[Table:DeepCopy(tostring(label))] = Table:DeepCopy(content)
         else
-            copy[DeepCopy(label)] = "nil"
+            copy[Table:DeepCopy(label)] = "nil"
         end
 
     end
 
     if copy and (not #copy == 0) then
-        setmetatable(copy, DeepCopy(getmetatable(orig)))
+        setmetatable(copy, Table:DeepCopy(getmetatable(orig)))
     end
 
     else
@@ -137,7 +98,7 @@ end
 -- string.find but not case sensitive
 --@param str1 string       - string 1 to compare
 --@param str2 string       - string 2 to compare
-function CaseInsensitiveSearch(str1, str2)
+function Table:CaseInsensitiveSearch(str1, str2)
     str1 = string.lower(str1)
     str2 = string.lower(str2)
     local result = string.find(str1, str2, 1, true)
@@ -145,18 +106,25 @@ function CaseInsensitiveSearch(str1, str2)
 end
 
 
-
--- TODO: concatenate function (copy from DOLL)
-function Concat(tab1, tab2)
-
+-- Concatenate 2 tables into one
+---@param t1    table               - First Table
+---@param t2    table               - Second Table
+---@return 		concatenatedTable   - Returns both Tables as a single new one
+function Table:ConcatenateTables(t1, t2)
+    local result = {}
+    for i = 1, #t1 do
+        result[#result + 1] = t1[i]
+    end
+    for i = 1, #t2 do
+        result[#result + 1] = t2[i]
+    end
+    return result
 end
 
 
-
-
--- sorts a key, value pair table
-function SortData(data)
-
+-- Sorts a key, value pair table
+---@param data  table - The data table to sort
+function Table:SortData(data)
     if type(data) == "table" or type(data) == "userdata" then
         local array = {}
 

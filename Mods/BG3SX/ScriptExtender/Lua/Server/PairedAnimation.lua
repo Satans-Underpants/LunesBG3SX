@@ -5,7 +5,7 @@ end
 function StartPairedAnimation(caster, target, animProperties)
     -- Always create a proxy for targets if they are PCs or companions or some temporary party members. 
     -- It fixes the moan sounds for companions and prevents animation reset on these characters' selection in the party.
-    local targetNeedsProxy = (EntityIsPlayable(target) or Osi.IsPartyMember(target, 1) == 1)
+    local targetNeedsProxy = (Entity:IsPlayable(target) or Osi.IsPartyMember(target, 1) == 1)
 
     local pairData = {
         Caster = caster,
@@ -17,8 +17,8 @@ function StartPairedAnimation(caster, target, animProperties)
         SwitchPlaces = false,
     }
 
-    local casterScaled = SexActor_PurgeBodyScaleStatuses(pairData.CasterData)
-    local targetScaled = SexActor_PurgeBodyScaleStatuses(pairData.TargetData)
+    local casterScaled = Entity:PurgeBodyScaleStatuses(pairData.CasterData)
+    local targetScaled = Entity:PurgeBodyScaleStatuses(pairData.TargetData)
 
     UpdatePairedAnimationVars(pairData)
 
@@ -51,7 +51,7 @@ function StartPairedAnimation(caster, target, animProperties)
     Osi.ObjectTimerLaunch(caster, "PairedSexSetup", setupDelay)
 
     -- Add sex control spells to the caster
-    SexActor_InitCasterSexSpells(pairData)
+    Scene:InitSexSpells(pairData)
     SexActor_RegisterCasterSexSpell(pairData, pairData.AnimContainer)
     if pairData.CasterData.HasPenis == pairData.TargetData.HasPenis then
         SexActor_RegisterCasterSexSpell(pairData, "zzSwitchPlaces")
@@ -96,7 +96,7 @@ function PairedAnimationListeners()
             function TryStripPairedActor(actorData)
                 if actorData.Strip then
                     Osi.ApplyStatus(actorData.Actor, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
-                    SexActor_Strip(actorData)
+                    Entity:UnequipAll(actorData)
                 end
             end
 
@@ -106,7 +106,7 @@ function PairedAnimationListeners()
         end
 
         if timer == "PairedSexSetup" then
-            pairData.ProxyData = SexActor_CreateProxyMarker(pairData.Target)
+            pairData.ProxyData = Helper:CreateLocationMarker(pairData.Target)
             SexActor_SubstituteProxy(pairData.CasterData, pairData.ProxyData)
             SexActor_SubstituteProxy(pairData.TargetData, pairData.ProxyData)
             Osi.ObjectTimerLaunch(pairData.Caster, "PairedSexAnimStart", 400)

@@ -4,9 +4,7 @@
 -- 
 ----------------------------------------------------------------------------------------------------
 
-
 local UserSettings = {}
-
 UserSettings.__index = UserSettings
 
 
@@ -20,7 +18,6 @@ local allVariables = {
     ["autoErection"] = 1
 }
 
-Ext.Osiris.RegisterListener("CharacterCreationFinished", 1, "after", function()  end)   
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -34,16 +31,17 @@ local function getVariables()
     return allVariables
 end
 
+
 -- Toggle Auto Erection during Sex
 -- @param bool   - On or Off
-function SetAutoErection(bool)
+function UserSettings:SetAutoErection(bool)
     allVariables["autoErection"] = bool
 end
 
 
 -- Get Auto Erection choice
 -- @retun        - bool user choice
-function GetAutoErection()
+function UserSettings:GetAutoErection()
     return allVariables["autoErection"]
 end
 
@@ -90,7 +88,7 @@ end
 
 -- Create new SaveFile with default values
 local function instantiateDefaultSettings()
-    SetAutoErection(1)
+    Genitals:SetAutoErection(1)
 end
 
 

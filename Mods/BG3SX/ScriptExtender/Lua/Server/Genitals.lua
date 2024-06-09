@@ -4,19 +4,18 @@
 -- 
 ----------------------------------------------------------------------------------------------------
 
+-- CONSTRUCTOR
+--------------------------------------------------------------
+
+
+Genitals = {}
+Genitals.__index = Genitals
 
 -- Saved genitals for better performance
 local allGenitals = {}
 local setVanillaVulvas = {}
 local setVanillaPenises = {}
 local setFunErections = {}
-local additionalGenitals = {}
-
-----------------------------------------------------------------------------------------------------
--- 
--- 									Getters and Setters
--- 
-----------------------------------------------------------------------------------------------------
 
 -- Setters
 local function setAllGenitals(genitals)
@@ -62,75 +61,6 @@ end
 
 
 
-----------------------------------------------------------------------------------------------------
--- 
--- 									Shorthands and Helpers
--- 
-----------------------------------------------------------------------------------------------------
-
-
--- TODO: Move to Utils 
-
---- Checks if an item is present in a list.
--- @param list table	- The table to be searched.
--- @param item any		- The item to search for in the table.
--- @return bool 		- Returns true if the item is found, otherwise returns false.
-local function contains(list, item)
-    for i, object in ipairs(list) do
-        if object == item then
-            return true
-        end
-    end
-    return false
-end
-
-
--- Checks if the substring 'sub' is present within the string 'str'.
--- @param str string 	-  The string to search within.
--- @param sub string 	- The substring to look for.
--- @return bool			- Returns true if 'sub' is found within 'str', otherwise returns false.
-local function stringContains(str, sub)
-    -- Make the comparison case-insensitive
-    str = str:lower()
-    sub = sub:lower()
-    return (string.find(str, sub, 1, true) ~= nil)
-end
-
--- Helper function to convert a list to a set
--- @param list 		- the list to be converted
--- @return 			- set from list
-local function listToSet(list)
-    local set = {}
-    for _, v in ipairs(list) do
-        set[v] = true
-    end
-    return set
-end
-
---- Retrieves the value of a specified property from an object or returns a default value if the property doesn't exist.
--- @param obj           The object from which to retrieve the property value.
--- @param propertyName  The name of the property to retrieve.
--- @param defaultValue  The default value to return if the property is not found.
--- @return              The value of the property if found; otherwise, the default value.
-function GetPropertyOrDefault(obj, propertyName, defaultValue)
-    local success, value = pcall(function() return obj[propertyName] end)
-    if success then
-        return value or defaultValue
-    else
-        return defaultValue
-    end
-end
-
-
--- for maps
-local function getKey(map, item)
-    for key, object in pairs(map) do
-        if object == item then
-            return key
-        end
-    end
-    return nil
-end
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 									XML Handling
@@ -199,9 +129,9 @@ local function getModGenitals(modName)
     for _, genital in pairs(allGenitals) do -- Rens Aasimar contains a Vulva without a linked VisualResource which might cause problems since it outputs nil
         local visualResource = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual").VisualResource
 		local resource = Ext.Resource.Get(visualResource, "Visual") -- Visualbank
-	    local sourceFile = GetPropertyOrDefault(resource, "SourceFile", nil)
+	    local sourceFile = Helper:GetPropertyOrDefault(resource, "SourceFile", nil)
 		if sourceFile then 
-			if stringContains(sourceFile, modName) then
+			if Helper:StringContains(sourceFile, modName) then
 				table.insert(modGenitals, genital)
 			end
 		end
@@ -222,11 +152,11 @@ end
 function getAdditionalGenitals(allGenitals)
     -- Default genitals that come with BG3SX
     local setVanilla = {
-        listToSet(getVanillaGenitals("VULVA", false)),
-        listToSet(getVanillaGenitals("PENIS", false)),
-        listToSet(getVanillaGenitals("VULVA", true)),
-        listToSet(getVanillaGenitals("PENIS", true)),
-        listToSet(getFunErections())
+        Helper:ListToSet(getVanillaGenitals("VULVA", false)),
+        Helper:ListToSet(getVanillaGenitals("PENIS", false)),
+        Helper:ListToSet(getVanillaGenitals("VULVA", true)),
+        Helper:ListToSet(getVanillaGenitals("PENIS", true)),
+        Helper:ListToSet(getFunErections())
     }
 
     local additionalGenitals = {}
@@ -267,7 +197,7 @@ end
 
 -- 	if modName then
 --         for _, race in pairs(RACES) do
--- 			if stringContains(modName, race) then
+-- 			if Helper:StringContains(modName, race) then
 --                 print("Error: Mod name matches a race name, which suggests improper directory structure.")
 -- 				print("Error: Spell will be added to \"Other Genitals\"")
 --                 return "Other_Genitals"
@@ -304,7 +234,7 @@ end
 -- TODO - this would make FunErections a requirement - can we add it directly to the mod? 
 -- Then refractor the code, instead of SimpleErections we might scan for BG3SX instead
 -- Adds base spells to Change Genitals - Vanilla Vula, Vanilla Flaccid, Erections
-function InitializeChangeGenitals()
+function Genitals:InitializeChangeGenitals()
 
 	local baseSpells = {"Vanilla_Vulva","Vanilla_Flaccid","SimpleErections", "Other_Genitals"}
 
@@ -323,14 +253,14 @@ end
 -- TODO - the rest of this code can be repursposed for when we switch to UI implementation
 
 -- Add Genital containers - Vanilla & MrFunSize are always added
-function OnSessionLoaded()
+function Genitals:Initialize()
 
 
     -- Purge all Containers (this solves a lot of issues)
     purgeObjectSpells()
 
 	-- Initialize Genitals that are always added
-	InitializeChangeGenitals()
+	Genitals:InitializeChangeGenitals()
 
 	-- Default gentials that come with BG3SX
 
@@ -358,8 +288,6 @@ function OnSessionLoaded()
 	container:Sync()
 end
 
-Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
-
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 									Genitals
@@ -379,7 +307,7 @@ local function getPermittedGenitals(uuid)
 	local allGenitals = getAllGenitals()
 
 	-- Get the properties for the character
-	local E = GetPropertyOrDefault(Ext.Entity.Get(uuid),"CharacterCreationStats", nil)
+	local E = Helper:GetPropertyOrDefault(Ext.Entity.Get(uuid),"CharacterCreationStats", nil)
 	local bt =  Ext.Entity.Get(uuid).BodyType.BodyType
 	local bs = 0
 
@@ -394,7 +322,7 @@ local function getPermittedGenitals(uuid)
 	local race
 	for _, tag in pairs(raceTags) do
 		if RACETAGS[tag] then
-			race = getKey(RACES, RACETAGS[tag])
+			race = Helper:GetKey(RACES, RACETAGS[tag])
 			break
 		end
 	end
@@ -415,7 +343,7 @@ local function getPermittedGenitals(uuid)
 	-- specific Githzerai feature (T3 and T4 are not strong, but normal)
 	local bodyShapeOverride = false
 
-	if contains(raceTags, "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67") then
+	if Helper:Contains(raceTags, "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67") then
 		bodyShapeOverride = true
 	end
 
@@ -475,7 +403,7 @@ local function getFilteredGenitals(spell, listOfGenitals)
 
 	-- only keep genitals that are in both filtered (race/body) and Mod
     for _, genital in ipairs(listOfGenitals) do
-        if contains(spellGenitals, genital) then
+        if Helper:Contains(spellGenitals, genital) then
             table.insert(filteredGenitals, genital)
         end
     end
@@ -494,7 +422,7 @@ local genitalChoice = {}
 -- @param spell		- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 -- @param uuid 	    - uuid of entity that will receive the genital
 ---return 			- ID of CharacterCreationAppearaceVisual
-function getNextGenital(spell, uuid)
+function Genitals:GetNextGenital(spell, uuid)
 
     local permittedGenitals = getPermittedGenitals(uuid)
     local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
@@ -528,13 +456,13 @@ end
 -- Get the current genital of the entity
 -- @param uuid 	    - uuid of entity that has a genital
 ---return 			- ID of CharacterCreationAppearaceVisual
-function getCurrentGenital(uuid)
+function Genitals:GetCurrentGenital(uuid)
 	local allGenitals = getAllGenitals()
 	local characterVisuals =  Ext.Entity.Get(uuid):GetAllComponents().CharacterCreationAppearance.Visuals
 
 	
 	for _, visual in pairs(characterVisuals)do
-		if contains(allGenitals, visual) then
+		if Helper:Contains(allGenitals, visual) then
 		return visual
 		end
 	end
@@ -542,185 +470,33 @@ end
 
 
 -- Override the current genital with the new one
--- @param newGenital	- ID of CharacterCreationAppearaceVisual of type PrivateParts
--- @param uuid 	     	- uuid of entity that will receive the genital
-function overrideGenital(newGenital, uuid)
+---@param newGenital	string	- UUID of CharacterCreationAppearaceVisual of type PrivateParts
+---@param uuid			string	- UUID of entity that will receive the genital
+function Genitals:OverrideGenital(newGenital, uuid)
 	local currentGenital = getCurrentGenital(uuid)
+
 
 	-- Origins don't have genitals - We have to add one before we can remove it
 	-- if currentGenital and not (currentGenital == newGenital) then
 	-- 	-- Note: This is not a typo, It's actually called Ovirride
 	-- 	Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
 	-- end
+
 	if newGenital then
 		if currentGenital then
 			Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
 		end
-		Osi.AddCustomVisualOverride(uuid, newGenital)
+		Ext.Timer.WaitFor(100, function()
+			Osi.AddCustomVisualOverride(uuid, newGenital)
+		end
+		)
 	end
 end
 
 -- Add a genital to a non NPC if they do not have one (only penises)
 -- @param uuid              - uuid of entity that will receive the genital
-function AddGenitalIfHasNone(uuid)
-    if EntityHasPenis(uuid) and not getCurrentGenital(uuid) then
-        Osi.AddCustomVisualOverride(uuid, getNextGenital("Vanilla_Flaccid", uuid))
+function Genitals:AddGenitalIfHasNone(uuid)
+    if Entity:HasPenis(uuid) and not Genitals:GetCurrentGenital(uuid) then
+        Osi.AddCustomVisualOverride(uuid, Genitals:GetNextGenital("Vanilla_Flaccid", uuid))
     end
 end
-
-----------------------------------------------------------------------------------------------------
--- 
--- 									Event Listener
--- 
-----------------------------------------------------------------------------------------------------
-
--- TODO - move to UI 
-
--- Genital changing
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_) 
-
--- If UI is used then use UI listener instead
-
--- Check wether spell is in container Change Genitals
-local containerID = Ext.Stats.Get(spell).SpellContainerID
-
-	if containerID == "Change_Genitals" then
-	-- Transform genitals
-		local newGenital = getNextGenital(spell, caster)
-		overrideGenital(newGenital, caster)
-	end
-end)
-
-
-
--- Settings - move to UI
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_) 
-
-	-- If UI is used then use UI listener instead
-	
-	if spell == "Auto_Erections" then
-		SetAutoErection(1)
-
-	elseif spell == "Manual_Erections" then
-		SetAutoErection(0)
-	end
-end)
-
-----------------------------------------------------------------------------------------------------
--- 
--- 									Automatic Erections Assigning
--- 								  Only MrFunSize supported for now
---
-----------------------------------------------------------------------------------------------------
-
-
--- TODO - timers might be better, but we'll need to implement a way to receive
--- pairData in other classes, -> refractor code 
-
-
--- TODO - instead access pairData
-local sexPairs = {}
-
-
--- Sex
-Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
-
-	local autoErections = GetAutoErection()
-	if (autoErections == 1) and (spell == "AskForSex")  then
-
-	
-			local casterGenital = getCurrentGenital(caster)
-			local targetGenital
-
-			if not IsNPC(target) then
-				targetGenital = getCurrentGenital(target)
-			end
-	
-			local pair = {caster = caster; casterGenital = casterGenital; target = target, targetGenital = targetGenital}
-			table.insert(sexPairs, pair)
-	
-			if EntityHasPenis(caster) then
-				Osi.UseSpell(caster, "SimpleErections", caster)		
-			end
-	
-			if EntityHasPenis(target) then
-				Osi.UseSpell(target, "SimpleErections", target)		
-			end
-	end
-end)
-
-
--- Ending Sex
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _) 
-
-
-	local autoErections = GetAutoErection()
-
-
-	if (autoErections == 1) and (spell == "zzzEndSex") then
-
-		local prevGenCaster = ""
-		local prevGenTarget = ""
-		local target = ""
-
-        for i, pair in ipairs(sexPairs) do
-            if pair.caster == caster then
-                target = pair.target
-				prevGenCaster = pair.casterGenital
-				prevGenTarget = pair.targetGenital
-                table.remove(sexPairs, i)
-                break
-            end
-        end
-
-
-		if caster and prevGenCaster then
-			overrideGenital(prevGenCaster, caster)
-		end
-
-		if target and prevGenTarget then
-			overrideGenital(prevGenTarget, target)
-		end
-
-		
-	end
-end)
-
-
-local masturbators = {}
-
--- Masturbation
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _) 
-
-
-	local autoErections = GetAutoErection()
-
-	if (autoErections == 1) and (spell == "StartMasturbation") then
-
-		-- Save previous genitals
-		local casterGenital = getCurrentGenital(caster)
-
-		local masturbator = {caster = caster; casterGenital = casterGenital}
-		table.insert(masturbators, masturbator)
-
-		if EntityHasPenis(caster) then
-			Osi.UseSpell(caster, "SimpleErections", caster)	
-		end	
-	end
-
-	if (autoErections == 1) and spell =="zzzStopMasturbating" then
-
-		local previousGenital = ""
-		for _, masturbator in ipairs(masturbators) do
-			if masturbator.caster == caster then
-				previousGenital= masturbator.casterGenital
-			end
-		end
-
-		if previousGenital then
-			overrideGenital(previousGenital, caster)
-		end
-
-		masturbators[caster] = nil
-	end
-end)

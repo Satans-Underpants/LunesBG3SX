@@ -52,7 +52,7 @@ RACETAGS = {
 }
 
 --TODO: overhaul modded races support with new race and bodytype system 
-
+-- TODO WHITELIST SPECIFIC CUSTOM RACES TO ALLOW SEX
 -- bt3 / bt4 are bodyshape overrdes - TODO - check if this can be automated
 MODDED_RACES = {
     { uuid = "ca1c9216-a0cf-44e7-811a-2f9081c536ed", name = "GITHZERAI", useDefault = true, defaultName = "GITHYANKI",
