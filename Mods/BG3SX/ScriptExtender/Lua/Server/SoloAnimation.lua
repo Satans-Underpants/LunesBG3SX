@@ -30,13 +30,13 @@ function StartSoloAnimation(actor, animProperties)
     Osi.ObjectTimerLaunch(actor, "SoloSexSetup", setupDelay)
 
     -- Add sex control spells to the caster
-    Scene:InitSexSpells(soloData)
-    SexActor_RegisterCasterSexSpell(soloData, soloData.AnimContainer)
-    SexActor_RegisterCasterSexSpell(soloData, "ChangeLocationSolo")
+    Sex:InitSexSpells(soloData)
+    Sex:RegisterCasterSexSpell(soloData, soloData.AnimContainer)
+    Sex:RegisterCasterSexSpell(soloData, "ChangeLocationSolo")
     if soloData.ActorData.CameraScaleDown then
-        SexActor_RegisterCasterSexSpell(soloData, "CameraHeight")
+        Sex:RegisterCasterSexSpell(soloData, "CameraHeight")
     end
-    SexActor_RegisterCasterSexSpell(soloData, "zzzStopMasturbating")
+    Sex:RegisterCasterSexSpell(soloData, "zzzStopMasturbating")
     AddSoloCasterSexSpell(soloData)
 end
 
@@ -105,7 +105,7 @@ function SoloAnimationListeners()
         ------------------------------------
 
         if timer == "SexVocal" then
-            SexActor_PlayVocal(soloData.ActorData, 1500, 2500)
+            Sex:PlayVocal(soloData.ActorData, 1500, 2500)
             return
         end
     end)
@@ -123,7 +123,7 @@ function SoloAnimationListeners()
         if spell == "zzzStopMasturbating" then
             StopSoloAnimation(soloData)
         else
-            for _, newAnim in ipairs(SexAnimations) do
+            for _, newAnim in ipairs(ANIMATIONDATA) do
                 if newAnim.AnimName == spell then
                     soloData.AnimProperties = newAnim
                     UpdateSoloAnimationVars(soloData)
@@ -173,7 +173,7 @@ function StopSoloAnimation(soloData)
 
     Osi.ObjectTimerLaunch(soloData.Actor, "FinishMasturbating", 200)
     Osi.ObjectTimerLaunch(soloData.Actor, "SoloSexFade.End", 2500)
-    SexActor_StopVocalTimer(soloData.ActorData)
+    Sex:StopVocalTimer(soloData.ActorData)
 end
 
 local PLAYER_SEX_SOUNDS = {
@@ -227,10 +227,10 @@ end
 function MoveSoloSceneToLocation(actor, x, y, z)
     local soloData = AnimationSolos[actor]
     if soloData then
-        SexActor_MoveSceneToLocation(x, y, z, soloData.ActorData, nil, soloData.AnimationProp)
+        Sex:MoveSceneToLocation(x, y, z, soloData.ActorData, nil, soloData.AnimationProp)
     end
 end
 
 function AddSoloCasterSexSpell(soloData)
-    SexActor_AddCasterSexSpell(soloData, soloData.ActorData, "SoloAddCasterSexSpell")
+    Sex:AddSexSpells(soloData, soloData.ActorData, "SoloAddCasterSexSpell")
 end

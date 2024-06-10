@@ -15,9 +15,9 @@ Table.__index = Table
 --------------------------------------------------------------
 
 -- Checks if an item is present in a list.
----@param list table	- The table to be searched.
----@param item any		- The item to search for in the table.
----@return bool 		- Returns true if the item is found, otherwise returns false.
+---@param list  table	- The table to be searched.
+---@param item  any		- The item to search for in the table.
+---@return      bool    - Returns true if the item is found, otherwise returns false.
 function Table:Contains(list, item)
     for i, object in ipairs(list) do
         if object == item then
@@ -29,8 +29,8 @@ end
 
 
 -- Helper function to convert a list to a set
----@param list 		- the list to be converted
----@return 			- set from list
+---@param list  table   - The list to be converted
+---@return 		table	- Set from list
 function Table:ListToSet(list)
     local set = {}
     for _, v in ipairs(list) do
@@ -96,8 +96,8 @@ end
 
 
 -- string.find but not case sensitive
---@param str1 string       - string 1 to compare
---@param str2 string       - string 2 to compare
+---@param str1  string  - String 1 to compare
+---@param str2  string  - String 2 to compare
 function Table:CaseInsensitiveSearch(str1, str2)
     str1 = string.lower(str1)
     str2 = string.lower(str2)

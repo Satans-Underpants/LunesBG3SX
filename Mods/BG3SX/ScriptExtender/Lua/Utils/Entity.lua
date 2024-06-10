@@ -13,9 +13,23 @@ Entity.__index = Entity
 -- Variables
 --------------------------------------------------------------
 
+local availableAnimations = {}
 
 -- METHODS
 --------------------------------------------------------------
+
+-- Sets an entities available custom animations
+---@param uuid      string  - The entity UUID to check
+function Entity:SetAvailableAnimations(uuid, animations)
+    availableAnimations[uuid] = animations
+end
+
+-- Returns an entities available animations
+---@param uuid      string  - The entity UUID to check
+---@return          table   - Returns a saved table of animations
+function Entity:GetAvailableAnimations(uuid)
+    return availableAnimations[uuid]
+end
 
 -- Return Status
 -------------------------------
@@ -191,7 +205,7 @@ end
 ---@example
 -- local helmetIsInvisible = Entity:TryGetEntityValue(entity, "ServerCharacter", "PlayerData", "HelmetOption")
 -- print(helmetIsInvisible) -- Should return either 0 or 1
--- This is all akin to doing Ext.Entity.Get(entity).ServerCharacter.PlayerData.HelmetOption
+-- Its essentially like using Ext.Entity.Get(entity).ServerCharacter.PlayerData.HelmetOption
 function Entity:TryGetEntityValue(uuid, component, field1, field2, field3)
     local entity = Ext.Entity.Get(uuid)
     local v, doStop

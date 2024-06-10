@@ -2,7 +2,7 @@ if not AnimationPairs then
     AnimationPairs = {}
 end
 
-function StartPairedAnimation(caster, target, animProperties)
+function Scene:StartPairedScene(caster, target, animProperties)
     -- Always create a proxy for targets if they are PCs or companions or some temporary party members. 
     -- It fixes the moan sounds for companions and prevents animation reset on these characters' selection in the party.
     local targetNeedsProxy = (Entity:IsPlayable(target) or Osi.IsPartyMember(target, 1) == 1)
@@ -20,7 +20,7 @@ function StartPairedAnimation(caster, target, animProperties)
     local casterScaled = Entity:PurgeBodyScaleStatuses(pairData.CasterData)
     local targetScaled = Entity:PurgeBodyScaleStatuses(pairData.TargetData)
 
-    UpdatePairedAnimationVars(pairData)
+    Sex:UpdateAvailableAnimations(pairData)
 
     AnimationPairs[#AnimationPairs + 1] = pairData
 
@@ -51,16 +51,16 @@ function StartPairedAnimation(caster, target, animProperties)
     Osi.ObjectTimerLaunch(caster, "PairedSexSetup", setupDelay)
 
     -- Add sex control spells to the caster
-    Scene:InitSexSpells(pairData)
-    SexActor_RegisterCasterSexSpell(pairData, pairData.AnimContainer)
+    Sex:InitSexSpells(pairData)
+    Sex:RegisterCasterSexSpell(pairData, pairData.AnimContainer)
     if pairData.CasterData.HasPenis == pairData.TargetData.HasPenis then
-        SexActor_RegisterCasterSexSpell(pairData, "zzSwitchPlaces")
+        Sex:RegisterCasterSexSpell(pairData, "zzSwitchPlaces")
     end
-    SexActor_RegisterCasterSexSpell(pairData, "ChangeLocationPaired")
+    Sex:RegisterCasterSexSpell(pairData, "ChangeLocationPaired")
     if pairData.CasterData.CameraScaleDown then
-        SexActor_RegisterCasterSexSpell(pairData, "CameraHeight")
+        Sex:RegisterCasterSexSpell(pairData, "CameraHeight")
     end
-    SexActor_RegisterCasterSexSpell(pairData, "zzzEndSex")
+    Sex:RegisterCasterSexSpell(pairData, "zzzEndSex")
     AddPairedCasterSexSpell(pairData)
 end
 
@@ -142,12 +142,12 @@ function PairedAnimationListeners()
         ------------------------------------
 
         if timer == "SexVocalCaster" then
-            SexActor_PlayVocal(pairData.CasterData, 1500, 2500)
+            Sex:PlayVocal(pairData.CasterData, 1500, 2500)
             return
         end
 
         if timer == "SexVocalTarget" then
-            SexActor_PlayVocal(pairData.TargetData, 1500, 2500)
+            Sex:PlayVocal(pairData.TargetData, 1500, 2500)
             return
         end
         
@@ -164,13 +164,13 @@ function PairedAnimationListeners()
             StopPairedAnimation(pairData)
         elseif spell == "zzSwitchPlaces" then
             pairData.SwitchPlaces = not pairData.SwitchPlaces
-            UpdatePairedAnimationVars(pairData)
+            Sex:UpdateAvailableAnimations(pairData)
             PlayPairedAnimation(pairData)
         else
-            for _, newAnim in ipairs(SexAnimations) do
+            for _, newAnim in ipairs(ANIMATIONDATA) do
                 if newAnim.AnimName == spell then
                     pairData.AnimProperties = newAnim
-                    UpdatePairedAnimationVars(pairData)
+                    Sex:UpdateAvailableAnimations(pairData)
                     PlayPairedAnimation(pairData)
                     break
                 end
@@ -222,11 +222,11 @@ function StopPairedAnimation(pairData)
     Osi.ObjectTimerLaunch(pairData.Caster, "PairedSexFade.End", 2500)
     Osi.ObjectTimerLaunch(pairData.Target, "PairedSexFade.End", 2500)
 
-    SexActor_StopVocalTimer(pairData.CasterData)
-    SexActor_StopVocalTimer(pairData.TargetData)
+    Sex:StopVocalTimer(pairData.CasterData)
+    Sex:StopVocalTimer(pairData.TargetData)
 end
 
-function UpdatePairedAnimationVars(pairData)
+function Sex:UpdateAvailableAnimations(pairData)
     local topData = pairData.CasterData
     local btmData = pairData.TargetData
 
@@ -292,9 +292,9 @@ function MovePairedSceneToLocation(actor, x, y, z)
     end
     local pairData = AnimationPairs[pairIndex]
 
-    SexActor_MoveSceneToLocation(x, y, z, pairData.CasterData, pairData.TargetData)
+    Sex:MoveSceneToLocation(x, y, z, pairData.CasterData, pairData.TargetData)
 end
 
 function AddPairedCasterSexSpell(pairData)
-    SexActor_AddCasterSexSpell(pairData, pairData.CasterData, "PairedAddCasterSexSpell")
+    Sex:AddSexSpells(pairData, pairData.CasterData, "PairedAddCasterSexSpell")
 end

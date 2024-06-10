@@ -74,7 +74,7 @@ function SexActor_Terminate(actorData)
     Osi.PlaySound(actorData.Actor, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)])
 
     Osi.RemoveBoosts(actorData.Actor, "ActionResourceBlock(Movement)", 0, "", "")
-    SexActor_StopVocalTimer(actorData)
+    Sex:StopVocalTimer(actorData)
 
     if actorData.OldVisualScale then
         local actorEntity = Ext.Entity.Get(actorData.Actor)
@@ -88,7 +88,7 @@ function SexActor_Terminate(actorData)
 
     removeSexPositionSpells(actorData.Actor)
     if Osi.IsPartyMember(actorData.Actor, 0) == 1 then
-        Spells:AddMainSexSpells(actorData.Actor)
+        Sex:AddMainSexSpells(actorData.Actor)
     end
 
     if actorData.IsCompanionInCamp then
@@ -98,7 +98,7 @@ function SexActor_Terminate(actorData)
     Osi.SetDetached(actorData.Actor, 0)
 
     --Fire a timer to notify other mods that a scene has ended
-    SexEvent_EndSexScene(actorData)
+    Sex:EndSexSceneTimer(actorData)
 end
 
 function Entity:PurgeBodyScaleStatuses(actorData)
@@ -202,7 +202,7 @@ function SexActor_SubstituteProxy(actorData, proxyData)
     Osi.ApplyStatus(actorData.Proxy, "SEX_ACTOR", -1)
 end
 
-function BG3SX:ChangeCameraHeight(actor)
+function Sex:ChangeCameraHeight(actor)
     local actorEntity = Ext.Entity.Get(actor)
     local currentActorScale = Entity:TryGetEntityValue(actorEntity, "GameObjectVisual", "Scale", nil, nil)
     if currentActorScale == 0.5 then
@@ -243,7 +243,7 @@ function SexActor_FinalizeSetup(actorData, proxyData)
 end
 
 function SexActor_StartAnimation(actorData, animProperties)
-    SexActor_StopVocalTimer(actorData)
+    Sex:StopVocalTimer(actorData)
 
     local animActor = actorData.Proxy or actorData.Actor
     if animProperties["Loop"] == true then
@@ -255,7 +255,7 @@ function SexActor_StartAnimation(actorData, animProperties)
     end
 
     if animProperties["Sound"] == true and #actorData.SoundTable >= 1 then
-        SexActor_StartVocalTimer(actorData, 600)
+        Sex:StartVocalTimer(actorData, 600)
     end
     
     --Update the Persistent Variable on the actor so that other mods can use this
@@ -263,37 +263,44 @@ function SexActor_StartAnimation(actorData, animProperties)
     actorEntity.Vars.ActorData = actorData
 
     --Fire a timer to notify other mods that an Animation has started or changed 
-    SexEvent_SexAnimationStart(actorData)
+    Sex:SexAnimationStartTimer(actorData)
 end
 
-function SexActor_StartVocalTimer(actorData, time)
+function Sex:StartVocalTimer(actorData, time)
     Osi.ObjectTimerLaunch(actorData.Actor, actorData.VocalTimerName, time)
 end
 
-function SexActor_StopVocalTimer(actorData)
+function Sex:StopVocalTimer(actorData)
     Osi.ObjectTimerCancel(actorData.Actor, actorData.VocalTimerName)
 end
 
-function SexActor_PlayVocal(actorData, minRepeatTime, maxRepeatTime)
+function Sex:PlayVocal(actorData, minRepeatTime, maxRepeatTime)
     if #actorData.SoundTable >= 1 then
         local soundActor = actorData.Proxy or actorData.Actor
         Osi.PlaySound(soundActor, actorData.SoundTable[math.random(1, #actorData.SoundTable)])
-        SexActor_StartVocalTimer(actorData, math.random(minRepeatTime, maxRepeatTime))
+        Sex:StartVocalTimer(actorData, math.random(minRepeatTime, maxRepeatTime))
     end
 end
 
-function SexEvent_SexAnimationStart(actorData)
+function Sex:SexAnimationStartTimer(actorData)
     Osi.ObjectTimerLaunch(actorData.Actor, "Event_SexAnimationStart", 1)
 end
 
-function SexEvent_EndSexScene(actorData)
+function Sex:EndSexSceneTimer(actorData)
     Osi.ObjectTimerLaunch(actorData.Actor, "Event_EndSexScene", 1)
 end
 
 -- TODO: Move the function to a separate SexScene.lua or something
-function SexActor_MoveSceneToLocation(newX, newY, newZ, casterData, targetData, scenePropObject)
+function Sex:MoveSceneToLocation(entity, location)
     -- Do nothing if the new location is too far from the caster's start position,
     -- so players would not abuse it to get to some "no go" places.
+    for _, scene in pairs(SAVEDSCENES) do
+        for _, entry in pairs(scene.entities) do
+            if entity == entry then
+                
+            end
+        end
+    end
     local dx = newX - casterData.StartX
     local dy = newY - casterData.StartY
     local dz = newZ - casterData.StartZ
@@ -325,18 +332,18 @@ function SexActor_MoveSceneToLocation(newX, newY, newZ, casterData, targetData, 
 end
 
 -- TODO: Move the function to a separate SexScene.lua or something
-function Scene:InitSexSpells(sceneData)
+function Sex:InitSexSpells(sceneData)
     sceneData.CasterSexSpells = {}
     sceneData.NextCasterSexSpell = 1
 end
 
 -- TODO: Move the function to a separate SexScene.lua or something
-function SexActor_RegisterCasterSexSpell(sceneData, spellName)
+function Sex:RegisterCasterSexSpell(sceneData, spellName)
     sceneData.CasterSexSpells[#sceneData.CasterSexSpells + 1] = spellName
 end
 
 -- TODO: Move the function to a separate SexScene.lua or something
-function SexActor_AddCasterSexSpell(sceneData, casterData, timerName)
+function Sex:AddSexSpells(sceneData, casterData, timerName)
     if sceneData.NextCasterSexSpell <= #sceneData.CasterSexSpells then
         Osi.AddSpell(casterData.Actor, sceneData.CasterSexSpells[sceneData.NextCasterSexSpell])
 

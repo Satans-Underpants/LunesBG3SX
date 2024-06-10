@@ -12,7 +12,7 @@
 
 -- key = Scene scene
 -- value = Content content
-local savedScenes = {}
+SAVEDSCENES = {}
 
 
 -- Listeners
@@ -30,7 +30,7 @@ function OnSessionLoaded()
     Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_, _)
         local party = Osi.DB_PartyMembers:Get(nil)
         for i = #party, 1, -1 do
-            Spells:AddMainSexSpells(party[i][1])
+            Sex:AddMainSexSpells(party[i][1])
             Genitals:AddGenitalIfHasNone(party[i][1])
         end
     end)
@@ -39,7 +39,7 @@ function OnSessionLoaded()
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(actor)
     
         if string.find(actor, "CharacterCreationDummy") == nil then
-            Spells:AddMainSexSpells(actor)
+            Sex:AddMainSexSpells(actor)
             Genitals:AddGenitalIfHasNone(actor)
         end
         
@@ -54,7 +54,7 @@ function OnSessionLoaded()
         -- Checks to see if the name of the spell used matches any of the Spells in the AnimationPacks
         for _, table in ipairs(StartSexSpells) do
             if table.AnimName == spell then
-                Spells:SexSpellUsed(caster, target, table)
+                Sex:SexSpellUsed(caster, target, table) -- Checks which spell it was and initiates a scene
                 break
             end
         end
@@ -71,16 +71,16 @@ function OnSessionLoaded()
 
     Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(caster, x, y, z, spell, spellType, spellElement, storyActionID)
         if spell == "ChangeLocationPaired" then
-            MovePairedSceneToLocation(caster, x,y,z)
+            Sex:MoveSceneToLocation(caster, x,y,z)
         end
         if spell == "ChangeLocationSolo" then
-            MoveSoloSceneToLocation(caster, x,y,z)
+            Sex:MoveSceneToLocation(caster, x,y,z)
         end
     end)
 
     Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
         if spell == "CameraHeight" then
-            BG3SX:ChangeCameraHeight(caster)
+            Sex:ChangeCameraHeight(caster)
         end
     end)
 
@@ -223,8 +223,7 @@ Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 
 Ext.Events.GameStateChanged:Subscribe(function(e)
     if e.FromState == "Running" and e.ToState == "Save" then
-        TerminateAllSoloAnimations()
-        TerminateAllPairedAnimations()
+        Sex:TerminateAllScenes()
     end
 end)
 

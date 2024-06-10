@@ -37,7 +37,7 @@ StartSexSpells = {
     },
 }
 
-SexAnimations = {
+ANIMATIONDATA = {
     {
         AnimName = "Grinding",
         AnimLength = 3600,

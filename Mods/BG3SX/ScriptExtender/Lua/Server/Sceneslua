@@ -30,9 +30,30 @@ function Scene:new(entities)
     }, Scene)
 
     initialize(self) -- Automatically calls the Itinitialize function on creation
+    table.insert(SAVEDSCENES, self)
 
     return instance
 end
+
+local pairData = {
+    Caster = caster,
+    CasterData = SexActor_Init(caster, true, "SexVocalCaster", animProperties),
+    Target = target,
+    TargetData = SexActor_Init(target, true, "SexVocalTarget", animProperties), -- targetNeedsProxy
+    AnimationActorHeights = "",
+    AnimProperties = animProperties,
+    SwitchPlaces = false,
+}
+
+local soloData = {
+    Actor = actor,
+    ActorData = SexActor_Init(actor, true, "SexVocal", animProperties),
+    AnimProperties = animProperties,
+    AnimContainer = "",
+    AnimationProp = "",
+}
+
+
 
 -- CONSTANTS
 --------------------------------------------------------------
@@ -125,7 +146,7 @@ function Scene:Destroy()
 
             -- Unlocks movement
             Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
-            SexActor_StopVocalTimer(actorData)
+            Sex:StopVocalTimer(actorData)
 
             -- Sets scale back to a saved value during scene initialization
             local startScale
@@ -146,7 +167,7 @@ function Scene:Destroy()
 
             -- Readds the regular sex spells (StartSex, Options, ChangeGenitals)
             if Osi.IsPartyMember(entity) == 1 then
-                Spells:AddMainSexSpells(entity)
+                Sex:AddMainSexSpells(entity)
             end
 
             -- Re-Sets the flag for companions in camp so they can move back to their tents
@@ -160,7 +181,7 @@ function Scene:Destroy()
             end
         end
     --Fire a timer to notify other mods that a scene has ended
-    -- SexEvent_EndSexScene(actorData)
+    -- Sex:EndSexSceneTimer(actorData)
     -- Ext.Net.PostMessageToServer("BG3SX_EndSexScene","")
 end
 
@@ -268,38 +289,6 @@ end
 
 
 
--- TODO: Move the function to a separate SexScene.lua or something
-function Scene:InitSexSpells()
-    -- give the entities the correct spells based on amount of entities in the scene
-    -- currently only masturbation and 2 people is supported
-    -- also add spells that everyone gets like end sex
-
-    -- self.entities for loop to give each entity spells
-
-    sceneData.CasterSexSpells = {}
-    sceneData.NextCasterSexSpell = 1
-end
-
--- TODO: Move the function to a separate SexScene.lua or something
-function SexActor_RegisterCasterSexSpell(sceneData, spellName)
-    sceneData.CasterSexSpells[#sceneData.CasterSexSpells + 1] = spellName
-end
-
--- TODO: Move the function to a separate SexScene.lua or something
-function SexActor_AddCasterSexSpell(sceneData, casterData, timerName)
-    if sceneData.NextCasterSexSpell <= #sceneData.CasterSexSpells then
-        Osi.AddSpell(casterData.Actor, sceneData.CasterSexSpells[sceneData.NextCasterSexSpell])
-
-        sceneData.NextCasterSexSpell = sceneData.NextCasterSexSpell + 1
-        if sceneData.NextCasterSexSpell <= #sceneData.CasterSexSpells then
-            -- A pause greater than 0.1 sec between two (Try)AddSpell calls in needed 
-            -- for the spells to appear in the hotbar exactly in the order they are added.
-            Osi.ObjectTimerLaunch(casterData.Actor, timerName, 200)
-        end
-    end
-end
-
-
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -313,22 +302,21 @@ end
 -- Initializes the actor
 ---@param self instance - "self" to actually be applied to the Actor:new instance
 initialize = function(self)
+    
+    -- Iterate over every entity thats involved in a new scene
     for _, entity in pairs(self.entities) do
 
-        setStartLocation(entity)
-        removeSexPositionSpells(entity)
+        setStartLocation(entity) -- Save start location of each entity to later teleport them back
+        removeSexPositionSpells(entity) -- Removes any random position spells they still might have
 
         -- Create a new actor for each entity involved in the scene
-        table.insert(self.actors, actorActor:new(entity))
+        table.insert(self.actors, Actor:new(entity))
 
         -- Scale entity for camera
         -- TODO - rewrite TryGetEntityValue to take a table instead of multiple strings
         local startScale = Entity:TryGetEntityValue(entity, "GameObjectVisual", "Scale", nil, nil)
         table.insert(self.entityScales, {entity = entity, scale = startScale})
         Entity:Scale(self.entity, 0.5)
-
-        
-        
 
         -- Make entity untargetable and detached from party to stop party members from following
         Osi.SetDetached(entity, 1)
@@ -338,7 +326,6 @@ initialize = function(self)
         Osi.RemoveSpell(entity, "StartSexContainer")
         Osi.RemoveSpell(entity, "Change_Genitals")
         Osi.RemoveSpell(entity, "BG3SXOptions")
-        removeSexPositionSpells(entity) -- Just in case
 
         -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening
         if Osi.GetFlag(FLAG_COMPANION_IN_CAMP, entity) == 1 then
@@ -346,11 +333,75 @@ initialize = function(self)
         end
 
 
-
+        -- Save the entities body heightclass for animation matching
         local entityBodyShape = Entity:GetBodyShape(entity)
         local entityHeightClass = Entity:GetHeightClass(entity)
         
         -- probably need a delay for setup
         Sex:StartSex(entityHeightClass)
     end
+end
+
+
+
+function Scene:StartPairedScene(caster, target, animProperties)
+    -- Always create a proxy for targets if they are PCs or companions or some temporary party members. 
+    -- It fixes the moan sounds for companions and prevents animation reset on these characters' selection in the party.
+    local targetNeedsProxy = (Entity:IsPlayable(target) or Osi.IsPartyMember(target, 1) == 1)
+
+    local pairData = {
+        Caster = caster,
+        CasterData = SexActor_Init(caster, true, "SexVocalCaster", animProperties),
+        Target = target,
+        TargetData = SexActor_Init(target, true, "SexVocalTarget", animProperties), -- targetNeedsProxy
+        AnimationActorHeights = "",
+        AnimProperties = animProperties,
+        SwitchPlaces = false,
+    }
+
+    local casterScaled = Entity:PurgeBodyScaleStatuses(pairData.CasterData)
+    local targetScaled = Entity:PurgeBodyScaleStatuses(pairData.TargetData)
+
+    Sex:UpdateAvailableAnimations(pairData)
+
+    AnimationPairs[#AnimationPairs + 1] = pairData
+
+    local setupDelay = 400
+
+    if pairData.CasterData.Strip or pairData.TargetData.Strip then
+        if pairData.CasterData.Strip then
+            Osi.ApplyStatus(caster, "DARK_JUSTICIAR_VFX", 1)
+        end
+        if pairData.TargetData.Strip then
+            Osi.ApplyStatus(target, "DARK_JUSTICIAR_VFX", 1)
+        end
+        Osi.ObjectTimerLaunch(caster, "PairedSexStrip", 600)
+        setupDelay = 2000
+    end
+
+    if (casterScaled or targetScaled) and setupDelay < BODY_SCALE_DELAY then
+        setupDelay = BODY_SCALE_DELAY -- Give some time for the bodies to go back to their normal scale
+    end
+    
+    if pairData.AnimProperties["Fade"] == true then
+        Osi.ObjectTimerLaunch(caster, "PairedSexFade.Start", setupDelay - 200)
+        Osi.ObjectTimerLaunch(caster, "PairedSexFade.End", setupDelay + 800)
+        Osi.ObjectTimerLaunch(target, "PairedSexFade.Start", setupDelay - 200)
+        Osi.ObjectTimerLaunch(target, "PairedSexFade.End", setupDelay + 800)
+    end
+
+    Osi.ObjectTimerLaunch(caster, "PairedSexSetup", setupDelay)
+
+    -- Add sex control spells to the caster
+    Sex:InitSexSpells(pairData)
+    Sex:RegisterCasterSexSpell(pairData, pairData.AnimContainer)
+    if pairData.CasterData.HasPenis == pairData.TargetData.HasPenis then
+        Sex:RegisterCasterSexSpell(pairData, "zzSwitchPlaces")
+    end
+    Sex:RegisterCasterSexSpell(pairData, "ChangeLocationPaired")
+    if pairData.CasterData.CameraScaleDown then
+        Sex:RegisterCasterSexSpell(pairData, "CameraHeight")
+    end
+    Sex:RegisterCasterSexSpell(pairData, "zzzEndSex")
+    AddPairedCasterSexSpell(pairData)
 end
