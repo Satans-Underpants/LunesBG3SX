@@ -4,20 +4,6 @@
 --
 ----------------------------------------------------------------------------------------
 
--- CONSTRUCTOR
---------------------------------------------------------------
-
--- Scene Handling
---------------------------------------------------------------
-
--- key = Scene scene
--- value = Content content
-SAVEDSCENES = {}
-
-
--- Listeners
---------------------------------------------------------------
-
 -- Runs every time a save is loaded --
 function OnSessionLoaded()
     ------------------------------------------------------------------------------------------------------------------------------------------
@@ -34,15 +20,12 @@ function OnSessionLoaded()
             Genitals:AddGenitalIfHasNone(party[i][1])
         end
     end)
-    
-    
+
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(actor)
-    
         if string.find(actor, "CharacterCreationDummy") == nil then
             Sex:AddMainSexSpells(actor)
             Genitals:AddGenitalIfHasNone(actor)
         end
-        
     end)
 
     -----------------------------------------------------------------------------------------------------------------------------------------
@@ -59,22 +42,20 @@ function OnSessionLoaded()
             end
         end
     end)
-    
+
     Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(_, target, spell, _, _, _)
         if spell == "BlockStripping" then
-            Osi.RemoveStatus(target, "BLOCK_STRIPPING")  
-            Osi.ApplyStatus(target, "BLOCK_STRIPPING", -1)  
+            Osi.RemoveStatus(target, "BLOCK_STRIPPING")
+            Osi.ApplyStatus(target, "BLOCK_STRIPPING", -1)
         elseif spell == "RemoveStrippingBlock" then
-            Osi.RemoveStatus(target, "BLOCK_STRIPPING")  
+            Osi.RemoveStatus(target, "BLOCK_STRIPPING")
         end
     end)
 
     Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(caster, x, y, z, spell, spellType, spellElement, storyActionID)
-        if spell == "ChangeLocationPaired" then
-            Sex:MoveSceneToLocation(caster, x,y,z)
-        end
-        if spell == "ChangeLocationSolo" then
-            Sex:MoveSceneToLocation(caster, x,y,z)
+        local position = {x,y,z}
+        if spell == "ChangeSceneLocation" then
+            Scene:MoveSceneToLocation(caster, position)
         end
     end)
 
@@ -99,7 +80,7 @@ function OnSessionLoaded()
             Genitals:OverrideGenital(newGenital, caster)
         end
     end)
-        
+
     -- Genital Settings
     Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
         -- If UI is used then use UI listener instead
@@ -130,22 +111,22 @@ function OnSessionLoaded()
             if not IsNPC(target) then
                 targetGenital = Genitals:GetCurrentGenital(target)
             end
-    
+
             local pair = {caster = caster; casterGenital = casterGenital; target = target, targetGenital = targetGenital}
             table.insert(sexPairs, pair)
-    
+
             if Entity:HasPenis(caster) then
-                Osi.UseSpell(caster, "SimpleErections", caster)		
+                Osi.UseSpell(caster, "SimpleErections", caster)
             end
-    
+
             if Entity:HasPenis(target) then
-                Osi.UseSpell(target, "SimpleErections", target)		
+                Osi.UseSpell(target, "SimpleErections", target)
             end
         end
     end)
 
     -- Auto-Erections handling on Sex ending
-    Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _) 
+    Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
 
 
         local autoErections = GetAutoErection()
@@ -176,14 +157,14 @@ function OnSessionLoaded()
                 Genitals:OverrideGenital(prevGenTarget, target)
             end
 
-            
+
         end
     end)
 
     -- Auto-Erection handling for masturbating
     -- TODO - access Scene/PairsData instead
     local masturbators = {}
-    Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _) 
+    Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
 
 
         local autoErections = GetAutoErection()
@@ -197,8 +178,8 @@ function OnSessionLoaded()
             table.insert(masturbators, masturbator)
 
             if Entity:HasPenis(caster) then
-                Osi.UseSpell(caster, "SimpleErections", caster)	
-            end	
+                Osi.UseSpell(caster, "SimpleErections", caster)
+            end
         end
 
         if (autoErections == 1) and spell =="zzzStopMasturbating" then
@@ -218,34 +199,14 @@ function OnSessionLoaded()
         end
     end)
 end
+                -- ^ End of OnSessionLoaded function ^ --
 
+-- Subscribes to the SessionLoaded event and executes our OnSessionLoaded function
 Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 
+-- Makes it so the game never saves with an active scene to avoid errors/crashes
 Ext.Events.GameStateChanged:Subscribe(function(e)
     if e.FromState == "Running" and e.ToState == "Save" then
         Sex:TerminateAllScenes()
     end
 end)
-
-
-
-
-
-
-
--- On Gameplay Start initialize
--- Adding Spells
--- Adding Genitals
-
-
--- On Spell used
--- Start Scene (create proxies etc)
-
--- if spell "sexspell" then
---     Scene:new({caster, target})
--- end
-
--- Give Erections
--- Initialize NPC stripping/Give them genitals/erections
-
--- End Sex etc.

@@ -4,6 +4,7 @@
 --
 ----------------------------------------------------------------------------------------
 
+SAVEDSCENES = {}
 Scene = {}
 Scene.__index = Scene
 local initialize
@@ -35,25 +36,6 @@ function Scene:new(entities)
     return instance
 end
 
-local pairData = {
-    Caster = caster,
-    CasterData = SexActor_Init(caster, true, "SexVocalCaster", animProperties),
-    Target = target,
-    TargetData = SexActor_Init(target, true, "SexVocalTarget", animProperties), -- targetNeedsProxy
-    AnimationActorHeights = "",
-    AnimProperties = animProperties,
-    SwitchPlaces = false,
-}
-
-local soloData = {
-    Actor = actor,
-    ActorData = SexActor_Init(actor, true, "SexVocal", animProperties),
-    AnimProperties = animProperties,
-    AnimContainer = "",
-    AnimationProp = "",
-}
-
-
 
 -- CONSTANTS
 --------------------------------------------------------------
@@ -64,6 +46,13 @@ local BODY_SCALE_DELAY = 2000
 
 -- METHODS
 --------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- 
+-- 							TODO - SWITCH ALL OSI TIMERS WITH EXT TIMERS
+-- 
+----------------------------------------------------------------------------------------------------
 
 
 
@@ -84,8 +73,8 @@ local function removeSexPositionSpells(entity) -- entity
     Osi.RemoveSpell(entity, "zzzEndSex")
     Osi.RemoveSpell(entity, "zzzStopMasturbating")
     Osi.RemoveSpell(entity, "CameraHeight")
-    Osi.RemoveSpell(entity, "ChangeLocationPaired")
-    Osi.RemoveSpell(entity, "ChangeLocationSolo")
+    Osi.RemoveSpell(entity, "ChangeSceneLocation")
+    Osi.RemoveSpell(entity, "ChangeSceneLocation")
     Osi.RemoveSpell(entity, "zzSwitchPlaces")
 end
 
@@ -97,16 +86,17 @@ end
 
 
 -- Sets an entities start location before possibly getting teleported during a scene for an easy reset on Scene:Destroy() with getStartLocation
----@param entity string - uuid of the entity 
+---@param entity string - UUID of the entity 
 local function setStartLocation(entity)
     local position = Osi.GetPosition(entity)
     local rotation = Osi.GetRotation(entity)
     table.insert(startLocations, {entity = entity, position = position, rotation = rotation})
 end
 
-
 -- Gets an entities start location for a location reset of an entity on Scene:Destroy()
----@param entity string - uuid of the entity 
+---@param entity    string  - UUID of the entity 
+---@return          table   - The entities position
+---@return          table   - The entities rotation
 local function getStartLocation(entity)
     for _, entry in startLocations do
         if entry.entity == entity then
@@ -116,79 +106,12 @@ local function getStartLocation(entity)
 end
 
 
-----------------------------------------------------------------------------------------------------
--- 
--- 										Scene Stop
--- 
-----------------------------------------------------------------------------------------------------
-
--- Destroys a scene instance
-function Scene:Destroy()
-    if self.actors then
-        -- Iterates over every saved actor for a given scene instance
-        for _, actor in pairs(self.actors) do
-
-            -- Teleport actors parent (the main entity) back to its startLocation
-            local startLocation = getStartLocation(actor.parent)
-            Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.y)
-            Osi.SetVisible(actor, 1)
-
-            -- Delete actor
-            actor:Destroy()
-        end
-    end
-
-    if self.entities then
-        -- Iterates over every saved entity for a given scene instance
-        for _, entity in pairs(self.entities) do
-            -- Play recovery sound as substitue for orgasms
-            Osi.PlaySound(entity, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)])
-
-            -- Unlocks movement
-            Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
-            Sex:StopVocalTimer(actorData)
-
-            -- Sets scale back to a saved value during scene initialization
-            local startScale
-            for _, entry in self.entityScale do
-                if entity == entry.entity then
-                    startScale = entry.scale
-                end
-            end
-            Entity:Scale(entity, startScale)
-
-            -- Requips everything which may have been removed during scene initialization
-            if Entity:HasEquipment(actorData) then
-                Entity:Redress(actorData)
-            end
-
-            -- Removes any spells given
-            removeSexPositionSpells(entity)
-
-            -- Readds the regular sex spells (StartSex, Options, ChangeGenitals)
-            if Osi.IsPartyMember(entity) == 1 then
-                Sex:AddMainSexSpells(entity)
-            end
-
-            -- Re-Sets the flag for companions in camp so they can move back to their tents
-            if Ext.Entity.Get(entity).CampPresence ~= nil then
-                Osi.SetFlag(FLAG_COMPANION_IN_CAMP, entity)
-            end
-
-            -- Re-attach entity to make it selectable again
-            Osi.SetDetached(entity, 0)
-
-            end
-        end
-    --Fire a timer to notify other mods that a scene has ended
-    -- Sex:EndSexSceneTimer(actorData)
-    -- Ext.Net.PostMessageToServer("BG3SX_EndSexScene","")
-end
-
-
 
 -- copies the components of a parent entity to the proxy
 -- the proxy is the entity used in sex
+--- func desc
+---@param actorData any
+---@param proxyData any
 function Scene:SubstituteProxy(actorData, proxyData)
     actorData.StartX, actorData.StartY, actorData.StartZ = Osi.GetPosition(actorData.Actor)
 
@@ -258,7 +181,11 @@ end
 
 
 
-function SexActor_FinalizeSetup(actorData, proxyData)
+
+--- func desc
+---@param actorData any
+---@param proxyData any
+function Scene:FinalizeSetup(actorData, proxyData)
     if actorData.Proxy then
         local actorEntity = Ext.Entity.Get(actorData.Actor)
         local proxyEntity = Ext.Entity.Get(actorData.Proxy)
@@ -284,6 +211,78 @@ function SexActor_FinalizeSetup(actorData, proxyData)
     end
 
     BlockActorMovement(actorData.Actor)
+end
+
+
+
+
+----------------------------------------------------------------------------------------------------
+-- 
+-- 										Scene Stop
+-- 
+----------------------------------------------------------------------------------------------------
+
+-- Destroys a scene instance
+function Scene:Destroy()
+    if self.actors then
+        -- Iterates over every saved actor for a given scene instance
+        for _, actor in pairs(self.actors) do
+
+            -- Teleport actors parent (the main entity) back to its startLocation
+            local startLocation = getStartLocation(actor.parent)
+            Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.z)
+            Osi.SetVisible(actor, 1)
+
+            -- Delete actor
+            actor:Destroy()
+        end
+    end
+
+    if self.entities then
+        -- Iterates over every saved entity for a given scene instance
+        for _, entity in pairs(self.entities) do
+            -- Play recovery sound as substitue for orgasms
+            Osi.PlaySound(entity, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)])
+
+            -- Unlocks movement
+            Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
+            Sex:StopVocals(actorData)
+
+            -- Sets scale back to a saved value during scene initialization
+            local startScale
+            for _, entry in self.entityScale do
+                if entity == entry.entity then
+                    startScale = entry.scale
+                end
+            end
+            Entity:Scale(entity, startScale)
+
+            -- Requips everything which may have been removed during scene initialization
+            if Entity:HasEquipment(actorData) then
+                Entity:Redress(actorData)
+            end
+
+            -- Removes any spells given
+            removeSexPositionSpells(entity)
+
+            -- Readds the regular sex spells (StartSex, Options, ChangeGenitals)
+            if Osi.IsPartyMember(entity) == 1 then
+                Sex:AddMainSexSpells(entity)
+            end
+
+            -- Re-Sets the flag for companions in camp so they can move back to their tents
+            if Ext.Entity.Get(entity).CampPresence ~= nil then
+                Osi.SetFlag(FLAG_COMPANION_IN_CAMP, entity)
+            end
+
+            -- Re-attach entity to make it selectable again
+            Osi.SetDetached(entity, 0)
+
+            end
+        end
+    --Fire a timer to notify other mods that a scene has ended
+    -- Sex:EndSexSceneTimer(actorData)
+    -- Ext.Net.PostMessageToServer("BG3SX_EndSexScene","")
 end
 
 
@@ -323,7 +322,7 @@ initialize = function(self)
         Osi.DetachFromPartyGroup(entity)
 
         -- Remove the main spells
-        Osi.RemoveSpell(entity, "StartSexContainer")
+        Osi.RemoveSpell(entity, "BG3SXContainer")
         Osi.RemoveSpell(entity, "Change_Genitals")
         Osi.RemoveSpell(entity, "BG3SXOptions")
 
@@ -344,6 +343,16 @@ end
 
 
 
+
+
+----------------------------------------------------------------------------------------------------
+-- 
+-- 								          Sex
+-- 
+----------------------------------------------------------------------------------------------------
+
+--- func desc
+---@param : any
 function Scene:StartPairedScene(caster, target, animProperties)
     -- Always create a proxy for targets if they are PCs or companions or some temporary party members. 
     -- It fixes the moan sounds for companions and prevents animation reset on these characters' selection in the party.
@@ -398,10 +407,57 @@ function Scene:StartPairedScene(caster, target, animProperties)
     if pairData.CasterData.HasPenis == pairData.TargetData.HasPenis then
         Sex:RegisterCasterSexSpell(pairData, "zzSwitchPlaces")
     end
-    Sex:RegisterCasterSexSpell(pairData, "ChangeLocationPaired")
+    Sex:RegisterCasterSexSpell(pairData, "ChangeSceneLocation")
     if pairData.CasterData.CameraScaleDown then
         Sex:RegisterCasterSexSpell(pairData, "CameraHeight")
     end
     Sex:RegisterCasterSexSpell(pairData, "zzzEndSex")
     AddPairedCasterSexSpell(pairData)
+end
+
+
+
+--- func desc
+---@param entity any
+---@param location any
+function Scene:MoveSceneToLocation(entity, location)
+    for _, scene in pairs(SAVEDSCENES) do
+        for _, entry in pairs(scene.entities) do
+            if entity == entry then
+                
+            end
+        end
+    end
+
+    local dx = newX - casterData.StartX
+    local dy = newY - casterData.StartY
+    local dz = newZ - casterData.StartZ
+    
+    -- Do nothing if the new location is too far from the caster's start position,
+    -- so players would not abuse it to get to some "no go" places.
+    if math.sqrt(dx * dx + dy * dy + dz * dz) >= 4 then
+        return
+    end
+
+    -- Move stuff
+    function TryMoveObject(obj)
+        if obj then
+            Osi.TeleportToPosition(obj, newX, newY, newZ)
+        end
+    end
+
+    Osi.SetDetached(casterData.Actor, 1)
+
+    TryMoveObject(casterData.Proxy)
+    if targetData then
+        TryMoveObject(targetData.Proxy)
+    end
+    TryMoveObject(scenePropObject)
+    TryMoveObject(casterData.Actor)
+    if targetData then
+        TryMoveObject(targetData.Actor)
+        Osi.CharacterMoveToPosition(targetData.Actor, newX, newY, newZ, "", "")
+    end
+
+    Osi.SetDetached(casterData.Actor, 0)
 end

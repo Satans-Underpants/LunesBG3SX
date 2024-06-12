@@ -21,6 +21,7 @@ local initialize
 ---@param visual            string  - UUID of a visual template
 ---@param equipment         table   - Table of UUIDs of equipments
 ---@param armour            table   - Table of UUIDs of armour (Vanity Slots)
+---@param mynewvalue        integer - My new value
 function Actor:new(parent)
     local instance       = setmetatable({
         parent           = parent,
@@ -33,7 +34,7 @@ function Actor:new(parent)
         entity           = Osi.CreateAtObject(Osi.GetTemplate(parent), self.position, 1, 0, "", 1),
         visual           = "",
         equipment        = {},
-        armour           = {}
+        armour           = {},
     }, Actor)
 
     initialize(self) -- Automatically calls the Itinitialize function on creation

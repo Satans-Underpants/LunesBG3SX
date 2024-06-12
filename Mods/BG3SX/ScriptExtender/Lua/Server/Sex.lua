@@ -13,72 +13,12 @@ Sex.__index = Sex
 -- METHODS
 --------------------------------------------------------------
 
--- Changes the camera height by scaling an entity
--- Camera will zoom out on the entity which will look nicer on scene start
----@param entity string - uuid of the entity 
-function Sex:ChangeCameraHeight(entity)
-    if entity.GameObjectVisual.Scale == 0.5 then
-        entity.GameObjectVisual.Scale = 0.05
-        entity:Replicate("GameObjectVisual")
-    elseif entity.GameObjectVisual.Scale ~= 0.5 then
-        entity.GameObjectVisual.Scale = 0.5
-        entity:Replicate("GameObjectVisual")
-    end
-end
-
---- Handles the SexSpellUsed Event by starting new animations based on spell used
----@param caster            string  - The casters UUID
----@param target            string  - The targets UUID
----@param animProperties    table   - The animation properites to use
-function Sex:SexSpellUsed(caster, target, animProperties)
-
-    if animProperties then
-        Scene:new({caster, target})
-
-        -- dunno if we should move animProperties over to the scene as well, to store which animation is supposed to be placed right now
-    end
-
-
-
-
-    -- vvvvvvvvvvv old stuff vvvvvvvvvvv
-
-    -- if animProperties then
-    --     if animProperties["Type"] == "Solo" then
-    --         StartSoloAnimation(caster, animProperties)
-    --     elseif animProperties["Type"] == "Paired" then
-    --         Scene:StartPairedScene(caster, target, animProperties)
-    --     end
-    -- end
-end
-
---- Adds the main sex spells to an entity
----@param entity    string - The entities UUID
-function Sex:AddMainSexSpells(entity)
-    -- Add "Start Sex" and "Sex Options" spells only if entity is PLAYABLE or HUMANOID or FIEND, and is not a child (KID)
-    if (Entity:IsPlayable(entity)
-        or Osi.IsTagged(entity, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1 
-        or Osi.IsTagged(entity, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
-        and Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
-    then
-        Osi.AddSpell(entity, "StartSexContainer")
-        Osi.AddSpell(entity, "Change_Genitals")
-        Osi.AddSpell(entity, "BG3SXOptions")
-        -- we switched to another spell
-        Osi.RemoveSpell(entity, "SexOptions")
-    end
-end
-
-
 ----------------------------------------------------------------------------------------------------
 -- 
--- 										   Sex
+-- 										   Sex Setup
 -- 
 ----------------------------------------------------------------------------------------------------
 
-
--- Spells
---------------------------------------------------------------
 
 -- Adds Sex spells for the caster
 -- TODO: Add functionality to also add them to targets
@@ -102,6 +42,7 @@ local function addSexSpells(entity)
         end
     -- end
 end
+
 
 -- Give the entities the correct spells based on amount of entities in the scene
 -- Currently only masturbation and 2 people is supported
@@ -127,8 +68,49 @@ function Sex:RegisterCasterSexSpell(sceneData, spellName)
     sceneData.CasterSexSpells[#sceneData.CasterSexSpells + 1] = spellName
 end
 
+--- Adds the main sex spells to an entity
+---@param entity    string  - The entities UUID
+function Sex:AddMainSexSpells(entity)
+    -- Add "Start Sex" and "Sex Options" spells only if entity is PLAYABLE or HUMANOID or FIEND, and is not a child (KID)
+    if (Entity:IsPlayable(entity)
+        or Osi.IsTagged(entity, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1 
+        or Osi.IsTagged(entity, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
+        and Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
+    then
+        Osi.AddSpell(entity, "BG3SXContainer")
+        Osi.AddSpell(entity, "Change_Genitals")
+        Osi.AddSpell(entity, "BG3SXOptions")
+    end
+end
 
+--- Handles the SexSpellUsed Event by starting new animations based on spell used
+---@param caster            string  - The casters UUID
+---@param target            string  - The targets UUID
+---@param animProperties    table   - The animation properites to use
+function Sex:SexSpellUsed(caster, target, animProperties)
+    if animProperties then
+        Scene:new({caster, target})
+    end
+end
 
+----------------------------------------------------------------------------------------------------
+-- 
+-- 										   Sex Options
+-- 
+----------------------------------------------------------------------------------------------------
+
+-- Changes the camera height by scaling an entity
+-- Camera will zoom out on the entity which will look nicer on scene start
+---@param entity string - uuid of the entity 
+function Sex:ChangeCameraHeight(entity)
+    if entity.GameObjectVisual.Scale == 0.5 then
+        entity.GameObjectVisual.Scale = 0.05
+        entity:Replicate("GameObjectVisual")
+    elseif entity.GameObjectVisual.Scale ~= 0.5 then
+        entity.GameObjectVisual.Scale = 0.5
+        entity:Replicate("GameObjectVisual")
+    end
+end
 
 
 -- Animations
@@ -138,7 +120,9 @@ end
 ---@param actorData any
 ---@param animProperties any
 function Sex:StartAnimation(actorData, animProperties)
-    Sex:StopVocalTimer(actorData)
+    Sex:StopVocals(actorData)
+
+    -- Animation:PlayAnimation(actor, animData) - make if statement below into this new function
 
     local animActor = actorData.Proxy or actorData.Actor
     if animProperties["Loop"] == true then
@@ -150,7 +134,7 @@ function Sex:StartAnimation(actorData, animProperties)
     end
 
     if animProperties["Sound"] == true and #actorData.SoundTable >= 1 then
-        Sex:StartVocalTimer(actorData, 600)
+        Sex:PlayVocal(actorData, MOANING_SOUNDS, 600, 600)
     end
 
     -- --Update the Persistent Variable on the actor so that other mods can use this
@@ -166,30 +150,23 @@ end
 --------------------------------------------------------------
 
 --
----@param actorData any
----@param time any
-function Sex:StartVocalTimer(actorData, time)
-    Osi.ObjectTimerLaunch(actorData.Actor, actorData.VocalTimerName, time)
+---@param actor any
+function Sex:StopVocals(actor)
+    Sound:PlaySound(actor)
 end
 
 
 --
----@param actorData any
-function Sex:StopVocalTimer(actorData)
-    Osi.ObjectTimerCancel(actorData.Actor, actorData.VocalTimerName)
-end
-
-
---
----@param actorData any
----@param minRepeatTime any
----@param maxRepeatTime any
-function Sex:PlayVocal(actorData, minRepeatTime, maxRepeatTime)
-    if #actorData.SoundTable >= 1 then
-        local soundActor = actorData.Proxy or actorData.Actor
-        Osi.PlaySound(soundActor, actorData.SoundTable[math.random(1, #actorData.SoundTable)])
-        Sex:StartVocalTimer(actorData, math.random(minRepeatTime, maxRepeatTime))
+---@param actor         Actor   - The actor to play them on
+---@param soundTable    table   - A soundtable to pick sounds from
+---@param minRepeatTime Time    - Min. time until repeat
+---@param maxRepeatTime Time    - Max. time until repeat
+function Sex:PlayVocal(actor, soundTable, minRepeatTime, maxRepeatTime)
+    if sound then
+        Sound.PlaySound(actor, soundTable[math.random(1, #soundTable)]) -- Plays a random entry of moaning sounds on an actor
     end
+    -- Will be an infinite loop because it calls itself, need another way to handle it
+    -- Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), Sound:PlaySound(actor, minRepeatTime, maxRepeatTime))
 end
 
 
@@ -206,6 +183,7 @@ function Sex:EndSexSceneTimer(actorData)
     Osi.ObjectTimerLaunch(actorData.Actor, "Event_EndSexScene", 1)
 end
 
+
 -- Enables or Disables getting the Role Switch spell for the lesbian/gay/straight UpdateAvailableAnimations check
 local roleSwitch = 0
 function Sex:EnableRoleSwitch()
@@ -215,50 +193,6 @@ end
 function Sex:DisableRoleSwitch()
     roleSwitch = 0
     return roleSwitch
-end
-
-
---
-function Sex:MoveSceneToLocation(entity, location)
-    for _, scene in pairs(SAVEDSCENES) do
-        for _, entry in pairs(scene.entities) do
-            if entity == entry then
-                
-            end
-        end
-    end
-
-    local dx = newX - casterData.StartX
-    local dy = newY - casterData.StartY
-    local dz = newZ - casterData.StartZ
-    
-    -- Do nothing if the new location is too far from the caster's start position,
-    -- so players would not abuse it to get to some "no go" places.
-    if math.sqrt(dx * dx + dy * dy + dz * dz) >= 4 then
-        return
-    end
-
-    -- Move stuff
-    function TryMoveObject(obj)
-        if obj then
-            Osi.TeleportToPosition(obj, newX, newY, newZ)
-        end
-    end
-
-    Osi.SetDetached(casterData.Actor, 1)
-
-    TryMoveObject(casterData.Proxy)
-    if targetData then
-        TryMoveObject(targetData.Proxy)
-    end
-    TryMoveObject(scenePropObject)
-    TryMoveObject(casterData.Actor)
-    if targetData then
-        TryMoveObject(targetData.Actor)
-        Osi.CharacterMoveToPosition(targetData.Actor, newX, newY, newZ, "", "")
-    end
-
-    Osi.SetDetached(casterData.Actor, 0)
 end
 
 

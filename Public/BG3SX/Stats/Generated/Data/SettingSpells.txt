@@ -38,8 +38,6 @@ data "CastSound" "Instrument_Bard_Silence"
 data "TargetSound" "Instrument_Bard_Silence"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 
-
-
 new entry "BlockStripping"
 type "SpellData"
 data "SpellType" "Target"

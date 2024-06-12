@@ -1,80 +1,47 @@
+----------------------------------------------------------------------------------------------------
+-- 
+-- 							Mashup of SoloAnimation and PairedAnimation
+-- 
+----------------------------------------------------------------------------------------------------
 
 
+-- CONSTRUCTOR
+--------------------------------------------------------------
 
+function Animation:new()
+    local instance      = setmetatable({
+    }, Animation)
 
-if not AnimationPairs then
-    AnimationPairs = {}
+    return instance
 end
 
---- func desc
----@param caster any
----@param target any
----@param animProperties any
-function Scene:StartPairedScene(caster, target, animProperties)
-    -- Always create a proxy for targets if they are PCs or companions or some temporary party members. 
-    -- It fixes the moan sounds for companions and prevents animation reset on these characters' selection in the party.
-    local targetNeedsProxy = (Entity:IsPlayable(target) or Osi.IsPartyMember(target, 1) == 1)
 
-    local pairData = {
-        Caster = caster,
-        CasterData = SexActor_Init(caster, true, "SexVocalCaster", animProperties),
-        Target = target,
-        TargetData = SexActor_Init(target, true, "SexVocalTarget", animProperties), -- targetNeedsProxy
-        AnimationActorHeights = "",
-        AnimProperties = animProperties,
-        SwitchPlaces = false,
-    }
 
-    local casterScaled = Entity:PurgeBodyScaleStatuses(pairData.CasterData)
-    local targetScaled = Entity:PurgeBodyScaleStatuses(pairData.TargetData)
+----------------------------------------------------------------------------------------------------
+-- 
+-- 							                Start 
+-- 
+----------------------------------------------------------------------------------------------------
 
-    Sex:UpdateAvailableAnimations(pairData)
 
-    AnimationPairs[#AnimationPairs + 1] = pairData
+----------------------------------------------------------------------------------------------------
+-- 
+-- 							                 End
+-- 
+----------------------------------------------------------------------------------------------------
 
-    local setupDelay = 400
 
-    if pairData.CasterData.Strip or pairData.TargetData.Strip then
-        if pairData.CasterData.Strip then
-            Osi.ApplyStatus(caster, "DARK_JUSTICIAR_VFX", 1)
-        end
-        if pairData.TargetData.Strip then
-            Osi.ApplyStatus(target, "DARK_JUSTICIAR_VFX", 1)
-        end
-        Osi.ObjectTimerLaunch(caster, "PairedSexStrip", 600)
-        setupDelay = 2000
+-- TODO - might be done in Scene.lua
+
+function createAnimationPairsIfNoneExist()
+    if not AnimationPairs then
+        AnimationPairs = {}
     end
-
-    if (casterScaled or targetScaled) and setupDelay < BODY_SCALE_DELAY then
-        setupDelay = BODY_SCALE_DELAY -- Give some time for the bodies to go back to their normal scale
-    end
-    
-    if pairData.AnimProperties["Fade"] == true then
-        Osi.ObjectTimerLaunch(caster, "PairedSexFade.Start", setupDelay - 200)
-        Osi.ObjectTimerLaunch(caster, "PairedSexFade.End", setupDelay + 800)
-        Osi.ObjectTimerLaunch(target, "PairedSexFade.Start", setupDelay - 200)
-        Osi.ObjectTimerLaunch(target, "PairedSexFade.End", setupDelay + 800)
-    end
-
-    Osi.ObjectTimerLaunch(caster, "PairedSexSetup", setupDelay)
-
-    -- Add sex control spells to the caster
-    Sex:InitSexSpells(pairData)
-    Sex:RegisterCasterSexSpell(pairData, pairData.AnimContainer)
-    if pairData.CasterData.HasPenis == pairData.TargetData.HasPenis then
-        Sex:RegisterCasterSexSpell(pairData, "zzSwitchPlaces")
-    end
-    Sex:RegisterCasterSexSpell(pairData, "ChangeSceneLocation")
-    if pairData.CasterData.CameraScaleDown then
-        Sex:RegisterCasterSexSpell(pairData, "CameraHeight")
-    end
-    Sex:RegisterCasterSexSpell(pairData, "zzzEndSex")
-    AddPairedCasterSexSpell(pairData)
 end
 
 
 --- func desc
-function PairedAnimationListeners()
+function AnimationListeners()
 
     Ext.Osiris.RegisterListener("ObjectTimerFinished", 2, "after", function(actor, timer)
 

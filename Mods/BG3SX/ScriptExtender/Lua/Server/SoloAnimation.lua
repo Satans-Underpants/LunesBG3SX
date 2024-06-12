@@ -2,6 +2,9 @@ if not AnimationSolos then
     AnimationSolos = {}
 end
 
+--- func desc
+---@param actor any
+---@param animProperties any
 function StartSoloAnimation(actor, animProperties) 
     local soloData = {
         Actor = actor,
@@ -32,7 +35,7 @@ function StartSoloAnimation(actor, animProperties)
     -- Add sex control spells to the caster
     Sex:InitSexSpells(soloData)
     Sex:RegisterCasterSexSpell(soloData, soloData.AnimContainer)
-    Sex:RegisterCasterSexSpell(soloData, "ChangeLocationSolo")
+    Sex:RegisterCasterSexSpell(soloData, "ChangeSceneLocation")
     if soloData.ActorData.CameraScaleDown then
         Sex:RegisterCasterSexSpell(soloData, "CameraHeight")
     end
@@ -40,6 +43,8 @@ function StartSoloAnimation(actor, animProperties)
     AddSoloCasterSexSpell(soloData)
 end
 
+
+--- func desc
 function SoloAnimationListeners()
 
     Ext.Osiris.RegisterListener("ObjectTimerFinished", 2, "after", function(actor, timer)
@@ -105,7 +110,7 @@ function SoloAnimationListeners()
         ------------------------------------
 
         if timer == "SexVocal" then
-            Sex:PlayVocal(soloData.ActorData, 1500, 2500)
+            Sound:PlaySound(soloData.ActorData, 1500, 2500)
             return
         end
     end)
@@ -137,6 +142,9 @@ end
 
 Ext.Events.SessionLoaded:Subscribe(SoloAnimationListeners)
 
+
+--- func desc
+---@param soloData any
 function PlaySoloAnimation(soloData)
     RemoveAnimationProp(soloData)
     SexActor_StartAnimation(soloData.ActorData, soloData.AnimProperties)
@@ -151,12 +159,17 @@ function PlaySoloAnimation(soloData)
     end
 end
 
+
+--- func desc
+---@param soloData any
 function TerminateSoloAnimation(soloData)
     SexActor_Terminate(soloData.ActorData)
     RemoveAnimationProp(soloData)
     SexActor_TerminateProxyMarker(soloData.ProxyData)
 end
 
+
+--- func desc
 function TerminateAllSoloAnimations()
     for _, soloData in pairs(AnimationSolos) do
         TerminateSoloAnimation(soloData)
@@ -164,6 +177,9 @@ function TerminateAllSoloAnimations()
     AnimationSolos = {}
 end
 
+
+--- func desc
+---@param soloData any
 function StopSoloAnimation(soloData)
     Osi.ObjectTimerCancel(soloData.Actor, "SoloAnimTimeout")
     Osi.ObjectTimerCancel(soloData.Actor, "SoloSexFade.Start")
@@ -173,9 +189,11 @@ function StopSoloAnimation(soloData)
 
     Osi.ObjectTimerLaunch(soloData.Actor, "FinishMasturbating", 200)
     Osi.ObjectTimerLaunch(soloData.Actor, "SoloSexFade.End", 2500)
-    Sex:StopVocalTimer(soloData.ActorData)
+    Sex:StopVocals(soloData.ActorData)
 end
 
+
+-- DATA TABLE
 local PLAYER_SEX_SOUNDS = {
     "BreathLongExhaleOpen_PlayerCharacter_Cine",
     "BreathLongInhaleOpen_PlayerCharacter_Cine",
@@ -184,6 +202,9 @@ local PLAYER_SEX_SOUNDS = {
     "LoveMoanOpen_PlayerCharacter_Cine"
 }
 
+
+--- func desc
+---@param ( any
 function UpdateSoloAnimationVars(soloData)
     local gender
 
@@ -210,6 +231,9 @@ function UpdateSoloAnimationVars(soloData)
     actorEnt.Vars.SoloData = soloData
 end
 
+
+--- func desc
+---@param soloData any
 function CreateAnimationProp(soloData)
     local prop = soloData.AnimProperties["AnimObject"]
     if prop then
@@ -217,6 +241,9 @@ function CreateAnimationProp(soloData)
     end
 end
 
+
+--- func desc
+---@param soloData any
 function RemoveAnimationProp(soloData)
     if soloData.AnimationProp then
         Osi.RequestDelete(soloData.AnimationProp)
@@ -224,13 +251,22 @@ function RemoveAnimationProp(soloData)
     end
 end
 
+
+--- func desc
+---@param actor any
+---@param x any
+---@param y any
+---@param z any
 function MoveSoloSceneToLocation(actor, x, y, z)
     local soloData = AnimationSolos[actor]
     if soloData then
-        Sex:MoveSceneToLocation(x, y, z, soloData.ActorData, nil, soloData.AnimationProp)
+        Scene:MoveSceneToLocation(x, y, z, soloData.ActorData, nil, soloData.AnimationProp)
     end
 end
 
+
+--- func desc
+---@param soloData any
 function AddSoloCasterSexSpell(soloData)
     Sex:AddSexSpells(soloData, soloData.ActorData, "SoloAddCasterSexSpell")
 end
