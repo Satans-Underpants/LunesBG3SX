@@ -151,7 +151,7 @@ function Scene:SubstituteProxy(actorData, proxyData)
     --[[ Osi.Transform(actorData.Proxy, lookTemplate, "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
 
     Osi.SetDetached(actorData.Proxy, 1)
-    BlockActorMovement(actorData.Proxy)
+    disableActorMovement(actorData.Proxy)
  ]]
     local proxyEntity = Ext.Entity.Get(actorData.Proxy)
 
@@ -210,7 +210,7 @@ function Scene:FinalizeSetup(actorData, proxyData)
         Osi.SetVisible(actorData.Actor, 0)
     end
 
-    BlockActorMovement(actorData.Actor)
+    disableActorMovement(actorData.Actor)
 end
 
 
@@ -460,4 +460,41 @@ function Scene:MoveSceneToLocation(entity, location)
     end
 
     Osi.SetDetached(casterData.Actor, 0)
+end
+
+
+
+--- func desc
+---@param actor any
+---@param x any
+---@param y any
+---@param z any
+function MovePairedSceneToLocation(actor, x, y, z)
+    local pairIndex = FindPairIndexByActor(actor)
+    if pairIndex < 1 then
+        return
+    end
+    local pairData = AnimationPairs[pairIndex]
+
+    Scene:MoveSceneToLocation(x, y, z, pairData.CasterData, pairData.TargetData)
+end
+
+
+
+---@param pairData any
+function StopPairedAnimation(pairData)
+    Osi.ObjectTimerCancel(pairData.Caster, "PairedSexFade.Start")
+    Osi.ObjectTimerCancel(pairData.Caster, "PairedSexFade.End")
+    Osi.ObjectTimerCancel(pairData.Target, "PairedSexFade.Start")
+    Osi.ObjectTimerCancel(pairData.Target, "PairedSexFade.End")
+
+    Osi.ScreenFadeTo(pairData.Caster, 0.1, 0.1, "AnimFade")
+    Osi.ScreenFadeTo(pairData.Target, 0.1, 0.1, "AnimFade")
+
+    Osi.ObjectTimerLaunch(pairData.Caster, "FinishSex", 200)
+    Osi.ObjectTimerLaunch(pairData.Caster, "PairedSexFade.End", 2500)
+    Osi.ObjectTimerLaunch(pairData.Target, "PairedSexFade.End", 2500)
+
+    Sex:StopVocals(pairData.CasterData)
+    Sex:StopVocals(pairData.TargetData)
 end

@@ -15,7 +15,7 @@ local function removeSexPositionSpells(actor) -- entity
     Osi.RemoveSpell(actor, "zzSwitchPlaces")
 end
 
-local function BlockActorMovement(actor)
+local function disableActorMovement(actor)
     Osi.AddBoosts(actor, "ActionResourceBlock(Movement)", "", "")
 end
 
@@ -174,7 +174,7 @@ function SexActor_SubstituteProxy(actorData, proxyData)
     Osi.Transform(actorData.Proxy, lookTemplate, "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
 
     Osi.SetDetached(actorData.Proxy, 1)
-    BlockActorMovement(actorData.Proxy)
+    disableActorMovement(actorData.Proxy)
 
     local proxyEntity = Ext.Entity.Get(actorData.Proxy)
 
@@ -239,7 +239,7 @@ function SexActor_FinalizeSetup(actorData, proxyData)
         Osi.SetVisible(actorData.Actor, 0)
     end
 
-    BlockActorMovement(actorData.Actor)
+    disableActorMovement(actorData.Actor)
 end
 
 function SexActor_StartAnimation(actorData, animProperties)

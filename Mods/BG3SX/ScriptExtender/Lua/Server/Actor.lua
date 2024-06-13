@@ -18,10 +18,10 @@ local initialize
 ---@param position          table   - Table of x,y,z coordinates
 ---@param rotation          table   - Table with x,y,z,w 
 ---@param currentAnimation  string  - UUID of animation being player
+---@param uuid              string  - UUID of the actor
 ---@param visual            string  - UUID of a visual template
 ---@param equipment         table   - Table of UUIDs of equipments
 ---@param armour            table   - Table of UUIDs of armour (Vanity Slots)
----@param mynewvalue        integer - My new value
 function Actor:new(parent)
     local instance       = setmetatable({
         parent           = parent,
@@ -31,7 +31,7 @@ function Actor:new(parent)
         positon          = Osi.GetPosition(parent),
         rotation         = Osi.GetRotation(parent),
         currentAnimation = "",
-        entity           = Osi.CreateAtObject(Osi.GetTemplate(parent), self.position, 1, 0, "", 1),
+        uuid             = Osi.CreateAtObject(Osi.GetTemplate(parent), self.position, 1, 0, "", 1),
         visual           = "",
         equipment        = {},
         armour           = {},
@@ -45,79 +45,53 @@ end
 -- METHODS
 --------------------------------------------------------------
 
--- Blocks the actors movement
-local function blockActorMovement(entity)
-    Osi.AddBoosts(entity, "ActionResourceBlock(Movement)", "", "")
-end
-
--- Finalizing setup function after a delay in Actor:Setup()
-local function finalizeSetup(self)
-
-    -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
-    if Entity:TryCopyEntityComponent(self.parent, self.entity, "AppearanceOverride") then
-        -- Type is special Appearance Edit Enhanced thing?
-        if self.entity.GameObjectVisual.Type ~= 2 then
-            self.entity.GameObjectVisual.Type = 2
-            self.entity:Replicate("GameObjectVisual")
-        end
-    end
-
-    -- Copy actor's display name to proxy (mostly for Tavs)
-    Entity:TryCopyEntityComponent(self.parent, self.entity, "DisplayName")
-
-    -- Copy and dress actor like the parent entity
-    Actor:CopyEquipmentFromParent(self.parent)
-    if self.equipment then
-        Actor:DressActor()
-    end
-
-    blockActorMovement(self.parent)
-end
 
 
--- MAIN METHODS
+-- META
 --------------------------------------------------------------
-
--- Set ups the actor like  detaching them from the group etc.
-initialize = function(self)
-
-    Osi.Transform(self.entity, Actor:GetLooks(), "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
-    self.visual = self.entity.OriginalTemplate
-    Osi.SetDetached(self.entity, 1)
-    blockActorMovement(self.entity)
-
-    -- Copy Voice component to the proxy because Osi.CreateAtObject does not do this and we want the proxy to play vocals
-    Entity:TryCopyEntityComponent(self.parent, self.entity, "Voice")
-
-    -- Copy MaterialParameterOverride component if present.
-    -- This fixes the white Shadowheart going back to her original black hair as a proxy.
-    Entity:TryCopyEntityComponent(self.parent, self.entity, "MaterialParameterOverride")
-
-    Osi.ApplyStatus(self.entity, "SEX_ACTOR", -1)
-
-    -- Wait for 0.2 seconds for everything to finalize, then call the last step of the finalize function
-    Ext.Timer.WaitFor(200, finalizeSetup(self))
-
-end
 
 
 -- Cleans up the actor
 function Actor:Destroy()
 
     Osi.StopAnimation(self.entity, 1)
-    Osi.TeleportToPosition(self.entity, 0,0,0)
-    Osi.SetOnStage(self.entity, 0) -- to diable AI
+    Osi.TeleportToPosition(self.entity, 0,0,0) -- hide from viewer
+    Osi.SetOnStage(self.entity, 0) -- to disable AI
     Osi.RequestDeleteTemporary(self.entity)
 
-    
 
     -- Then destroy element from Scene.lua saved actors table
     
 end
 
+-- Helpers
+--------------------------------------------------------------
+
+
+
+
+-- Actor Movement
+--------------------------------------------------------------
+
+
+-- Blocks the actors movement
+---@param entity string  - uuid of entity
+local function disableActorMovement(entity)
+    Osi.AddBoosts(entity, "ActionResourceBlock(Movement)", "", "")
+end
+
+-- Unlocks movement
+---@param entity string  - uuid of entity
+local function enableActorMovement(entity)
+    Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
+end
+
+
+-- Visuals
+--------------------------------------------------------------
 
 --- Gets parent entities looks including attachments like Wylls Horns
----@return Visual   - The looks of a parent entity
+---@return lookTemplate string   - uuid - The looks of a parent entity
 function Actor:GetLooks()
     local visTemplate = Entity:TryGetEntityValue(self.parent, "GameObjectVisual", "RootTemplateId", nil, nil)
     local origTemplate = Entity:TryGetEntityValue(self.parent, "OriginalTemplate", "OriginalTemplate", nil, nil)
@@ -174,7 +148,7 @@ function Actor:CopyEquipmentFromParent()
 end
 
 
---- Dresses an actor based on which equipment/armour (vanity slots) have been saved on it 
+--- Dresses an actor based on which equipment/armour (vanity slots) have been saved on it (BlockStripping)
 function Actor:DressActor()
     Osi.SetArmourSet(self.entity, self.armour)
 
@@ -193,3 +167,58 @@ function Actor:DressActor()
     self.armour = nil
     self.equipment = nil
 end
+
+
+-- MAIN METHODS
+--------------------------------------------------------------
+
+
+-- Finalizing setup function after a delay in Actor:Setup()
+local function finalizeSetup(self)
+
+    -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
+    if Entity:TryCopyEntityComponent(self.parent, self.entity, "AppearanceOverride") then
+        -- Type is special Appearance Edit Enhanced thing?
+        if self.entity.GameObjectVisual.Type ~= 2 then
+            self.entity.GameObjectVisual.Type = 2
+            self.entity:Replicate("GameObjectVisual")
+        end
+    end
+
+    -- Copy actor's display name to proxy (mostly for Tavs)
+    Entity:TryCopyEntityComponent(self.parent, self.entity, "DisplayName")
+
+    -- Copy and dress actor like the parent entity
+    Actor:CopyEquipmentFromParent(self.parent)
+    if self.equipment then
+        Actor:DressActor()
+    end
+
+    disableActorMovement(self.parent)
+end
+
+
+
+-- Set ups the actor like  detaching them from the group etc.
+initialize = function(self)
+
+    Osi.Transform(self.entity, Actor:GetLooks(), "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
+    self.visual = self.entity.OriginalTemplate
+    Osi.SetDetached(self.entity, 1)
+    disableActorMovement(self.entity)
+
+    -- Copy Voice component to the proxy because Osi.CreateAtObject does not do this and we want the proxy to play vocals
+    Entity:TryCopyEntityComponent(self.parent, self.entity, "Voice")
+
+    -- Copy MaterialParameterOverride component if present.
+    -- This fixes the white Shadowheart going back to her original black hair as a proxy.
+    Entity:TryCopyEntityComponent(self.parent, self.entity, "MaterialParameterOverride")
+
+    Osi.ApplyStatus(self.entity, "SEX_ACTOR", -1)
+
+    -- Wait for 0.2 seconds for everything to finalize, then call the last step of the finalize function
+    Ext.Timer.WaitFor(200, finalizeSetup(self))
+
+end
+
+

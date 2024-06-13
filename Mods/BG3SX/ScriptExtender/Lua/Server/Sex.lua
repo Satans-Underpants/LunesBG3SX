@@ -93,6 +93,17 @@ function Sex:SexSpellUsed(caster, target, animProperties)
     end
 end
 
+
+
+
+
+
+--- func desc
+---@param pairData any
+function AddPairedCasterSexSpell(pairData)
+    Sex:AddSexSpells(pairData, pairData.CasterData, "PairedAddCasterSexSpell")
+end
+
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 										   Sex Options
@@ -329,6 +340,57 @@ end
 
 
 
+--- func desc
+---@param pairData any
+function Sex:UpdateAvailableAnimations(pairData)
+    local topData = pairData.CasterData
+    local btmData = pairData.TargetData
+
+    if topData.HasPenis == false and btmData.HasPenis == false then
+        pairData.AnimContainer = "LesbianAnimationsContainer"
+    elseif topData.HasPenis == true and btmData.HasPenis == true then
+        pairData.AnimContainer = "GayAnimationsContainer"
+    else
+        pairData.AnimContainer = "StraightAnimationsContainer"
+    end
+
+    local switchRoles = 0 -- No role switch
+    if topData.HasPenis == btmData.HasPenis and pairData.SwitchPlaces then
+        switchRoles = 1 -- Normal role switch
+    elseif topData.HasPenis == false and btmData.HasPenis then
+        switchRoles = 2 -- Forced switch for FxM pair
+    end
+    if switchRoles ~= 0 then
+        btmData, topData = topData, btmData
+    end
+
+    local topAnimation, btmAnimation
+    local heightAnimation = pairData.AnimProperties[topData.HeightClass .. "Top_" .. btmData.HeightClass .. "Btm"]
+    if heightAnimation then
+        topAnimation = heightAnimation.Top
+        btmAnimation = heightAnimation.Btm
+    else
+        topAnimation = pairData.AnimProperties.FallbackTopAnimationID
+        btmAnimation = pairData.AnimProperties.FallbackBottomAnimationID
+    end
+
+    -- For the initial "standing hug" animation in a FxM pair do NOT revert top/bottom roles
+    if switchRoles == 2 and topAnimation == "49d78660-5175-4ed2-9853-840bb58cf34a" and btmAnimation == "10fee5b7-d674-436c-994c-616e01efcb90" then
+        switchRoles = 0
+        btmData, topData = topData, btmData
+    end
+
+    topData.Animation  = topAnimation
+    topData.SoundTable = pairData.AnimProperties.SoundTop
+    btmData.Animation  = btmAnimation
+    btmData.SoundTable = pairData.AnimProperties.SoundBottom
+
+    --Update the Persistent Variable on the actor so that other mods can use this
+    local casterEnt = Ext.Entity.Get(pairData.Caster)
+    local targetEnt = Ext.Entity.Get(pairData.Target)
+    casterEnt.Vars.PairData = pairData
+    targetEnt.Vars.PairData = pairData
+end
 
 
 
