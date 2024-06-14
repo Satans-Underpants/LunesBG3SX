@@ -2,7 +2,7 @@
 -- Library of Vanilla genitals for easy access (resource made available on BG3 modding) 
 -------------------------------------------------------------------------------------------------
 
--- Penis/Vulva
+-- Masc/Femme
 BODYTYPE = {
 	MALE = 0,
 	FEMALE = 1
