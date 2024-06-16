@@ -27,10 +27,9 @@ function OnSessionLoaded()
             Genitals:AddGenitalIfHasNone(actor)
         end
     end)
+end
 
 
-
-            
 -- Subscribes to the SessionLoaded event and executes our OnSessionLoaded function
 Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 

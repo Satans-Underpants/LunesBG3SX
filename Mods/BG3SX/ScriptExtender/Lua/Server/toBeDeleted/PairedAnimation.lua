@@ -177,7 +177,7 @@ function PairedAnimationListeners()
             Sex:UpdateAvailableAnimations(pairData)
             PlayPairedAnimation(pairData)
         else
-            for _, newAnim in ipairs(ANIMATIONDATA) do
+            for _, newAnim in ipairs(ANIMATIONS) do
                 if newAnim.AnimName == spell then
                     pairData.AnimProperties = newAnim
                     Sex:UpdateAvailableAnimations(pairData)

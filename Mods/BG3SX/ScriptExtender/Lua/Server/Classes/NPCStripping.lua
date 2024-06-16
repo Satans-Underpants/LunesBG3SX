@@ -130,7 +130,11 @@ end
  -- @param           - uuid of NPC
 function stripNPC(uuid)
     local naked = getNakedTemplate(uuid)
-    Ext.Resource.Get(getVisualResourceID(uuid),"CharacterVisual").VisualSet.Slots = naked
+    local resource = getVisualResourceID(uuid)
+    Ext.Resource.Get(resource,"CharacterVisual").VisualSet.Slots = naked
+
+    local payload = {naked = naked, resource = resource}
+    Ext.Net.BroadcastMessage("NPCStrip", Ext.Json.Stringify(payload))
 end
 
  -- redress the NPC (give original template)
@@ -145,9 +149,12 @@ function redress(uuid)
 
         if entry.uuid == uuid then
             dressed = entry.slots
-            Ext.Resource.Get(getVisualResourceID(uuid),"CharacterVisual").VisualSet.Slots = dressed
+            local resource = getVisualResourceID(uuid)
+            Ext.Resource.Get(resource,"CharacterVisual").VisualSet.Slots = dressed
             table.remove(OriginalTemplates, getIndex(OriginalTemplates, entry))
 
+            local payload = {dressed = dressed, resource = resource}
+            Ext.Net.BroadcastMessage("NPCDress", Ext.Json.Stringify(payload))
             return
         end
     end

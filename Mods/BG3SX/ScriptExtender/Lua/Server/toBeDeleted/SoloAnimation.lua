@@ -128,7 +128,7 @@ function SoloAnimationListeners()
         if spell == "zzzStopMasturbating" then
             StopSoloAnimation(soloData)
         else
-            for _, newAnim in ipairs(ANIMATIONDATA) do
+            for _, newAnim in ipairs(ANIMATIONS) do
                 if newAnim.AnimName == spell then
                     soloData.AnimProperties = newAnim
                     UpdateSoloAnimationVars(soloData)

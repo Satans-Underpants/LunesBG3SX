@@ -109,3 +109,35 @@ end
 function Helper:DestroyMarker(marker)
     Osi.RequestDelete(marker)
 end
+
+
+-- Credit to FallenStar  https://github.com/FallenStar08/SharedCode
+-- Slightly modified version
+--Returns all aummons, avatars and Origins
+function GetEveryoneThatIsRelevant()
+    local goodies = {}
+    local avatarsDB = Osi.DB_Avatars:Get(nil)
+    local originsDB = Osi.DB_Origins:Get(nil)
+    local summonsDB = Osi.DB_PlayerSummons:Get(nil)
+
+    for _, avatar in pairs(avatarsDB) do
+        goodies[#goodies + 1] = avatar[1]
+    end
+
+    for _, origin in pairs(originsDB) do
+        goodies[#goodies + 1] = origin[1]
+    end
+
+    for _, summon in pairs(summonsDB) do
+        goodies[#goodies + 1] = summon[1]
+    end
+
+    return goodies
+end
+
+
+
+
+
+
+

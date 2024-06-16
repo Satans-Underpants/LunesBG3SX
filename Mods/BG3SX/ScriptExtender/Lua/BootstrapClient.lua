@@ -1,3 +1,5 @@
+Ext.Require("Client/NPCSync.lua")
+
 Ext.Vars.RegisterUserVariable("ActorData", {
     Server = true,
     Client = true, 

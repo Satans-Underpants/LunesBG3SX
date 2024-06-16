@@ -2,22 +2,30 @@
 local DEBUG = {}
 
 -- Function to print debug messages
-function DEBUG.print(source, message)
+---@param source    string  - The file it comes from
+---@param message   string  - The message to print
+function DEBUG:print(source, message)
     print("[" .. source .. "] [DEBUG] " .. tostring(message))
 end
 
 -- Function to print warnings
-function DEBUG.warn(source, message)
+---@param source    string  - The file it comes from
+---@param message   string  - The message to print
+function DEBUG:warn(source, message)
     print("[" .. source .. "] [WARNING] " .. tostring(message))
 end
 
 -- Function to print errors
-function DEBUG.error(source, message)
+---@param source    string  - The file it comes from
+---@param message   string  - The message to print
+function DEBUG:error(source, message)
     print("[" .. source .. "] [ERROR] " .. tostring(message))
 end
 
 -- Function to dump tables (data structures)
-function DEBUG.dump(source, table, indent)
+---@param source    string  - The file it comes from
+---@param table     table   - The table to dump
+function DEBUG:dump(source, table, indent)
     if not indent then indent = 0 end
     local toprint = string.rep(" ", indent) .. "{\n"
     indent = indent + 2 

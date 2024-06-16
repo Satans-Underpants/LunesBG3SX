@@ -38,7 +38,7 @@ function PlayAnimation(sceneActors, animation)
     if animTimeout > 0 then
         Osi.ObjectTimerLaunch(sceneActors[1].uuid, "PairedAnimTimeout", animTimeout)
     else
-        Osi.ObjectTimerCancel(sceneActors[1].uuid,, "PairedAnimTimeout")
+        Osi.ObjectTimerCancel(sceneActors[1].uuid, "", "PairedAnimTimeout")
     end
 end
 
