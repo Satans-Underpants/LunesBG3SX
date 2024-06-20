@@ -23,6 +23,28 @@ STRINGIFY_OPTIONS = {
 -- METHODS
 --------------------------------------------------------------
 
+-- Checks if a number is even
+---@param n int - The number to check
+---@example
+-- for i = 1, 10 do
+--    if isEven(i) then
+--        print(i .. " is even")
+--    else
+--        print(i .. " is odd")
+--    end
+-- end
+function Helper:isEven(n)
+    return n % 2 == 0
+end
+
+-- Checks if a number is odd
+---@param n int - The number to check
+function Helper:isOdd(n)
+    return n % 2 ~= 0
+end
+
+
+
 -- Credit: Yoinked from Morbyte (Norbyte?)
 --- func desc
 ---@param srcObject any
