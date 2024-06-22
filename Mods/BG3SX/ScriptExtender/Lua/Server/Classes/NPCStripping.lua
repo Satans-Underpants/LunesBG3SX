@@ -12,6 +12,8 @@
 -- 
 ----------------------------------------------------------------------------------------------------
 
+-- TODO - helper functions to UTILS
+
 
 -- remove a  slot form VisualResources
 -- @param       - items: list of current items in the slots
@@ -226,7 +228,7 @@ local sexPairs = {}
 -- Sex
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
 
-	if spell == "AskForSex" and IsNPC(target) then
+	if spell == "BG3SX_AskForSex" and IsNPC(target) then
 
 		local pair = {caster = caster; target = target}
 		table.insert(sexPairs, pair)
@@ -243,7 +245,7 @@ end)
 -- Ending Sex
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
 
-	if spell == "zzzEndSex" then
+	if spell == "BG3SX_StopAction" then
 
 		local target = ""
         for i, pair in ipairs(sexPairs) do

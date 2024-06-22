@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------------------------
 -- 
--- 							Animation Playing Handling [Mostly Timer based]
+--                             Animation Playing Handling [Mostly Timer based]
 -- 
 ----------------------------------------------------------------------------------------------------
 
@@ -8,46 +8,44 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-function Animation:new()
+Animation = {}
+Animation.__index = Animation
+
+local playAnimation
+function Animation:new(actor, animationData, animation) animation
     local instance      = setmetatable({
+        actor = actor,
+        animationData = animationData,
+        animation = animation
     }, Animation)
+
+    playAnimation()
 
     return instance
 end
 
 
-
 ----------------------------------------------------------------------------------------------------
 -- 
--- 							                Start 
+--                                             Start 
 -- 
 ----------------------------------------------------------------------------------------------------
 
-
---- func desc
----@param pairData any
-function PlayAnimation(sceneActors, animation)
-
-    for _, actor in pairs(sceneActors) do
-        SexActor_StartAnimation(sceneActors.uuid, animation)
-    end
-
-    -- TODO - figure out what this does
-    -- Timeout timer
-    local animTimeout = animation["AnimLength"] * 1000
-    if animTimeout > 0 then
-        Osi.ObjectTimerLaunch(sceneActors[1].uuid, "PairedAnimTimeout", animTimeout)
+-- Stops remaining Animation and plays a new one
+playAnimation = function()
+    Osi.PlayAnimation(self.actor, "") -- First, stop current animation
+    if self.animationData.Loop == true then
+        Osi.PlayLoopingAnimation(self.actor, "", self.animation, "", "", "", "", "")
     else
-        Osi.ObjectTimerCancel(sceneActors[1].uuid, "", "PairedAnimTimeout")
+        Osi.PlayAnimation(self.actor, self.animation)
+        end
     end
 end
 
 
+
 ----------------------------------------------------------------------------------------------------
 -- 
--- 							                 End
+--                                              End
 -- 
 ----------------------------------------------------------------------------------------------------
-
-
-

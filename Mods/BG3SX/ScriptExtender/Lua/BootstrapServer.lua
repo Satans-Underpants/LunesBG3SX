@@ -10,6 +10,7 @@ Ext.Require("Data/Equipment.lua")
 Ext.Require("Data/Statuses.lua")
 Ext.Require("Data/Origins.lua")
 Ext.Require("Data/Sounds.lua")
+Ext.Require("Data/SceneTypes.lua")
 
 -- Initialize Debug Class
 Ext.Require("Server/Classes/_DEBUG.lua")

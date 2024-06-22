@@ -2,10 +2,10 @@
 // Main Spells
 //-------------------------------------------------
 
-new entry "BG3SXContainer"
+new entry "BG3SX_MainContainer"
 type "SpellData"
 data "SpellType" "Shout"
-data "ContainerSpells" "StartMasturbation;AskForSex"
+data "ContainerSpells" "BG3SX_StartMasturbating;BG3SX_AskForSex"
 data "Icon" "Spell_Enchantment_Hex"
 data "DisplayName" "hc53c7f99ge6bcg40ffg9c3fg9ebd31a82940;1"
 data "Description" ""
@@ -15,13 +15,13 @@ data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "IsLinkedSpellContainer"
 
-new entry "AskForSex"
+new entry "BG3SX_AskForSex"
 type "SpellData"
 data "SpellType" "Target"
 data "SpellProperties" ""
 data "TargetRadius" "1.5"
 data "Requirements" "!Combat"
-data "SpellContainerID" "BG3SXContainer"
+data "SpellContainerID" "BG3SX_MainContainer"
 data "Icon" "Spell_Enchantment_Friends"
 data "DisplayName" "hf8d87b70ge53ag4a26gb758g3b9cccddbba0;1"
 data "Description" ""
@@ -34,12 +34,12 @@ data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 
-new entry "StartMasturbation"
+new entry "BG3SX_StartMasturbating"
 type "SpellData"
 data "SpellType" "Shout"
 data "SpellProperties" ""
 data "Requirements" "!Combat"
-data "SpellContainerID" "BG3SXContainer"
+data "SpellContainerID" "BG3SX_MainContainer"
 data "Icon" "Spell_Divination_Guidance"
 data "DisplayName" "h8f892314gf60ag45d3g86fegadd638f56439;1"
 data "Description" ""
@@ -57,7 +57,7 @@ data "SpellAnimationIntentType" "None"
 // Ending Spells
 //-------------------------------------------------
 
-new entry "zzzEndSex"
+new entry "BG3SX_StopAction"
 type "SpellData"
 data "SpellType" "Shout"
 data "SpellProperties" ""
@@ -75,7 +75,7 @@ data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 
-new entry "zzzStopMasturbating"
+new entry "BG3SX_StopMasturbating"
 type "SpellData"
 data "SpellType" "Shout"
 data "SpellProperties" ""
@@ -94,7 +94,7 @@ data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 
-new entry "zzSwitchPlaces"
+new entry "BG3SX_SwitchPlaces"
 type "SpellData"
 data "SpellType" "Shout"
 data "SpellProperties" ""
@@ -117,7 +117,7 @@ data "SpellAnimationIntentType" "None"
 // Teleport Spells
 //-------------------------------------------------
 
-new entry "ChangeSceneLocation"
+new entry "BG3SX_ChangeSceneLocation"
 type "SpellData"
 data "SpellType" "Zone"
 data "SpellProperties" ""
@@ -139,7 +139,7 @@ data "SpellAnimationIntentType" "None"
 // Camera Spells
 //-------------------------------------------------
                
-new entry "CameraHeight"
+new entry "BG3SX_ChangeCameraHeight"
 type "SpellData"
 data "SpellType" "Shout"
 data "SpellProperties" ""
@@ -159,7 +159,7 @@ data "SpellAnimationIntentType" "None"
 // STRIPPING BLOCK
 //-------------------------------------------------
 
-new entry "BLOCK_STRIPPING"
+new entry "BG3SX_BlockStripping"
 type "StatusData"
 data "StatusType" "BOOST"
 data "DisplayName" "h36120177g096ag43f9g9582gea5081f761b2;1"
@@ -173,7 +173,7 @@ data "StillAnimationPriority" "None"
 // Debug Spells
 //-------------------------------------------------
 
-new entry "DebugSelf"
+new entry "BG3SX_DebugSelf"
 type "SpellData"
 data "SpellType" "Shout"
 data "SpellProperties" ""
@@ -191,7 +191,7 @@ data "SpellFlags" "ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 
-new entry "DebugTarget"
+new entry "BG3SX_DebugTarget"
 type "SpellData"
 data "SpellType" "Target"
 data "SpellProperties" ""

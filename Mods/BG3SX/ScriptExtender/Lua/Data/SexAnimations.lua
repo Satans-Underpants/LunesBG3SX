@@ -1,6 +1,6 @@
 StartSexSpells = {
     {
-        AnimName = "StartMasturbation",
+        AnimName = "BG3SX_StartMasturbating",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -15,7 +15,7 @@ StartSexSpells = {
         Tall_Female = "2c60a233-b669-4b94-81dc-280e98238fd0",
     },
     {
-        AnimName = "AskForSex",
+        AnimName = "BG3SX_AskForSex",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -37,6 +37,7 @@ StartSexSpells = {
     },
 }
 
+-- Additional data thats included when using a spell equal to AnimName
 ANIMATIONS = {
     {
         AnimName = "Grinding",

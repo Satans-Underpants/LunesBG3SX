@@ -1,3 +1,4 @@
+-- After Sex
 ORGASM_SOUNDS = {
     "Player_Races_Voice_Combat_Recover",
     "Player_Races_Voice_Combat_Recover_Chance",
@@ -6,7 +7,7 @@ ORGASM_SOUNDS = {
     "Player_Races_Voice_Gen_Recover_Cinematics"
 }
 
--- DATA TABLE
+-- During Sex
 MOANING_SOUNDS = {
     "BreathLongExhaleOpen_PlayerCharacter_Cine",
     "BreathLongInhaleOpen_PlayerCharacter_Cine",
@@ -14,3 +15,13 @@ MOANING_SOUNDS = {
     "LoveMoanClosed_PlayerCharacter_Cine",
     "LoveMoanOpen_PlayerCharacter_Cine"
 }
+
+
+KISSING_SOUNDS = {
+    "CAMP_Karlach_CRD_ROM_Date_SexKiss2",
+    "CAMP_Karlach_CRD_ROM_Date_SexKiss3",
+    "CAMP_Karlach_CRD_ROM_Date_SexKiss6",
+    "CAMP_Karlach_CRD_ROM_Date_SexKiss7",
+    "CAMP_Karlach_CRD_ROM_Date_SexKiss9"},
+}
+

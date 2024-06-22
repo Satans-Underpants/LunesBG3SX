@@ -33,14 +33,7 @@ function StartSoloAnimation(actor, animProperties)
     Osi.ObjectTimerLaunch(actor, "SoloSexSetup", setupDelay)
 
     -- Add sex control spells to the caster
-    Sex:InitSexSpells(soloData)
-    Sex:RegisterCasterSexSpell(soloData, soloData.AnimContainer)
-    Sex:RegisterCasterSexSpell(soloData, "ChangeSceneLocation")
-    if soloData.ActorData.CameraScaleDown then
-        Sex:RegisterCasterSexSpell(soloData, "CameraHeight")
-    end
-    Sex:RegisterCasterSexSpell(soloData, "zzzStopMasturbating")
-    AddSoloCasterSexSpell(soloData)
+    Sex:InitSexSpells(scene)
 end
 
 
@@ -125,7 +118,7 @@ function SoloAnimationListeners()
             return
         end
 
-        if spell == "zzzStopMasturbating" then
+        if spell == "BG3SX_StopMasturbating" then
             StopSoloAnimation(soloData)
         else
             for _, newAnim in ipairs(ANIMATIONS) do

@@ -5,20 +5,6 @@ function AnimationListeners()
     Ext.Osiris.RegisterListener("ObjectTimerFinished", 2, "after", function(actor, timer)
 
         ------------------------------------
-                  -- FADE TIMERS --
-        ------------------------------------
-
-        if timer == "PairedSexFade.Start" then
-            Osi.ScreenFadeTo(actor, 0.1, 0.1, "AnimFade")
-            return
-        end
-
-        if timer == "PairedSexFade.End" then
-            Osi.ClearScreenFade(actor, 0.1, "AnimFade", 0)
-            return
-        end
-        
-        ------------------------------------
                -- ANIMATION TIMERS --
         ------------------------------------
 
@@ -28,28 +14,9 @@ function AnimationListeners()
         end
         local pairData = AnimationPairs[pairIndex]
 
-        if timer == "PairedSexStrip" then
-            function TryStripPairedActor(actorData)
-                if actorData.Strip then
-                    Osi.ApplyStatus(actorData.Actor, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
-                    Entity:UnequipAll(actorData)
-                end
-            end
+     
 
-            TryStripPairedActor(pairData.CasterData)
-            TryStripPairedActor(pairData.TargetData)
-            return
-        end
-
-        if timer == "PairedSexSetup" then
-            pairData.ProxyData = Helper:CreateLocationMarker(pairData.Target)
-            SexActor_SubstituteProxy(pairData.CasterData, pairData.ProxyData)
-            SexActor_SubstituteProxy(pairData.TargetData, pairData.ProxyData)
-            Osi.ObjectTimerLaunch(pairData.Caster, "PairedSexAnimStart", 400)
-            return
-        end
-
-        if timer == "PairedSexAnimStart" then
+        if timer == "AnimStart" then
             SexActor_FinalizeSetup(pairData.CasterData, pairData.ProxyData)
             SexActor_FinalizeSetup(pairData.TargetData, pairData.ProxyData)
             PlayPairedAnimation(pairData)
@@ -96,9 +63,9 @@ function AnimationListeners()
         end
         local pairData = AnimationPairs[pairIndex]
 
-        if spell == "zzzEndSex" then
+        if spell == "BG3SX_StopAction" then
             StopPairedAnimation(pairData)
-        elseif spell == "zzSwitchPlaces" then
+        elseif spell == "BG3SX_SwitchPlaces" then
             pairData.SwitchPlaces = not pairData.SwitchPlaces
             Sex:UpdateAvailableAnimations(pairData)
             PlayPairedAnimation(pairData)

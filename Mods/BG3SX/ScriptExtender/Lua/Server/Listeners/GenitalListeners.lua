@@ -7,7 +7,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
     -- If UI is used then use UI listener instead
     -- Check wether spell is in container Change Genitals
     local containerID = Ext.Stats.Get(spell).SpellContainerID
-    if containerID == "Change_Genitals" then
+    if containerID == "BG3SX - Change Genitals" then
     -- Transform genitals
         local newGenital = Genitals:GetNextGenital(spell, caster)
         Genitals:OverrideGenital(newGenital, caster)
@@ -40,7 +40,7 @@ end)
 local sexPairs = {}
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
     local autoErections = GetAutoErection()
-    if (autoErections == 1) and (spell == "AskForSex")  then
+    if (autoErections == 1) and (spell == "BG3SX_AskForSex")  then
         local casterGenital = Genitals:GetCurrentGenital(caster)
         local targetGenital
 
@@ -68,7 +68,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
     local autoErections = GetAutoErection()
 
 
-    if (autoErections == 1) and (spell == "zzzEndSex") then
+    if (autoErections == 1) and (spell == "BG3SX_StopAction") then
 
         local prevGenCaster = ""
         local prevGenTarget = ""
@@ -105,7 +105,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 
     local autoErections = GetAutoErection()
 
-    if (autoErections == 1) and (spell == "StartMasturbation") then
+    if (autoErections == 1) and (spell == "BG3SX_StartMasturbating") then
 
         -- Save previous genitals
         local casterGenital = Genitals:GetCurrentGenital(caster)
@@ -118,7 +118,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
         end
     end
 
-    if (autoErections == 1) and spell =="zzzStopMasturbating" then
+    if (autoErections == 1) and spell =="BG3SX_StopMasturbating" then
 
         local previousGenital = ""
         for _, masturbator in ipairs(masturbators) do

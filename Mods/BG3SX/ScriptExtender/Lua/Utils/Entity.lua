@@ -206,42 +206,84 @@ end
 -- local helmetIsInvisible = Entity:TryGetEntityValue(entity, "ServerCharacter", "PlayerData", "HelmetOption")
 -- print(helmetIsInvisible) -- Should return either 0 or 1
 -- Its essentially like using Ext.Entity.Get(entity).ServerCharacter.PlayerData.HelmetOption
-function Entity:TryGetEntityValue(uuid, component, field1, field2, field3)
-    local entity = Ext.Entity.Get(uuid)
-    local v, doStop
+-- function Entity:TryGetEntityValue(uuid, component, field1, field2, field3)
+--     local entity = Ext.Entity.Get(uuid)
+--     local v, doStop
     
 
-    v = ResolveEntityArg(entity)
-    if not v then
-        return nil
-    end
+--     v = ResolveEntityArg(entity)
+--     if not v then
+--         return nil
+--     end
 
-    function GetFieldValue(obj, field)
-        if not field then
-            return obj, true
+--     function GetFieldValue(obj, field)
+--         if not field then
+--             return obj, true
+--         end
+--         local newObj = obj[field]
+--         return newObj, (newObj == nil)
+--     end
+
+--     v, doStop = GetFieldValue(v, component)
+--     if doStop then
+--         return v
+--     end
+
+--     v, doStop = GetFieldValue(v, field1)
+--     if doStop then
+--         return v
+--     end
+
+--     v, doStop = GetFieldValue(v, field2)
+--     if doStop then
+--         return v
+--     end
+
+--     v, doStop = GetFieldValue(v, field3)
+--     return v
+-- end
+
+
+
+-- Tries to get the value of an entities component
+---@param uuid                  string      - The entity UUID to check
+---@param previousComponent     value       - component of previous iteration
+---@param components            table       - Sorted list of component path
+---@return                      Value       - Returns the value of a field within a component
+---@example
+-- local helmetIsInvisible = Entity:TryGetEntityValue(entity, {"ServerCharacter", "PlayerData", "HelmetOption"})
+-- print(helmetIsInvisible) -- Should return either 0 or 1
+-- Its essentially like using Ext.Entity.Get(entity).ServerCharacter.PlayerData.HelmetOption
+function Entity:TryGetEntityValue(uuid, previousComponent, components)
+
+    local entity = Ext.Entity.Get(uuid)
+
+    -- end of recursion
+    if #components == 1 then
+        if not previousComponent then
+            return Helper:GetPropertyOrDefault(entity, components[1], nil)
+        else
+            return Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
         end
-        local newObj = obj[field]
-        return newObj, (newObj == nil)
     end
 
-    v, doStop = GetFieldValue(v, component)
-    if doStop then
-        return v
+    -- recursion
+    for i, component in pairs(components) do
+        if not previousComponent then
+            local currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
+        else
+            local currentComponent = Helper:GetPropertyOrDefault(previousComponent, components[1])
+        end
+
+        table.remove(components, 1)
+        Entity:TryGetEntityValue(uuid, previousComponent, components)
     end
 
-    v, doStop = GetFieldValue(v, field1)
-    if doStop then
-        return v
-    end
-
-    v, doStop = GetFieldValue(v, field2)
-    if doStop then
-        return v
-    end
-
-    v, doStop = GetFieldValue(v, field3)
-    return v
 end
+
+
+
+
 
 
 -- Unequips all equipment and armour (vanity slots) from an entity
@@ -372,6 +414,34 @@ local function getRace(character)
 
     return race
 
+end
+
+
+-- use a helper object and Osi to make an entity rotate
+---@param entity uuid
+---@param rotation int 
+---@return helper uuid - helper object that the entity will look towards with Osi.SteerTo
+function Entity:SaveEntityRotation(uuid)
+
+    entityX,entityY,entityZ = Osi.GetPosition(uuid)
+    rotation = Osi.GetRotation(uuid)[2]
+    entityRotation = Math:DegreeToRadian(rotation)
+
+    -- 1 = distance
+    x = (entityX + 1) * math.cos(entityRotation)
+    y = (entityY + 1) * math.sin(entityRotation)
+
+
+    -- creates helper object that entity can look at
+    return Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", x, y, entityZ, 0, 0, "")
+
+end
+
+-- use a helper object and Osi to make an entity rotate
+---@param entity uuid
+---@param helper uuid - helper object 
+function Entity:RotateEntity(uuid, helper)
+    Osi.SteerTo(uuid, helper, 1)
 end
 
 

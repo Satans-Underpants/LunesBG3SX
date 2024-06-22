@@ -7,12 +7,11 @@ local function removeSexPositionSpells(actor) -- entity
     Osi.RemoveSpell(actor, "GayAnimationsContainer")
     Osi.RemoveSpell(actor, "FemaleMasturbationContainer")
     Osi.RemoveSpell(actor, "MaleMasturbationContainer")
-    Osi.RemoveSpell(actor, "zzzEndSex")
-    Osi.RemoveSpell(actor, "zzzStopMasturbating")
-    Osi.RemoveSpell(actor, "CameraHeight")
-    Osi.RemoveSpell(actor, "ChangeSceneLocation")
-    Osi.RemoveSpell(actor, "ChangeSceneLocation")
-    Osi.RemoveSpell(actor, "zzSwitchPlaces")
+    Osi.RemoveSpell(actor, "BG3SX_StopAction")
+    Osi.RemoveSpell(actor, "BG3SX_StopMasturbating")
+    Osi.RemoveSpell(actor, "BG3SX_ChangeCameraHeight")
+    Osi.RemoveSpell(actor, "BG3SX_ChangeSceneLocation")
+    Osi.RemoveSpell(actor, "BG3SX_SwitchPlaces")
 end
 
 local function disableActorMovement(actor)
@@ -31,7 +30,7 @@ function SexActor_Init(actor, needsProxy, vocalTimerName, animProperties)
         SoundTable = {},
         VocalTimerName = vocalTimerName,
         HasPenis = Entity:HasPenis(actor),
-        Strip = (animProperties["Strip"] == true and Osi.HasActiveStatus(actor, "BLOCK_STRIPPING") == 0),
+        Strip = (animProperties["Strip"] == true and Osi.HasActiveStatus(actor, "BG3SX_BlockStripping") == 0),
         CameraScaleDown = (needsProxy and Osi.IsPartyMember(actor, 0) == 1),
     }
 
@@ -41,9 +40,9 @@ function SexActor_Init(actor, needsProxy, vocalTimerName, animProperties)
     Osi.SetDetached(actor, 1)
     Osi.DetachFromPartyGroup(actor)
 
-    Osi.RemoveSpell(actor, "BG3SXContainer")
-    Osi.RemoveSpell(actor, "Change_Genitals")
-    Osi.RemoveSpell(actor, "BG3SXOptions")
+    Osi.RemoveSpell(actor, "BG3SX_MainContainer")
+    Osi.RemoveSpell(actor, "BG3SX - Change Genitals")
+    Osi.RemoveSpell(actor, "BG3SX - Options")
     removeSexPositionSpells(actor) -- Just in case
 
     -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening
@@ -329,29 +328,4 @@ function Scene:MoveSceneToLocation(entity, location)
     end
 
     Osi.SetDetached(casterData.Actor, 0)
-end
-
--- TODO: Move the function to a separate SexScene.lua or something
-function Sex:InitSexSpells(sceneData)
-    sceneData.CasterSexSpells = {}
-    sceneData.NextCasterSexSpell = 1
-end
-
--- TODO: Move the function to a separate SexScene.lua or something
-function Sex:RegisterCasterSexSpell(sceneData, spellName)
-    sceneData.CasterSexSpells[#sceneData.CasterSexSpells + 1] = spellName
-end
-
--- TODO: Move the function to a separate SexScene.lua or something
-function Sex:AddSexSpells(sceneData, casterData, timerName)
-    if sceneData.NextCasterSexSpell <= #sceneData.CasterSexSpells then
-        Osi.AddSpell(casterData.Actor, sceneData.CasterSexSpells[sceneData.NextCasterSexSpell])
-
-        sceneData.NextCasterSexSpell = sceneData.NextCasterSexSpell + 1
-        if sceneData.NextCasterSexSpell <= #sceneData.CasterSexSpells then
-            -- A pause greater than 0.1 sec between two (Try)AddSpell calls in needed 
-            -- for the spells to appear in the hotbar exactly in the order they are added.
-            Osi.ObjectTimerLaunch(casterData.Actor, timerName, 200)
-        end
-    end
 end

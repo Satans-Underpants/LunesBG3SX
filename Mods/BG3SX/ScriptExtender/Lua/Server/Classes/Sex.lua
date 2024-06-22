@@ -20,53 +20,81 @@ Sex.__index = Sex
 ----------------------------------------------------------------------------------------------------
 
 
--- Adds Sex spells for the caster
--- TODO: Add functionality to also add them to targets
----@param sceneData any
----@param casterData any
----@param timerName any
-local function addSexSpells(entity)
+--- Strips an actor of an entity
+---@param scene Scene
+---@param entity uuid
+function Sex:PairedSexStrip(scene, entity)
 
-    -- for _, entity in pairs(entities) do
-
-        if sceneData.NextCasterSexSpell <= #sceneData.CasterSexSpells then
-            Osi.AddSpell(casterData.Actor, sceneData.CasterSexSpells[sceneData.NextCasterSexSpell])
-
-            sceneData.NextCasterSexSpell = sceneData.NextCasterSexSpell + 1
-            if sceneData.NextCasterSexSpell <= #sceneData.CasterSexSpells then
-                -- A pause greater than 0.1 sec between two (Try)AddSpell calls in needed 
-                -- for the spells to appear in the hotbar exactly in the order they are added.
-                -- Osi.ObjectTimerLaunch(casterData.Actor, timerName, 200)
-                Ext.Timer.Waitfor(200) -- trigger sometimes
-            end
-        end
+    -- for _, actor in scene.actors do
+    --     if actor.parent == entity do 
+    --         Osi.ApplyStatus(actor, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
+    --         Entity:UnequipAll(actor)
+    --     end
     -- end
+
+
+    Osi.ApplyStatus(entity, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
+    Entity:UnequipAll(entity)
 end
 
 
--- Give the entities the correct spells based on amount of entities in the scene
--- Currently only masturbation and 2 people is supported
--- Also add spells that everyone gets like end sex
-function Sex:InitSexSpells(scene)
-    
-    for _, entity in pairs(scene.entities) do
+local additionalSexSpells = {
+    "BG3SX_StopAction",
+    "BG3SX_SwitchPlaces",
+    "BG3SX_ChangeSceneLocation",
+    "BG3SX_ChangeCameraHeight"
+}           
+-- Adds additional sex spells for an entity
+---@param entity    string  - The entity UUID to give additional spells to
+local function addAdditionalSexSpells(entity)
+    local spellCount = 1
 
-        addSexSpells(entity)
-
-        -- entity.CasterSexSpells = {}
-        -- entity.NextCasterSexSpell = 1
-
+    for _,spell in pairs(additionalSexSpells) do
+        Ext.Timer.WaitFor(spellCount*200, function()
+            Osi.AddSpell(entity, spell)
+            spellCount = spellCount+1)
+        end
     end
-
 end
 
-
--- Registers Sex spells to distribute
----@param sceneData any
----@param spellName any
-function Sex:RegisterCasterSexSpell(sceneData, spellName)
-    sceneData.CasterSexSpells[#sceneData.CasterSexSpells + 1] = spellName
+-- Determines the scene type based on how many entities and penises are involved
+---@param  scene Scene       - The scene to check
+---@return sceneType string 
+function Sex:DetermineSceneType(scene)
+    local involvedEntities = 0
+    local penises = 0
+    for _, entity in pairs(scene.entities) do
+        involvedEntities = involvedEntities+1
+        if Entity:HasPenis(entity) then
+            penises = penises+1
+    end
+    for _,entry in SCENETYPES do
+        if involvedEntities == entry.involvedEntities and penises == entry.penises then
+            return entry.sceneType
+        end
+    end   
 end
+
+-- Give the entities the correct spells based on amount of entities and penises in the scene
+-- Also add spells that everyone gets like end sex
+---@param scene Scene   - The scene the function should get executed for
+function Sex:InitSexSpells(scene)
+    local sceneType = Sex:DetermineSceneType(scene)
+
+    for _, entity in pairs(scene.entities) do -- For each entity involved
+        if Entity:IsPlayable(entity) then -- Check if they are playable to not do this with NPCs
+            
+            for _, entry in SCENETYPES do
+                if sceneType == entry.sceneType then
+                    Osi.AddSpell(entity, entry.container) -- Add correct spellcontainer based on sceneType
+                end
+            end
+
+            addAdditionalSexSpells(entity)
+        end
+    end
+end
+
 
 --- Adds the main sex spells to an entity
 ---@param entity    string  - The entities UUID
@@ -77,25 +105,21 @@ function Sex:AddMainSexSpells(entity)
         or Osi.IsTagged(entity, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
         and Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
     then
-        Osi.AddSpell(entity, "BG3SXContainer")
-        Osi.AddSpell(entity, "Change_Genitals")
-        Osi.AddSpell(entity, "BG3SXOptions")
+        Osi.AddSpell(entity, "BG3SX_MainContainer")
+        Osi.AddSpell(entity, "BG3SX - Change Genitals")
+        Osi.AddSpell(entity, "BG3SX - Options")
     end
 end
 
---- Handles the SexSpellUsed Event by starting new animations based on spell used
+--- Handles the StartSexSpellUsed Event by starting new animations based on spell used
 ---@param caster            string  - The casters UUID
 ---@param target            string  - The targets UUID
 ---@param animProperties    table   - The animation properites to use
-function Sex:SexSpellUsed(caster, target, animProperties)
+function Sex:StartSexSpellUsed(caster, target, animProperties)
     if animProperties then
         Scene:new({caster, target})
     end
 end
-
-
-
-
 
 
 --- func desc
@@ -127,33 +151,50 @@ end
 -- Animations
 --------------------------------------------------------------
 
--- Starts a Sex animation
----@param actorData any
+local function playAnimationAndSound(actor, animationData, position)
+    if position == "Top" then
+        Animation:new(actor, animationData, animationData.FallbackTopAnimationID)
+        Sound:new(actor, animationData.SoundTop, animationData.Duration, animationData.Duration)
+    elseif position == "Bottom" then
+        Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
+        Sound:new(actor, animationData.SoundBottom, animationData.Duration, animationData.Duration)
+    end
+end
+
+-- Start new animations and sound for the actors of a scene
+---@param entity    Entity  - 
 ---@param animProperties any
-function Sex:StartAnimation(actorData, animProperties)
-    Sex:StopVocals(actorData)
+function Sex:PlayAnimation(entity, animProperties)
+    local scene = Scene:FindSceneByEntity(entity)
+    local sceneType = Sex:DetermineSceneType(scene)
 
-    -- Animation:PlayAnimation(actor, animData) - make if statement below into this new function
+    
+    if sceneType == "MasturbateFemale" or sceneType == "MasturbateMale"
+        playAnimationAndSound(scene.actors[1], animationData, "Bottom")
 
-    local animActor = actorData.Proxy or actorData.Actor
-    if animProperties["Loop"] == true then
-        -- _P("[SexActor.lua] Begin playing looping animation: ", actorData.Animation)
-        Osi.PlayLoopingAnimation(animActor, "", actorData.Animation, "", "", "", "", "")
-    else
-        -- _P("[SexActor.lua] Begin playing animation: ", actorData.Animation)
-        Osi.PlayAnimation(animActor, actorData.Animation)
+    elseif sceneType == "Lesbian" or sceneType == "Gay"
+        playAnimationAndSound(scene.actor[1], animationData, "Top")
+        playAnimationAndSound(scene.actor[2], animationData, "Bottom")
+
+    elseif sceneType == "Straight"
+        local actor1 = scene.actors[1]
+        local actor2 = scene.actors[2]
+            -- In case of actor1 not being male, swap them around to still assign correct animations
+            if not Entity:HasPenis(scene.actors[1].parent) -- Swap them around in case actor is not mal
+                actor2 = actor1
+                actor2 = scene.actors[1]
+            end
+        playAnimationAndSound(actor1, animationData, "Top")
+        playAnimationAndSound(actor2, animationData, "Bottom")
+
+    elseif sceneType == "FFF"
+
+    elseif sceneType == "FFM"
+
+    elseif sceneType == "MMF"
+
+    elseif sceneType == "MMM"
     end
-
-    if animProperties["Sound"] == true and #actorData.SoundTable >= 1 then
-        Sex:PlayVocal(actorData, MOANING_SOUNDS, 600, 600)
-    end
-
-    -- --Update the Persistent Variable on the actor so that other mods can use this
-    -- local actorEntity = Ext.Entity.Get(actorData.Actor)
-    -- actorEntity.Vars.ActorData = actorData
-
-    --Fire a timer to notify other mods that an Animation has started or changed 
-    Sex:SexAnimationStartTimer(actorData)
 end
 
 
@@ -184,14 +225,14 @@ end
 --
 ---@param actorData any
 function Sex:SexAnimationStartTimer(actorData)
-    Osi.ObjectTimerLaunch(actorData.Actor, "Event_SexAnimationStart", 1)
+    Osi.ObjectTimerLaunch(actorData.Actor, "Event_SexAnimationStart", 1) -- Event_SexAnimationStart does not exist
 end
 
 
 --
 ---@param actorData any
 function Sex:EndSexSceneTimer(actorData)
-    Osi.ObjectTimerLaunch(actorData.Actor, "Event_EndSexScene", 1)
+    Osi.ObjectTimerLaunch(actorData.Actor, "Event_EndSexScene", 1) -- Event_EndSexScene does not exist
 end
 
 
@@ -401,12 +442,56 @@ end
 
 
 
-
-
-
 function Sex:TerminateAllScenes()
     for _, scene in pairs(SAVEDSCENES) do
         scene:Destroy()
     end
     SAVEDSCENES = {}
+end
+
+
+-- To know what to write here check the timer listeners with 
+-- the correcponsing timer name
+
+
+
+
+
+-- TODO - we have a TerminatePairedAnimation and a StopPairedAnimation -> see whats up with that
+Sex:FinishSex(scene)
+    TerminatePairedAnimation(pairData)
+    table.remove(AnimationPairs, pairIndex)
+end
+
+
+-- TODO - might fit better to anim
+Sex:AnimStart(scene)
+    Scene:FinalizeSetup(pairData.CasterData, pairData.ProxyData)
+    PlayPairedAnimation(pairData)
+    Osi.SetDetached(pairData.Caster, 0)
+end
+
+
+        
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- 
+-- 										Spell Handling
+-- 
+----------------------------------------------------------------------------------------------------
+
+-- Removes the sex spells on an entity when scene has ended
+---@param entity    Entity  - The entity uuid to remove the spells from
+local function removeSexPositionSpells(entity) -- entity
+    Osi.RemoveSpell(entity, "StraightAnimationsContainer")
+    Osi.RemoveSpell(entity, "LesbianAnimationsContainer")
+    Osi.RemoveSpell(entity, "GayAnimationsContainer")
+    Osi.RemoveSpell(entity, "FemaleMasturbationContainer")
+    Osi.RemoveSpell(entity, "MaleMasturbationContainer")
+    Osi.RemoveSpell(entity, "BG3SX_StopAction")
+    Osi.RemoveSpell(entity, "BG3SX_StopMasturbating")
+    Osi.RemoveSpell(entity, "BG3SX_ChangeCameraHeight")
+    Osi.RemoveSpell(entity, "BG3SX_ChangeSceneLocation")
+    Osi.RemoveSpell(entity, "BG3SX_SwitchPlaces")
 end
