@@ -33,7 +33,7 @@ function Scene:new(entities)
     }, Scene)
 
     initialize(self) -- Automatically calls the Iinitialize function on creation
-    table.insert(SAVEDSCENES, self)
+    
 
     return instance
 end
@@ -185,8 +185,8 @@ initialize = function(self)
 
         -- Remove the main spells -- does nothing if they are already removed. We can just purge all animstart spells here
         Osi.RemoveSpell(entity, "BG3SX_MainContainer")
-        Osi.RemoveSpell(entity, "BG3SX - Change Genitals")
-        Osi.RemoveSpell(entity, "BG3SX - Options")
+        Osi.RemoveSpell(entity, "BG3SX_ChangeGenitals")
+        Osi.RemoveSpell(entity, "BG3SX_Options")
 
         -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening
         if Osi.GetFlag(FLAG_COMPANION_IN_CAMP, entity) == 1 then
@@ -249,6 +249,8 @@ function Scene:FinalizeSetup()
 
     end
 
+    table.insert(SAVEDSCENES, self)
+
 end
 
 
@@ -272,6 +274,11 @@ function Scene:Destroy()
             -- TODO: Osi.SteerTo(actor.parent, helper object which we need to create on scene creation,1)
             Osi.SetVisible(actor, 1)
 
+            -- Requips everything which may have been removed during scene initialization
+            if Entity:HasEquipment(actor.parent) then
+                Entity:Redress(actor.parent)
+            end
+
             -- Delete actor
             actor:Destroy()
         end
@@ -285,8 +292,7 @@ function Scene:Destroy()
 
             -- Unlocks movement
             Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
-            Sex:StopVocals(actorData)
-
+    
             -- Sets scale back to a saved value during scene initialization
             local startScale
             for _, entry in self.entityScale do
@@ -296,11 +302,7 @@ function Scene:Destroy()
             end
             Entity:Scale(entity, startScale)
 
-            -- Requips everything which may have been removed during scene initialization
-            if Entity:HasEquipment(actorData) then
-                Entity:Redress(actorData)
-            end
-
+            
             -- Removes any spells given
             Sex:removeSexPositionSpells(entity)
 

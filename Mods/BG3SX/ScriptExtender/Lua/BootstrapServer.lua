@@ -66,3 +66,21 @@ Ext.Vars.RegisterUserVariable("SoloData", {
     Client = true, 
     SyncToClient = true
 })
+
+-- TODO: Update ModVariable usage - E.g. Make SAVEDSCENES available, everything should be in there
+-- TODO: Create several server broadcast messages (events) for other mods to listen to
+-- Also create several _DEBUG messaged for each function
+-- E.g.
+-- BG3SX_SexAnimationSpellUsed(animationData)
+-- BG3SX_SceneInit(scene)
+-- BG3SX_SceneCreated(scene) -- 2 seperate events in case mods would need to intercept
+-- BG3SX_ActorInit(actor)
+-- BG3SX_ActorCreated(actor)
+-- BG3SX_AnimationChange(actor, animation)
+-- BG3SX_SoundChange(actor, sound)
+-- BG3SX_SceneTeleport(scene, location)
+-- BG3SX_SceneSwitchPlaces(scene, actorsInvolved) -- actorsInvolved in case of future 3+ actor scenes
+-- BG3SX_CameraHeightChange(entity)
+-- BG3SX_EntityStripped(entity, strippedEquipment, remainingEquipment)
+-- BG3SX_ActorDressed(actor, equipmentTable)
+-- BG3SX_GenitalChange(entity, genital)

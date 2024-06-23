@@ -7,7 +7,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
     -- If UI is used then use UI listener instead
     -- Check wether spell is in container Change Genitals
     local containerID = Ext.Stats.Get(spell).SpellContainerID
-    if containerID == "BG3SX - Change Genitals" then
+    if containerID == "BG3SX_ChangeGenitals" then
     -- Transform genitals
         local newGenital = Genitals:GetNextGenital(spell, caster)
         Genitals:OverrideGenital(newGenital, caster)

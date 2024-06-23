@@ -50,9 +50,17 @@ local function addAdditionalSexSpells(entity)
     local spellCount = 1
 
     for _,spell in pairs(additionalSexSpells) do
-        Ext.Timer.WaitFor(spellCount*200, function()
-            Osi.AddSpell(entity, spell)
-            spellCount = spellCount+1)
+        if spell == "BG3SX_SwitchPlaces" then
+            local sceneType = Sex:DetermineSceneType(entity)
+            if not sceneType == "MasturbateFemale" or not sceneType == "MasturbateMale" then
+                Ext.Timer.WaitFor(spellCount*200, function()
+                Osi.AddSpell(entity, spell)
+                spellCount = spellCount+1)
+            end 
+        else
+            Ext.Timer.WaitFor(spellCount*200, function()
+                Osi.AddSpell(entity, spell)
+                spellCount = spellCount+1)
         end
     end
 end
@@ -106,26 +114,20 @@ function Sex:AddMainSexSpells(entity)
         and Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
     then
         Osi.AddSpell(entity, "BG3SX_MainContainer")
-        Osi.AddSpell(entity, "BG3SX - Change Genitals")
-        Osi.AddSpell(entity, "BG3SX - Options")
+        Osi.AddSpell(entity, "BG3SX_ChangeGenitals")
+        Osi.AddSpell(entity, "BG3SX_Options")
     end
 end
 
 --- Handles the StartSexSpellUsed Event by starting new animations based on spell used
 ---@param caster            string  - The casters UUID
 ---@param target            string  - The targets UUID
----@param animProperties    table   - The animation properites to use
-function Sex:StartSexSpellUsed(caster, target, animProperties)
-    if animProperties then
+---@param animationData     table   - The animation data to use
+function Sex:StartSexSpellUsed(caster, target, animationData)
+    if animationData then
         Scene:new({caster, target})
+        Sex:PlayAnimation(caster, animationData)
     end
-end
-
-
---- func desc
----@param pairData any
-function AddPairedCasterSexSpell(pairData)
-    Sex:AddSexSpells(pairData, pairData.CasterData, "PairedAddCasterSexSpell")
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -152,13 +154,19 @@ end
 --------------------------------------------------------------
 
 local function playAnimationAndSound(actor, animationData, position)
+    local animation
     if position == "Top" then
-        Animation:new(actor, animationData, animationData.FallbackTopAnimationID)
+        animation = animationData.FallbackTopAnimationID
+        Animation:new(actor, animationData, animation)
         Sound:new(actor, animationData.SoundTop, animationData.Duration, animationData.Duration)
     elseif position == "Bottom" then
+        animation = animationData.FallbackTopAnimationID
         Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
         Sound:new(actor, animationData.SoundBottom, animationData.Duration, animationData.Duration)
     end
+    local payload
+    Ext.Net.BroadcastMessage("BG3SX_AnimationChange", actor, animtiona)
+    Ext.Net.BroadcastMessage("BG3SX_SoundChange", actor)
 end
 
 -- Start new animations and sound for the actors of a scene
@@ -186,7 +194,7 @@ function Sex:PlayAnimation(entity, animProperties)
             end
         playAnimationAndSound(actor1, animationData, "Top")
         playAnimationAndSound(actor2, animationData, "Bottom")
-
+        
     elseif sceneType == "FFF"
 
     elseif sceneType == "FFM"
@@ -195,30 +203,6 @@ function Sex:PlayAnimation(entity, animProperties)
 
     elseif sceneType == "MMM"
     end
-end
-
-
--- Sound
---------------------------------------------------------------
-
---
----@param actor any
-function Sex:StopVocals(actor)
-    Sound:PlaySound(actor)
-end
-
-
---
----@param actor         Actor   - The actor to play them on
----@param soundTable    table   - A soundtable to pick sounds from
----@param minRepeatTime Time    - Min. time until repeat
----@param maxRepeatTime Time    - Max. time until repeat
-function Sex:PlayVocal(actor, soundTable, minRepeatTime, maxRepeatTime)
-    if sound then
-        Sound.PlaySound(actor, soundTable[math.random(1, #soundTable)]) -- Plays a random entry of moaning sounds on an actor
-    end
-    -- Will be an infinite loop because it calls itself, need another way to handle it
-    -- Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), Sound:PlaySound(actor, minRepeatTime, maxRepeatTime))
 end
 
 
@@ -233,18 +217,6 @@ end
 ---@param actorData any
 function Sex:EndSexSceneTimer(actorData)
     Osi.ObjectTimerLaunch(actorData.Actor, "Event_EndSexScene", 1) -- Event_EndSexScene does not exist
-end
-
-
--- Enables or Disables getting the Role Switch spell for the lesbian/gay/straight UpdateAvailableAnimations check
-local roleSwitch = 0
-function Sex:EnableRoleSwitch()
-    roleSwitch = 1
-    return roleSwitch
-end
-function Sex:DisableRoleSwitch()
-    roleSwitch = 0
-    return roleSwitch
 end
 
 

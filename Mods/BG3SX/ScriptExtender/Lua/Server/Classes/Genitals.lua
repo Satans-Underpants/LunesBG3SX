@@ -226,7 +226,7 @@ function purgeObjectSpells()
     for _, spell in pairs(Ext.Stats.GetStats("SpellData")) do
 
         -- If ContainerSpells exists, the spell is a container
-        if Ext.Stats.Get(spell).ContainerSpells and spell == "BG3SX - Change Genitals" then
+        if Ext.Stats.Get(spell).ContainerSpells and spell == "BG3SX_ChangeGenitals" then
             local container = Ext.Stats.Get(spell)
             container.ContainerSpells = ""
             container:Sync()
@@ -241,7 +241,7 @@ function Genitals:InitializeChangeGenitals()
 
 	local baseSpells = {"Vanilla_Vulva","Vanilla_Flaccid","SimpleErections", "Other_Genitals"}
 
-	local container = (Ext.Stats.Get("BG3SX - Change Genitals"))
+	local container = (Ext.Stats.Get("BG3SX_ChangeGenitals"))
 
 	for _,spell in pairs(baseSpells) do 
 		local spellsInContainer = container.ContainerSpells
@@ -285,7 +285,7 @@ function Genitals:Initialize()
 
 	-- TODO - will be moved to UI, thus the uselessness 
 	local spell = "Other_Genitals"
-	local container = (Ext.Stats.Get("BG3SX - Change Genitals"))
+	local container = (Ext.Stats.Get("BG3SX_ChangeGenitals"))
 	local spellsInContainer = container.ContainerSpells
 	container.ContainerSpells = spellsInContainer..";" .. spell
 	container:Sync()

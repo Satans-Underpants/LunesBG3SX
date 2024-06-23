@@ -41,8 +41,8 @@ function SexActor_Init(actor, needsProxy, vocalTimerName, animProperties)
     Osi.DetachFromPartyGroup(actor)
 
     Osi.RemoveSpell(actor, "BG3SX_MainContainer")
-    Osi.RemoveSpell(actor, "BG3SX - Change Genitals")
-    Osi.RemoveSpell(actor, "BG3SX - Options")
+    Osi.RemoveSpell(actor, "BG3SX_ChangeGenitals")
+    Osi.RemoveSpell(actor, "BG3SX_Options")
     removeSexPositionSpells(actor) -- Just in case
 
     -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening

@@ -15,6 +15,7 @@ function Sound:new(scene, soundTable, duration)
     local instance      = setmetatable({
         scene = scene,
         soundTable = soundTable,
+        duration = duration
     }, Animation)
 
     playSound()
@@ -25,7 +26,7 @@ end
 -- Sound
 --------------------------------------------------------------
 
---
+-- Plays a new random sound of a soundTable with a random repeat time
 ---@param actor         Actor   - The actor to play it on
 ---@param soundTable    Table   - A list of sounds to use
 ---@param minRepeatTime Time    - Minimum Repeat Time
