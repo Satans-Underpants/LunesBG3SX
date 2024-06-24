@@ -203,7 +203,7 @@ end
 -- 			if Helper:StringContains(modName, race) then
 --                 print("Error: Mod name matches a race name, which suggests improper directory structure.")
 -- 				print("Error: Spell will be added to \"Other Genitals\"")
---                 return "Other_Genitals"
+--                 return "BG3SX_OtherGenitals"
 --             end
 --         end
 --     end
@@ -239,7 +239,7 @@ end
 -- Adds base spells to Change Genitals - Vanilla Vula, Vanilla Flaccid, Erections
 function Genitals:InitializeChangeGenitals()
 
-	local baseSpells = {"Vanilla_Vulva","Vanilla_Flaccid","SimpleErections", "Other_Genitals"}
+	local baseSpells = {"BG3SX_VanillaVulva","BG3SX_VanillaFlaccid","BG3SX_SimpleErections", "BG3SX_OtherGenitals"}
 
 	local container = (Ext.Stats.Get("BG3SX_ChangeGenitals"))
 
@@ -284,7 +284,7 @@ function Genitals:Initialize()
 	setAdditionalGenitals = modGenitals
 
 	-- TODO - will be moved to UI, thus the uselessness 
-	local spell = "Other_Genitals"
+	local spell = "BG3SX_OtherGenitals"
 	local container = (Ext.Stats.Get("BG3SX_ChangeGenitals"))
 	local spellsInContainer = container.ContainerSpells
 	container.ContainerSpells = spellsInContainer..";" .. spell
@@ -388,12 +388,12 @@ local function getFilteredGenitals(spell, listOfGenitals)
 	local spellGenitals = {}
 
 	-- Vanilla Spells
-	if spell == "Vanilla_Vulva" then
+	if spell == "BG3SX_VanillaVulva" then
 		spellGenitals = getVanillaVulvas()
-	elseif spell == "Vanilla_Flaccid" then
+	elseif spell == "BG3SX_VanillaFlaccid" then
 		spellGenitals = getVanillaPenises()
 	-- Modded Dicks (including MrFunSize)	
-	elseif spell == "SimpleErections" then
+	elseif spell == "BG3SX_SimpleErections" then
 		spellGenitals = getFunErections()
 	-- Modded Dicks		
 	else
@@ -509,9 +509,11 @@ function Genitals:OverrideGenital(newGenital, uuid)
 		Ext.Timer.WaitFor(100, function()
 			-- _P("[BG3SX][Genitals.lua] - Genitals:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
 			Osi.AddCustomVisualOverride(uuid, newGenital)
-		end
-		)
+		end)
 	end
+
+	Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- MOD EVENT
+
 end
 
 -- Add a genital to a non NPC if they do not have one (only penises)
@@ -525,8 +527,8 @@ function Genitals:AddGenitalIfHasNone(uuid)
 		-- _P("[BG3SX][Genitals.lua] - AddGenitalIfHasNone triggered with uuid: ", uuid)
 		if Entity:HasPenis(uuid) and not Genitals:GetCurrentGenital(uuid) then
 			-- _P("[BG3SX][Genitals.lua] - ActorHasPenis and not getCurrentGenital - AddCustomVisualOverride triggered")
-			Osi.AddCustomVisualOverride(uuid, Genitals:GetNextGenital("Vanilla_Flaccid", uuid))
-			-- _P("[BG3SX][Genitals.lua] - getNextGenital = ", getNextGenital("Vanilla_Flaccid", uuid))
+			Osi.AddCustomVisualOverride(uuid, Genitals:GetNextGenital("BG3SX_VanillaFlaccid", uuid))
+			-- _P("[BG3SX][Genitals.lua] - getNextGenital = ", getNextGenital("BG3SX_VanillaFlaccid", uuid))
 		end
 	end
 end

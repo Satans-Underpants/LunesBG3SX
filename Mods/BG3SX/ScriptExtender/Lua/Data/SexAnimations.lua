@@ -1,4 +1,4 @@
-StartSexSpells = {
+STARTSEXSPELLS = {
     {
         AnimName = "BG3SX_StartMasturbating",
         AnimLength = 3600,
@@ -37,10 +37,32 @@ StartSexSpells = {
     },
 }
 
+ADDITIONALSEXOPTIONS = {
+    "BG3SX_StopAction",
+    "BG3SX_SwitchPlaces",
+    "BG3SX_ChangeSceneLocation",
+    "BG3SX_ChangeCameraHeight"
+}  
+
+SEXSCENESPELLS{
+    "BG3SX_StraightAnimationsContainer",
+    "BG3SX_LesbianAnimationsContainer",
+    "BG3SX_StraightAnimationsContainer",
+    "BG3SX_LesbianAnimationsContainer",
+    "BG3SX_GayAnimationsContainer",
+    "BG3SX_FemaleMasturbationContainer",
+    "BG3SX_MaleMasturbationContainer",
+    "BG3SX_StopAction",
+    "BG3SX_StopMasturbating",
+    "BG3SX_ChangeCameraHeight",
+    "BG3SX_ChangeSceneLocation",
+    "BG3SX_SwitchPlaces",
+}
+
 -- Additional data thats included when using a spell equal to AnimName
 ANIMATIONS = {
     {
-        AnimName = "Grinding",
+        AnimName = "BG3SX_Grinding",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -53,7 +75,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "8b9b1bb2-842b-422c-90ff-efbbe84835aa"
     },
     {
-        AnimName = "EatPussy",
+        AnimName = "BG3SX_EatPussy",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -66,7 +88,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "f801ec0d-9fee-4584-bae3-96d7c3e285ff"
     },
     {
-        AnimName = "FingerFuck",
+        AnimName = "BG3SX_FingerFuck",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -79,7 +101,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "a79232a2-a498-4689-a5bd-8923e80284d2"
     },
     {
-        AnimName = "Blowjob",
+        AnimName = "BG3SX_Blowjob",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -92,7 +114,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "b3984708-7664-49ae-b96d-0512497ea036"
     },
     {
-        AnimName = "Missionary",
+        AnimName = "BG3SX_Missionary",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -105,7 +127,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "48a255e9-02ec-4541-b1b7-32275da29206"
     },
     {
-        AnimName = "Doggy",
+        AnimName = "BG3SX_Doggy",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -118,7 +140,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "ffdd67e7-7363-46a4-92e2-38260ef0a2e0"
     },
     {
-        AnimName = "Cowgirl",
+        AnimName = "BG3SX_Cowgirl",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -134,7 +156,7 @@ ANIMATIONS = {
         AnimName = "StopMasturbating",
     },
     {
-        AnimName = "MasturbateStanding",
+        AnimName = "BG3SX_MasturbateStanding",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -148,7 +170,7 @@ ANIMATIONS = {
         Tall_Female = "2c60a233-b669-4b94-81dc-280e98238fd0",
     },
     {
-        AnimName = "Milking",
+        AnimName = "BG3SX_Milking",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -161,7 +183,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "d2a17851-b51b-4e4f-be1d-30dc86b6466a"
     },
     {
-        AnimName = "Wanking",
+        AnimName = "BG3SX_Wanking",
         AnimLength = 3600,
         Loop = true,
         Fade = true,
@@ -174,7 +196,7 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "49497bdc-d901-4f60-9e4e-3d31a06f9002"
     },
     {
-        AnimName = "BottleSit",
+        AnimName = "BG3SX_BottleSit",
         AnimLength = 3600,
         Loop = true,
         Fade = true,

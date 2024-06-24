@@ -22,6 +22,6 @@ KISSING_SOUNDS = {
     "CAMP_Karlach_CRD_ROM_Date_SexKiss3",
     "CAMP_Karlach_CRD_ROM_Date_SexKiss6",
     "CAMP_Karlach_CRD_ROM_Date_SexKiss7",
-    "CAMP_Karlach_CRD_ROM_Date_SexKiss9"},
+    "CAMP_Karlach_CRD_ROM_Date_SexKiss9",
 }
 

@@ -176,7 +176,7 @@ end
 function giveGenitals(uuid)
     
 
-    local spells = {"Vanilla_Vulva", "Vanilla_Flaccid"}
+    local spells = {"BG3SX_VanillaVulva", "BG3SX_VanillaFlaccid"}
     local spell
 
     -- Create Slot for genitals

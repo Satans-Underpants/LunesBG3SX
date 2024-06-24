@@ -17,9 +17,9 @@ end)
 -- Genital Settings
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
     -- If UI is used then use UI listener instead
-    if spell == "Auto_Erections" then
+    if spell == "BG3SX_AutoErections" then
         Genitals:SetAutoErection(1)
-    elseif spell == "Manual_Erections" then
+    elseif spell == "BG3SX_ManualErections" then
         Genitals:SetAutoErection(0)
     end
 end)
@@ -52,11 +52,11 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         table.insert(sexPairs, pair)
 
         if Entity:HasPenis(caster) then
-            Osi.UseSpell(caster, "SimpleErections", caster)
+            Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
         end
 
         if Entity:HasPenis(target) then
-            Osi.UseSpell(target, "SimpleErections", target)
+            Osi.UseSpell(target, "BG3SX_SimpleErections", target)
         end
     end
 end)
@@ -114,7 +114,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
         table.insert(masturbators, masturbator)
 
         if Entity:HasPenis(caster) then
-            Osi.UseSpell(caster, "SimpleErections", caster)
+            Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
         end
     end
 

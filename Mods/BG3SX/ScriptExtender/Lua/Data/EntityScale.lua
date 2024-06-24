@@ -65,3 +65,41 @@ ACTORHEIGHTS = {
     GnomeFemale = "Short",
     GnomeMale = "Short",
 }
+
+HEIGHTCLASSMATCHUPS = {
+    Same = 0,
+    TallAndMed = 1,
+    TallAndShort = 2,
+    TallAndTiny = 3,
+    MedAndShort = 4,
+    MedAndTiny = 5,
+    ShortAndTiny = 6
+}
+
+HEIGHTCLASSMATCHUPSACCURATE = {
+    ["Tall"] = {
+        ["Tall"] = 0,
+        ["Med"] = 1,
+        ["Short"] = 2,
+        ["Tiny"] = 3
+    },
+    ["Med"] = {
+        ["Tall"] = 1,
+        ["Med"] = 0,
+        ["Short"] = 4,
+        ["Tiny"] = 5
+    },
+    ["Short"] = {
+        ["Tall"] = 2,
+        ["Med"] = 4,
+        ["Short"] = 0,
+        ["Tiny"] = 6
+    },
+    ["Tiny"] = {
+        ["Tall"] = 3,
+        ["Med"] = 5,
+        ["Short"] = 6,
+        ["Tiny"] = 0
+    }
+}
+

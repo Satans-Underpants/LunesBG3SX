@@ -11,6 +11,7 @@ function OnSessionLoaded()
     ------------------------------------------------------------------------------------------------------------------------------------------
 
     Genitals:Initialize() -- Initializes genitals, check Genitals.lua
+    _P("[BG3SX][Main.lua] - Genitals:Initialize done")
 
 
     Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_, _)
@@ -18,13 +19,17 @@ function OnSessionLoaded()
         for i = #party, 1, -1 do
             Sex:AddMainSexSpells(party[i][1])
             Genitals:AddGenitalIfHasNone(party[i][1])
+
         end
+        _P("[BG3SX][Main.lua] - Sex:AddMainSexSpells and Genitals:AddGenitalIfHasNone executed for ", i, " party members")
     end)
 
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(actor)
         if string.find(actor, "CharacterCreationDummy") == nil then
             Sex:AddMainSexSpells(actor)
             Genitals:AddGenitalIfHasNone(actor)
+            
+            _P("[BG3SX][Main.lua] - Sex:AddMainSexSpells and Genitals:AddGenitalIfHasNone executed for ", actor)
         end
     end)
 end
@@ -37,5 +42,7 @@ Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 Ext.Events.GameStateChanged:Subscribe(function(e)
     if e.FromState == "Running" and e.ToState == "Save" then
         Sex:TerminateAllScenes()
+
+        _P("[BG3SX][Main.lua] - Sex:TerminateAllScenes")
     end
 end)

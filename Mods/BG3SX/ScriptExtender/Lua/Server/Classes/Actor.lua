@@ -148,11 +148,12 @@ function Actor:CopyEquipmentFromParent()
 end
 
 
---- Dresses an actor based on which equipment/armour (vanity slots) have been saved on it (BlockStripping)
+--- Dresses an actor based on which equipment/armour (vanity slots) have been saved on it (BG3SX_ToggleStrippingBlock)
 function Actor:DressActor()
-    Osi.SetArmourSet(self.entity, self.armour)
+    -- Apparently there is a function to equip an ArmourSet directly but not Equipment
+    Osi.SetArmourSet(self.entity, self.armour) -- Equips a set of possibly copied armour
 
-    for _, itemData in ipairs(self.equipment) do
+    for _, itemData in ipairs(self.equipment) do -- Equips every item found in possibly copied equipment table
         local item = Osi.GetItemByTemplateInInventory(itemData.Template, self.entity)
         if item then
             -- Copy the dye applied to the source item
@@ -163,6 +164,8 @@ function Actor:DressActor()
             -- _P("[SexActor.lua] Actor:DressActor: couldn't find an item of template " .. itemTemplate .. " in the proxy")
         end
     end
+
+    Ext.Net.BroadcastMessage("BG3SX_ActorDressed", Ext.Json.Stringify({self, self.equipment})) -- MOD EVENT
 
     self.armour = nil
     self.equipment = nil
@@ -188,19 +191,28 @@ local function finalizeSetup(self)
     -- Copy actor's display name to proxy (mostly for Tavs)
     Entity:TryCopyEntityComponent(self.parent, self.entity, "DisplayName")
 
+    -- TODO: Currently parent entitiy never gets stripped if they don't have the block enabled
     -- Copy and dress actor like the parent entity
     Actor:CopyEquipmentFromParent(self.parent)
+    if Osi.HasActiveStatus(entity, "BG3SX_ToggleStrippingBlock") == 0 then
+        Effect:Trigger(self.parent, "DARK_JUSTICIAR_VFX")
+    end
     if self.equipment then
         Actor:DressActor()
     end
 
     disableActorMovement(self.parent)
+
+    Ext.Net.BroadcastMessage("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- MOD EVENT
+
 end
 
 
 
 -- Set ups the actor like  detaching them from the group etc.
 initialize = function(self)
+
+    Ext.Net.BroadcastMessage("BG3SX_ActorInit", Ext.Json.Stringify(self)) -- MOD EVENT
 
     Osi.Transform(self.entity, Actor:GetLooks(), "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
     self.visual = self.entity.OriginalTemplate
@@ -214,7 +226,7 @@ initialize = function(self)
     -- This fixes the white Shadowheart going back to her original black hair as a proxy.
     Entity:TryCopyEntityComponent(self.parent, self.entity, "MaterialParameterOverride")
 
-    Osi.ApplyStatus(self.entity, "SEX_ACTOR", -1)
+    Osi.ApplyStatus(self.entity, BG3SX_SEXACTOR, -1)
 
     -- Wait for 0.2 seconds for everything to finalize, then call the last step of the finalize function
     Ext.Timer.WaitFor(200, finalizeSetup(self))
