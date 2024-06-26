@@ -4,6 +4,7 @@
 
 -- Initialize Debug Class
 Ext.Require("Server/Classes/_DEBUG.lua")
+Ext.Require("Server/Classes/Events.lua")
 
 -- Initialize Data
 Ext.Require("Data/SexAnimations.lua")
@@ -57,24 +58,25 @@ _P("[BG3SX] - BootstrapServer.lua Initialized")
         -- Mod Net Events --
 ------------------------------------
 
--- Available Ext.Net.BroadcastMessage Events to listen to
--- Eventname(payload)                                                       - Payload Info                              - Where it Triggers
+-- Please check the very bottom of the Events.lua file on how to subscribe to event channels
+-- Channel is a "string"(payload needs Ext.Json.Stringify(payLoad))
+-- "Channel"(payload)                                                         - Payload Info                              - Where it Triggers
 
--- BG3SX_SexStartSpellUsed({caster, target, spellData})                     - spellData = Entry of STARTSEXSPELLS{}     - SexListeners.lua
--- BG3SX_SexAnimationChange({caster, animationData})                        - animationData = Entry of ANIMATIONS{}     - SexListeners.lua
--- BG3SX_SceneInit(newScene)                                                - Scene:new(instance)                       - Scene.lua
--- BG3SX_SceneCreated(newScene)                                             - Scene:new(instance) - Fully initialized   - Scene.lua
--- BG3SX_ActorInit(newActor)                                                - Actor:new(instance)                       - Actor.lua
--- BG3SX_ActorCreated(newActor)                                             - Actor:new(instance) - Fully initialized   - Actor.lua
--- BG3SX_AnimationChange(newAnimation)                                      - Animation:new(instance)                   - Animations.lua
--- BG3SX_SoundChange(newSound)                                              - Sound:new(instance)                       - Sounds.lua
--- BG3SX_SceneTeleport({scene, oldLocation, newlocation})                   -                                           - Scene.lua
--- BG3SX_SceneSwitchPlacesBefore(scene.actors)                              - List of actors before change              - Scene.lua
--- BG3SX_SceneSwitchPlacesAfter(scene.actors)                               - List of actors after change               - Scene.lua
--- BG3SX_CameraHeightChange(entity)                                         -                                           - Sex.lua
--- [NYI] BG3SX_EntityStripped({entity, strippedEquipment, remainingEquipment})    -                                           - Actor.lua
--- BG3SX_ActorDressed({actor, equipmentTable})                              -                                           - Actor.lua
--- BG3SX_GenitalChange({entity, newGenital})                                -                                           - Genitals.lua
+-- "BG3SX_SexStartSpellUsed"({caster, target, spellData})                     - spellData = Entry of STARTSEXSPELLS{}     - SexListeners.lua
+-- "BG3SX_SexAnimationChange"({caster, animationData})                        - animationData = Entry of ANIMATIONS{}     - SexListeners.lua
+-- "BG3SX_SceneInit"(newScene)                                                - Scene:new(instance)                       - Scene.lua
+-- "BG3SX_SceneCreated"(newScene)                                             - Scene:new(instance) - Fully initialized   - Scene.lua
+-- "BG3SX_ActorInit"(newActor)                                                - Actor:new(instance)                       - Actor.lua
+-- "BG3SX_ActorCreated"(newActor)                                             - Actor:new(instance) - Fully initialized   - Actor.lua
+-- "BG3SX_AnimationChange"(newAnimation)                                      - Animation:new(instance)                   - Animations.lua
+-- "BG3SX_SoundChange"(newSound)                                              - Sound:new(instance)                       - Sounds.lua
+-- "BG3SX_SceneTeleport"({scene, oldLocation, newlocation})                   -                                           - Scene.lua
+-- "BG3SX_SceneSwitchPlacesBefore"(scene.actors)                              - List of actors before change              - Scene.lua
+-- "BG3SX_SceneSwitchPlacesAfter"(scene.actors)                               - List of actors after change               - Scene.lua
+-- "BG3SX_CameraHeightChange"(entity)                                         -                                           - Sex.lua
+-- [NYI] "BG3SX_EntityStripped"({entity, strippedEquipment, remainingEquipment})    -                                           - Actor.lua
+-- "BG3SX_ActorDressed"({actor, equipmentTable})                              -                                           - Actor.lua
+-- "BG3SX_GenitalChange"({entity, newGenital})                                -                                           - Genitals.lua
 
 
 
