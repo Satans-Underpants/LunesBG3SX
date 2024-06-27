@@ -32,10 +32,9 @@ function Effect:Fade(entity, duration)
 
         _P("[BG3SX][Effects.lua] - Effect:Fade - ScreenFade started for ", entity)
 
-        Ext.Timer.WaiFor(duration, function()
+        Ext.Timer.WaitFor(duration, function()
             clearFade(entity)
-        end
-        )
+        end)
     end
 end
 

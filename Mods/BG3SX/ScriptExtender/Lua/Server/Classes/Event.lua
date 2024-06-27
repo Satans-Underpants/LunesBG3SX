@@ -9,15 +9,19 @@ Event = {}
 Event.__index = Event
 local globalSubscribers = {}
 
--- Destroy Management
+-- Lifetime Management
 -------------------------------
 
 -- Calculates payload size by characters
 ---@param payload   string  - The payload to evaluate
 local function calculatePayloadSize(payload)
     local size = 0
-    for k, v in pairs(payload) do
-        size = size + string.len(tostring(k)) + string.len(tostring(v))
+    if type(payload) == "table" then
+        for k, v in pairs(payload) do
+            size = size + string.len(tostring(k)) + string.len(tostring(v))
+        end
+    elseif type(payload) == "string" then
+        size = size + string.len(payload)
     end
     return size
 end
@@ -28,9 +32,9 @@ end
 local function countSubscribers(channel)
     local count = 0
     for _, sub in ipairs(globalSubscribers) do
-        if sub.Channel == channel then
+        -- if sub.Channel == channel then
             count = count + 1
-        end
+        -- end
     end
     return count
 end
@@ -42,12 +46,12 @@ local function calculateWaitTime(event)
     local subscriberCount = countSubscribers(event.Channel)
     local payloadSize = calculatePayloadSize(event.Payload)
 
-    -- Adjust wait time based on payload size and subscriber count
-    local waitTime = payloadSize * 10 + subscriberCount * 100
+    -- Adjust wait time in ms based on payload size and subscriber count (1000 = 1sec)
+    local waitTime = payloadSize * 2 + subscriberCount * 5
 
-    _P("[BG3SX][Events.lua] Calculated waitTime for ", event.Channel, " to be: ", waitTime)
-    _P("[BG3SX][Events.lua] subscriberCount = ", subscriberCount, " *100")
-    _P("[BG3SX][Events.lua] payloadSize = ", payloadSize, " *100")
+    _P("[BG3SX][Events.lua] Calculated waitTime for ", Ext.Json.Stringify(event.Channel), " Event to be: ", waitTime)
+    _P("[BG3SX][Events.lua] subscriberCount = ", subscriberCount, " *5ms")
+    _P("[BG3SX][Events.lua] payloadSize = ", payloadSize, " *2ms")
 
     return waitTime
 end
@@ -131,9 +135,10 @@ function Event:Throw(event)
     -- Iterate over all subscribers
     for _, sub in ipairs(globalSubscribers) do
         local handler = sub.Handler
-        
+        _P("EVENT THROWN")
         -- Call the handler with the event
         local ok, result = xpcall(handler, debug.traceback, event)
+        _P("EVENT OK")
         if not ok then
             Ext.Utils.PrintError("[BG3SX][Events.lua] Error while dispatching event " .. event.Channel .. ": ", result)
         end

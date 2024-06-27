@@ -50,7 +50,7 @@ function Entity:HasPenis(uuid)
     -- If entity is polymorphed (e.g., Disguise Self spell)
     if Osi.HasAppliedStatusOfType(uuid, "POLYMORPHED") == 1 then
         -- As of hotfix #17, "Femme Githyanki" disguise has a dick.
-        if Entity:TryGetEntityValue(uuid, "GameObjectVisual", "RootTemplateId") == "7bb034aa-d355-4973-9b61-4d83cf29d510" then
+        if Entity:TryGetEntityValue(uuid, nil, {"GameObjectVisual", "RootTemplateId"}) == "7bb034aa-d355-4973-9b61-4d83cf29d510" then
             return true
         end
 
@@ -80,7 +80,7 @@ end
 ---@return          bool    - Returns either true or false
 function Entity:HasEquipment(uuid)
     local entity = Ext.Entity.Get(uuid)
-    if entity.GearSet then
+    if Entity:UnequipAll(uuid) then
         return true
     end
     return false
@@ -268,6 +268,7 @@ function Entity:TryGetEntityValue(uuid, previousComponent, components)
     end
 
     -- recursion
+    _D(components)
     for i, component in pairs(components) do
         if not previousComponent then
             local currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
@@ -276,7 +277,7 @@ function Entity:TryGetEntityValue(uuid, previousComponent, components)
         end
 
         table.remove(components, 1)
-        Entity:TryGetEntityValue(uuid, previousComponent, components)
+        Entity:TryGetEntityValue(uuid, nil, {components})
     end
 
 end
@@ -286,38 +287,38 @@ end
 
 
 
--- Unequips all equipment and armour (vanity slots) from an entity
+-- Unequips all equipment from an entity
 ---@param uuid  string  - The entity UUID to unequip
 function Entity:UnequipAll(uuid)
-    local entity = Ext.Entity.Get(uuid)
-    entity.OldArmourSet = Osi.GetArmourSet(entity)
-    Osi.SetArmourSet(entity, 1)
+    -- local entity = Ext.Entity.Get(uuid)
+    Osi.SetArmourSet(uuid, 1)
     
     local currentEquipment = {}
     for _, slotName in ipairs(EQ_SLOTS) do
-        local gearPiece = Osi.GetEquippedItem(entity, slotName)
+        local gearPiece = Osi.GetEquippedItem(uuid, slotName)
         if gearPiece then
             Osi.LockUnequip(gearPiece, 0)
-            Osi.Unequip(entity, gearPiece)
+            Osi.Unequip(uuid, gearPiece)
             currentEquipment[#currentEquipment+1] = gearPiece
         end
     end
-    entity.GearSet = currentEquipment
+    return currentEquipment
 end
 
 
 -- Re-equips all equipment of an entity
 ---@param uuid      string      - The entity UUID to equip
 ---@param armorset  ArmorSet    - The entities prior armorset
-function Entity:Redress(uuid, armorSet)
+function Entity:Redress(uuid, oldArmourSet, oldEquipment)
     local entity = Ext.Entity.Get(uuid)
 
-    Osi.SetArmourSet(entity, armorSet)
+    Osi.SetArmourSet(entity, oldArmourSet)
 
-    for _, item in ipairs(entity.GearSet) do
+    for _, item in ipairs(oldEquipment) do
         Osi.Equip(entity, item)
     end
-    entity.GearSet = nil
+    oldArmourSet = nil
+    oldEquipment = nil
 end
 
 
@@ -366,7 +367,7 @@ end
 local function getBody(character)
 
     -- Get the properties for the character
-    local E = GetPropertyOrDefault(Ext.Entity.Get(character),"CharacterCreationStats", nil)
+    local E = Helper:GetPropertyOrDefault(Ext.Entity.Get(character),"CharacterCreationStats", nil)
     local bt =  Ext.Entity.Get(character).BodyType.BodyType
     local bs = 0
 
@@ -419,22 +420,19 @@ end
 
 -- use a helper object and Osi to make an entity rotate
 ---@param entity uuid
----@param rotation int 
 ---@return helper uuid - helper object that the entity will look towards with Osi.SteerTo
 function Entity:SaveEntityRotation(uuid)
 
-    entityX,entityY,entityZ = Osi.GetPosition(uuid)
-    rotation = Osi.GetRotation(uuid)[2]
-    entityRotation = Math:DegreeToRadian(rotation)
+    local entityX,entityY,entityZ = Osi.GetPosition(uuid)
+    local rotationX,rotationY,rotationZ = Osi.GetRotation(uuid)
+    local entityRotation = Math:DegreeToRadian(rotationY)
 
     -- 1 = distance
-    x = (entityX + 1) * math.cos(entityRotation)
-    y = (entityY + 1) * math.sin(entityRotation)
-
+    local x = (entityX + 1) * math.cos(entityRotation)
+    local y = (entityY + 1) * math.sin(entityRotation)
 
     -- creates helper object that entity can look at
     return Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", x, y, entityZ, 0, 0, "")
-
 end
 
 -- use a helper object and Osi to make an entity rotate

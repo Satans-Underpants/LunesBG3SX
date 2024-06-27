@@ -76,8 +76,11 @@ local function playAnimationAndSound(actor, animationData, position)
         newSound = Sound:new(actor, animationData.SoundBottom, animationData.Duration)
     end
 
-    Ext.Net.BroadcastMessage("BG3SX_AnimationChange", Ext.Json.Stringify(newAnimation))
-    Ext.Net.BroadcastMessage("BG3SX_SoundChange", Ext.Json.Stringify(newSound))
+    -- Ext.Net.BroadcastMessage("BG3SX_AnimationChange", Ext.Json.Stringify(newAnimation)) -- SE EVENT
+    -- Ext.Net.BroadcastMessage("BG3SX_SoundChange", Ext.Json.Stringify(newSound)) -- SE EVENT
+    Event:new("BG3SX_AnimationChange", Ext.Json.Stringify(newAnimation)) -- MOD EVENT
+    Event:new("BG3SX_SoundChange", Ext.Json.Stringify(newSound)) -- MOD EVENT
+
     _P("[BG3SX][Sex.lua] Sex:PlayAnimation - playAnimationAndSound - Scene animation and sound change for actor: ", actor, " for animation table:")
     _D(animationData)
 end
@@ -133,12 +136,23 @@ end
 
 --- Handles the StartSexSpellUsed Event by starting new animations based on spell used
 ---@param caster            string  - The casters UUID
----@param target            string  - The targets UUID
+---@param targets            table  - The targets UUID
 ---@param animationData     table   - The animation data to use
-function Sex:StartSexSpellUsed(caster, target, animationData)
+function Sex:StartSexSpellUsed(caster, targets, animationData)
+    local scene
     if animationData then
-        _P("[BG3SX][Sex.lua] - Sex:StartSexSpellUsed - Creating new scene")
-        local scene = Scene:new({caster, target})
+        _P("----------------------------- [BG3SX][Sex.lua] - Sex:StartSexSpellUsed - Creating new scene -----------------------------")
+        local sexHavers = {caster}
+
+        for _,target in pairs(targets) do
+            -- for masturbation caster == target
+            if not target == caster then
+                table.insert(sexHavers, target)
+            end
+        end
+
+        scene = Scene:new(sexHavers)
+
         Sex:InitSexSpells(scene)
         Sex:PlayAnimation(caster, animationData)
     end
@@ -248,7 +262,9 @@ function Sex:ChangeCameraHeight(entity)
         entity:Replicate("GameObjectVisual")
     end
 
-    Ext.Net.BroadcastMessage("BG3SX_CameraHeightChange", Ext.Json.Stringify(entity))
+    -- Ext.Net.BroadcastMessage("BG3SX_CameraHeightChange", Ext.Json.Stringify(entity)) -- SE MOD
+    Event:new("BG3SX_CameraHeightChange", Ext.Json.Stringify(entity)) -- MOD EVENT
+
     _P("[BG3SX][Sex.lua] - Sex:ChangeCameraHeight for ", entity)
     
 end

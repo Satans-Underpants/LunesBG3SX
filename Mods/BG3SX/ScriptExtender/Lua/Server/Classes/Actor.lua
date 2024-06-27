@@ -25,19 +25,21 @@ local initialize
 function Actor:new(parent)
     local instance       = setmetatable({
         parent           = parent,
-        genital          = Genitals:GetCurrentGenital(parent),
+        genital          = Genital:GetCurrentGenital(parent),
         autoErection     = UserSettings:GetAutoErection(parent),
+        oldArmourSet     = Osi.GetArmourSet(parent),
+        oldEquipment     = Entity:UnequipAll(parent),
         isStripped       = Entity:HasEquipment(parent),
         positon          = Osi.GetPosition(parent),
         rotation         = Osi.GetRotation(parent),
         currentAnimation = "",
-        uuid             = Osi.CreateAtObject(Osi.GetTemplate(parent), self.position, 1, 0, "", 1),
+        uuid             = Osi.CreateAtObject(Osi.GetTemplate(parent), parent, 1, 0, "", 1),
         visual           = "",
         equipment        = {},
         armour           = {},
     }, Actor)
 
-    initialize(self) -- Automatically calls the Itinitialize function on creation
+    initialize(instance) -- Automatically calls the Itinitialize function on creation
 
     return instance
 end
@@ -54,10 +56,10 @@ end
 -- Cleans up the actor
 function Actor:Destroy()
 
-    Osi.StopAnimation(self.entity, 1)
-    Osi.TeleportToPosition(self.entity, 0,0,0) -- hide from viewer
-    Osi.SetOnStage(self.entity, 0) -- to disable AI
-    Osi.RequestDeleteTemporary(self.entity)
+    Osi.StopAnimation(self.uuid, 1)
+    Osi.TeleportToPosition(self.uuid, 0,0,0) -- hide from viewer
+    Osi.SetOnStage(self.uuid, 0) -- to disable AI
+    Osi.RequestDeleteTemporary(self.uuid)
 
 
     -- Then destroy element from Scene.lua saved actors table
@@ -92,39 +94,51 @@ end
 
 --- Gets parent entities looks including attachments like Wylls Horns
 ---@return lookTemplate string   - uuid - The looks of a parent entity
-function Actor:GetLooks()
-    local visTemplate = Entity:TryGetEntityValue(self.parent, "GameObjectVisual", "RootTemplateId", nil, nil)
-    local origTemplate = Entity:TryGetEntityValue(self.parent, "OriginalTemplate", "OriginalTemplate", nil, nil)
+function Actor:GetLooks(parent)
+    _P("DUMP PARENT 1")
+    _D(parent)
+    local visTemplate = Entity:TryGetEntityValue(parent, nil, {"GameObjectVisual", "RootTemplateId"})
+    local origTemplate = Entity:TryGetEntityValue(parent, nil, {"OriginalTemplate", "OriginalTemplate"})
 
-    local lookTemplate = self.parent
+    local lookTemplate = parent
+    _P("DUMP LOOKTEMPLATE 1")
+    _D(lookTemplate)
     -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
     -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
     if visTemplate then
+        _P("Has visTemplate")
         if origTemplate then
+            _P("Has origTemplate")
             if origTemplate ~= visTemplate then
                 lookTemplate = visTemplate
+                _P("DUMP LOOKTEMPLATE 2")
+                _D(lookTemplate)
             end
         elseif origTemplate == nil then -- It's Tav?
+            _P("origTemplate == nil")
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
-            if Osi.HasAppliedStatusOfType(self.parent, "POLYMORPHED") == 1 or self.parent.AppearanceOverride then
+            if Osi.HasAppliedStatusOfType(parent, "POLYMORPHED") == 1 or parent.AppearanceOverride then
                 lookTemplate = visTemplate
+                _P("DUMP LOOKTEMPLATE 3")
+                _D(lookTemplate)
             end
         end
     end
+    _P(lookTemplate)
     return lookTemplate
 end
 
 
 --- Copies the equipment from the parent entity to the actor
 function Actor:CopyEquipmentFromParent()
-    local currentArmorSet = Osi.GetArmorSet(self.parent)
+    local currentArmorSet = Osi.GetArmourSet(self.parent)
 
     local copySlots = {}
     if currentArmorSet == 0 then -- "Normal" armour set
         copySlots = { "Boots", "Breast", "Cloak", "Gloves", "Amulet", "MeleeMainHand", "MeleeOffHand", "RangedMainHand", "RangedOffHand", "MusicalInstrument" }
 
         -- If the actor has "Hide Helmet" option off in the inventory...
-        if Entity:TryGetEntityValue(self.parent, "ServerCharacter", "PlayerData", "HelmetOption") ~= 0 then
+        if Entity:TryGetEntityValue(self.parent, nil, {"ServerCharacter", "PlayerData", "HelmetOption"}) ~= 0 then
             copySlots[#copySlots + 1] = "Helmet"
         end
     elseif currentArmorSet == 1 then -- "Vanity" armour set
@@ -136,7 +150,7 @@ function Actor:CopyEquipmentFromParent()
         local gearPiece = Osi.GetEquippedItem(self.parent, slotName)
         if gearPiece then
             local gearTemplate = Osi.GetTemplate(gearPiece)
-            Osi.TemplateAddTo(gearTemplate, self.entity, 1, 0)
+            Osi.TemplateAddTo(gearTemplate, self.uuid, 1, 0)
             copiedEquipment[#copiedEquipment + 1] = { Template = gearTemplate, SourceItem = gearPiece } 
         end
     end
@@ -151,24 +165,27 @@ end
 --- Dresses an actor based on which equipment/armour (vanity slots) have been saved on it (BG3SX_ToggleStrippingBlock)
 function Actor:DressActor()
     -- Apparently there is a function to equip an ArmourSet directly but not Equipment
-    Osi.SetArmourSet(self.entity, self.armour) -- Equips a set of possibly copied armour
+    Osi.SetArmourSet(self.uuid, self.oldArmourSet) -- Equips a set of possibly copied armour
 
-    for _, itemData in ipairs(self.equipment) do -- Equips every item found in possibly copied equipment table
-        local item = Osi.GetItemByTemplateInInventory(itemData.Template, self.entity)
+    _D(self.oldEquipment)
+    for _, itemData in pairs(self.oldEquipment) do -- Equips every item found in possibly copied equipment table
+        local item = Osi.GetItemByTemplateInInventory(itemData, self.uuid)
         if item then
             -- Copy the dye applied to the source item
             TryCopyEntityComponent(itemData.SourceItem, item, "ItemDye")
 
-            Osi.Equip(self.entity, item)
+            Osi.Equip(self.uuid, item)
+            table.insert(self.equipment, item)
         else
             -- _P("[SexActor.lua] Actor:DressActor: couldn't find an item of template " .. itemTemplate .. " in the proxy")
         end
     end
 
-    Ext.Net.BroadcastMessage("BG3SX_ActorDressed", Ext.Json.Stringify({self, self.equipment})) -- MOD EVENT
+    -- Ext.Net.BroadcastMessage("BG3SX_ActorDressed", Ext.Json.Stringify({self, self.equipment})) -- SE EVENT
+    Event:new("BG3SX_ActorDressed", Ext.Json.Stringify({self, self.equipment})) -- MOD EVENT - Events.lua
 
-    self.armour = nil
-    self.equipment = nil
+    -- self.armour = nil
+    -- self.equipment = nil
 end
 
 
@@ -180,30 +197,31 @@ end
 local function finalizeSetup(self)
 
     -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
-    if Entity:TryCopyEntityComponent(self.parent, self.entity, "AppearanceOverride") then
+    if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
         -- Type is special Appearance Edit Enhanced thing?
-        if self.entity.GameObjectVisual.Type ~= 2 then
-            self.entity.GameObjectVisual.Type = 2
-            self.entity:Replicate("GameObjectVisual")
+        if self.uuid.GameObjectVisual.Type ~= 2 then
+            self.uuid.GameObjectVisual.Type = 2
+            self.uuid:Replicate("GameObjectVisual")
         end
     end
 
     -- Copy actor's display name to proxy (mostly for Tavs)
-    Entity:TryCopyEntityComponent(self.parent, self.entity, "DisplayName")
+    Entity:TryCopyEntityComponent(self.parent, self.uuid, "DisplayName")
 
     -- TODO: Currently parent entitiy never gets stripped if they don't have the block enabled
     -- Copy and dress actor like the parent entity
-    Actor:CopyEquipmentFromParent(self.parent)
-    if Osi.HasActiveStatus(entity, "BG3SX_ToggleStrippingBlock") == 0 then
+    self:CopyEquipmentFromParent()
+    if Osi.HasActiveStatus(self.parent, "BG3SX_ToggleStrippingBlock") == 0 then
         Effect:Trigger(self.parent, "DARK_JUSTICIAR_VFX")
     end
     if self.equipment then
-        Actor:DressActor()
+        self:DressActor()
     end
 
     disableActorMovement(self.parent)
 
-    Ext.Net.BroadcastMessage("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- MOD EVENT
+    -- Ext.Net.BroadcastMessage("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- SE EVENT
+    Event:new("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- MOD EVENT - Events.lua
 
 end
 
@@ -212,21 +230,22 @@ end
 -- Set ups the actor like  detaching them from the group etc.
 initialize = function(self)
 
-    Ext.Net.BroadcastMessage("BG3SX_ActorInit", Ext.Json.Stringify(self)) -- MOD EVENT
+    -- Ext.Net.BroadcastMessage("BG3SX_ActorInit", Ext.Json.Stringify(self)) -- SE EVENT
+    Event:new("BG3SX_ActorInit", self) -- MOD EVENT - Events.lua
 
-    Osi.Transform(self.entity, Actor:GetLooks(), "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
-    self.visual = self.entity.OriginalTemplate
-    Osi.SetDetached(self.entity, 1)
-    disableActorMovement(self.entity)
+    Osi.Transform(self.uuid, Actor:GetLooks(self.parent), "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
+    self.visual = self.uuid.OriginalTemplate
+    Osi.SetDetached(self.uuid, 1)
+    disableActorMovement(self.uuid)
 
     -- Copy Voice component to the proxy because Osi.CreateAtObject does not do this and we want the proxy to play vocals
-    Entity:TryCopyEntityComponent(self.parent, self.entity, "Voice")
+    Entity:TryCopyEntityComponent(self.parent, self.uuid, "Voice")
 
     -- Copy MaterialParameterOverride component if present.
     -- This fixes the white Shadowheart going back to her original black hair as a proxy.
-    Entity:TryCopyEntityComponent(self.parent, self.entity, "MaterialParameterOverride")
+    Entity:TryCopyEntityComponent(self.parent, self.uuid, "MaterialParameterOverride")
 
-    Osi.ApplyStatus(self.entity, BG3SX_SEXACTOR, -1)
+    Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1)
 
     -- Wait for 0.2 seconds for everything to finalize, then call the last step of the finalize function
     Ext.Timer.WaitFor(200, finalizeSetup(self))

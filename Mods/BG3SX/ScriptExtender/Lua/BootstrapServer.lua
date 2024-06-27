@@ -4,7 +4,8 @@
 
 -- Initialize Debug Class
 Ext.Require("Server/Classes/_DEBUG.lua")
-Ext.Require("Server/Classes/Events.lua")
+Ext.Require("Server/Classes/Event.lua")
+Ext.Require("Server/Classes/SubscriberTest.lua")
 
 -- Initialize Data
 Ext.Require("Data/SexAnimations.lua")
@@ -14,6 +15,7 @@ Ext.Require("Data/Equipment.lua")
 Ext.Require("Data/Statuses.lua")
 Ext.Require("Data/Origins.lua")
 Ext.Require("Data/Sounds.lua")
+Ext.Require("Data/Spells.lua")
 Ext.Require("Data/SceneTypes.lua")
 
 -- Initialize Utilities
@@ -24,12 +26,12 @@ Ext.Require("Utils/Helper.lua")
 -- Ext.Require("Utils/UIHelper.lua") - [NYI]
 
 -- Initialize General Classes (Order intentional)
-Ext.Require("Server/Classes/Effects.lua")
-Ext.Require("Server/Classes/Sounds.lua")
+Ext.Require("Server/Classes/Effect.lua")
+Ext.Require("Server/Classes/Sound.lua")
 Ext.Require("Server/Classes/Animation.lua")
-Ext.Require("Server/Classes/Genitals.lua")
+Ext.Require("Server/Classes/Genital.lua")
 Ext.Require("Server/Classes/Actor.lua")
-Ext.Require("Server/Classes/Scenes.lua")
+Ext.Require("Server/Classes/Scene.lua")
 Ext.Require("Server/Classes/Sex.lua")
 -- Ext.Require("Server/Classes/Spells.lua") - [NYI]
 -- Ext.Require("Server/Classes/Objects.lua") - [NYI]
@@ -58,7 +60,7 @@ _P("[BG3SX] - BootstrapServer.lua Initialized")
         -- Mod Net Events --
 ------------------------------------
 
--- Please check the very bottom of the Events.lua file on how to subscribe to event channels
+-- Please check the very bottom of the Event.lua file on how to subscribe to event channels
 -- Channel is a "string"(payload needs Ext.Json.Stringify(payLoad))
 -- "Channel"(payload)                                                         - Payload Info                              - Where it Triggers
 

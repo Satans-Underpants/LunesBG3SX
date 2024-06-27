@@ -44,7 +44,7 @@ ADDITIONALSEXOPTIONS = {
     "BG3SX_ChangeCameraHeight"
 }  
 
-SEXSCENESPELLS{
+SEXSCENESPELLS = {
     "BG3SX_StraightAnimationsContainer",
     "BG3SX_LesbianAnimationsContainer",
     "BG3SX_StraightAnimationsContainer",

@@ -4,7 +4,7 @@
 -- 
 ----------------------------------------------------------------------------------------------------
 
-local UserSettings = {}
+UserSettings = {}
 UserSettings.__index = UserSettings
 
 
@@ -88,7 +88,7 @@ end
 
 -- Create new SaveFile with default values
 local function instantiateDefaultSettings()
-    Genitals:SetAutoErection(1)
+    Genital:SetAutoErection(1)
 end
 
 

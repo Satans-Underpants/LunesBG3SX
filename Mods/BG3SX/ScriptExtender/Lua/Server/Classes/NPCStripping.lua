@@ -136,7 +136,8 @@ function stripNPC(uuid)
     Ext.Resource.Get(resource,"CharacterVisual").VisualSet.Slots = naked
 
     local payload = {naked = naked, resource = resource}
-    Ext.Net.BroadcastMessage("NPCStrip", Ext.Json.Stringify(payload))
+    -- Ext.Net.BroadcastMessage("BG3SX_NPCStrip", Ext.Json.Stringify(payload)) -- SE EVENT
+    Event:new("BG3SX_NPCStrip", Ext.Json.Stringify(payload)) -- MOD EVENT - Events.lua
 end
 
  -- redress the NPC (give original template)
@@ -156,7 +157,8 @@ function redress(uuid)
             table.remove(OriginalTemplates, getIndex(OriginalTemplates, entry))
 
             local payload = {dressed = dressed, resource = resource}
-            Ext.Net.BroadcastMessage("NPCDress", Ext.Json.Stringify(payload))
+            -- Ext.Net.BroadcastMessage("BG3SX_NPCDress", Ext.Json.Stringify(payload)) -- SE EVENT
+            Event:new("BG3SX_NPCDress", Ext.Json.Stringify(payload)) -- MOD EVENT - Events.lua
             return
         end
     end
@@ -191,7 +193,7 @@ function giveGenitals(uuid)
     end
 
     -- Transform genitals
-    local newGenital = Genitals:GetNextGenital(spell, uuid)
+    local newGenital = Genital:GetNextGenital(spell, uuid)
     Osi.AddCustomVisualOverride(uuid, newGenital)
 
 end
@@ -200,7 +202,7 @@ end
  -- remove the genital
  -- @param           - uuid of the NPC
 function removeGenitals(uuid)
-    local genital = Genitals:GetCurrentGenital(uuid)
+    local genital = Genital:GetCurrentGenital(uuid)
     Osi.RemoveCustomVisualOvirride(uuid, genital) 
 end
 

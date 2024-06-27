@@ -11,8 +11,8 @@
 --------------------------------------------------------------
 
 
-Genitals = {}
-Genitals.__index = Genitals
+Genital = {}
+Genital.__index = Genital
 
 -- Saved genitals for better performance
 local allGenitals = {}
@@ -237,9 +237,9 @@ end
 -- TODO - this would make FunErections a requirement - can we add it directly to the mod? 
 -- Then refractor the code, instead of SimpleErections we might scan for BG3SX instead
 -- Adds base spells to Change Genitals - Vanilla Vula, Vanilla Flaccid, Erections
-function Genitals:InitializeChangeGenitals()
+function Genital:InitializeChangeGenitals()
 
-	local baseSpells = {"BG3SX_VanillaVulva","BG3SX_VanillaFlaccid","BG3SX_SimpleErections", "BG3SX_OtherGenitals"}
+	local baseSpells = {"BG3SX_VanillaVulva", "BG3SX_VanillaFlaccid", "BG3SX_SimpleErections", "BG3SX_OtherGenitals"}
 
 	local container = (Ext.Stats.Get("BG3SX_ChangeGenitals"))
 
@@ -256,14 +256,14 @@ end
 -- TODO - the rest of this code can be repursposed for when we switch to UI implementation
 
 -- Add Genital containers - Vanilla & MrFunSize are always added
-function Genitals:Initialize()
+function Genital:Initialize()
 
 
     -- Purge all Containers (this solves a lot of issues)
     purgeObjectSpells()
 
 	-- Initialize Genitals that are always added
-	Genitals:InitializeChangeGenitals()
+	Genital:InitializeChangeGenitals()
 
 	-- Default gentials that come with BG3SX
 
@@ -325,7 +325,7 @@ local function getPermittedGenitals(uuid)
 	local race
 	for _, tag in pairs(raceTags) do
 		if RACETAGS[tag] then
-			race = Helper:GetKey(RACES, RACETAGS[tag])
+			race = Table:GetKey(RACES, RACETAGS[tag])
 			break
 		end
 	end
@@ -347,7 +347,7 @@ local function getPermittedGenitals(uuid)
 	-- specific Githzerai feature (T3 and T4 are not strong, but normal)
 	local bodyShapeOverride = false
 
-	if Helper:Contains(raceTags, "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67") then
+	if Table:Contains(raceTags, "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67") then
 		bodyShapeOverride = true
 	end
 
@@ -407,7 +407,7 @@ local function getFilteredGenitals(spell, listOfGenitals)
 
 	-- only keep genitals that are in both filtered (race/body) and Mod
     for _, genital in ipairs(listOfGenitals) do
-        if Helper:Contains(spellGenitals, genital) then
+        if Table:Contains(spellGenitals, genital) then
             table.insert(filteredGenitals, genital)
         end
     end
@@ -426,7 +426,7 @@ local genitalChoice = {}
 -- @param spell		- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 -- @param uuid 	    - uuid of entity that will receive the genital
 ---return 			- ID of CharacterCreationAppearaceVisual
-function Genitals:GetNextGenital(spell, uuid)
+function Genital:GetNextGenital(spell, uuid)
 
     local permittedGenitals = getPermittedGenitals(uuid)
     local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
@@ -460,23 +460,23 @@ end
 -- Get the current genital of the entity
 -- @param uuid 	    - uuid of entity that has a genital
 ---return 			- ID of CharacterCreationAppearaceVisual
-function Genitals:GetCurrentGenital(uuid)
+function Genital:GetCurrentGenital(uuid)
 	local entity = Ext.Entity.Get(uuid)
 	local allGenitals = getAllGenitals()
 	local ccAppearance =  Helper:GetPropertyOrDefault(entity, "CharacterCreationAppearance", nil)
-	-- _P("[BG3SX][Genitals.lua] - Genitals:GetCurrentGenital - ccAppearance = ", ccAppearance)
+	-- _P("[BG3SX][Genitals.lua] - Genital:GetCurrentGenital - ccAppearance = ", ccAppearance)
 
 	local characterVisuals
 	if ccAppearance then
-		characterVisuals = GetPropertyOrDefault(ccAppearance, "Visuals", nil)
-		-- _P("[BG3SX][Genitals.lua] - Genitals:GetCurrentGenital - characterVisuals = ", characterVisuals)
+		characterVisuals = Helper:GetPropertyOrDefault(ccAppearance, "Visuals", nil)
+		-- _P("[BG3SX][Genitals.lua] - Genital:GetCurrentGenital - characterVisuals = ", characterVisuals)
 	end
 	-- local characterVisuals =  Ext.Entity.Get(uuid):GetAllComponents().CharacterCreationAppearance.Visuals
 	
 	if characterVisuals then
 		for _, visual in pairs(characterVisuals)do
-			if Helper:Contains(allGenitals, visual) then
-				-- _P("[BG3SX][Genitals.lua] - Genitals:GetCurrentGenital - visual to be returned = ", visual)
+			if Table:Contains(allGenitals, visual) then
+				-- _P("[BG3SX][Genitals.lua] - Genital:GetCurrentGenital - visual to be returned = ", visual)
 			return visual
 			end
 		end
@@ -487,10 +487,10 @@ end
 -- Override the current genital with the new one
 ---@param newGenital	string	- UUID of CharacterCreationAppearaceVisual of type PrivateParts
 ---@param uuid			string	- UUID of entity that will receive the genital
-function Genitals:OverrideGenital(newGenital, uuid)
-	-- _P("[BG3SX][Genitals.lua] - Genitals:OverrideGenital for uuid: ", uuid)
-	local currentGenital = getCurrentGenital(uuid)
-	-- _P("[BG3SX][Genitals.lua] - Genitals:OverrideGenital - currentGenital = ", currentGenital)
+function Genital:OverrideGenital(newGenital, uuid)
+	-- _P("[BG3SX][Genitals.lua] - Genital:OverrideGenital for uuid: ", uuid)
+	local currentGenital = Genital:GetCurrentGenital(uuid)
+	-- _P("[BG3SX][Genitals.lua] - Genital:OverrideGenital - currentGenital = ", currentGenital)
 
 	-- Origins don't have genitals - We have to add one before we can remove it
 	-- if currentGenital and not (currentGenital == newGenital) then
@@ -499,35 +499,36 @@ function Genitals:OverrideGenital(newGenital, uuid)
 	-- end
 
 	if newGenital then
-		-- _P("[BG3SX][Genitals.lua] - Genitals:OverrideGenital - newGenital exists = ", newGenital)
+		-- _P("[BG3SX][Genitals.lua] - Genital:OverrideGenital - newGenital exists = ", newGenital)
 		if currentGenital then
-			-- _P("[BG3SX][Genitals.lua] - Genitals:OverrideGenital - currentGenital exists = ", currentGenital, "RemoveCustomVisualOvirride triggered")
+			-- _P("[BG3SX][Genitals.lua] - Genital:OverrideGenital - currentGenital exists = ", currentGenital, "RemoveCustomVisualOvirride triggered")
 			Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
 		else
-			-- _P("[BG3SX][Genitals.lua] - Genitals:OverrideGenital - currentGenital does not exist")
+			-- _P("[BG3SX][Genitals.lua] - Genital:OverrideGenital - currentGenital does not exist")
 		end
 		Ext.Timer.WaitFor(100, function()
-			-- _P("[BG3SX][Genitals.lua] - Genitals:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
+			-- _P("[BG3SX][Genitals.lua] - Genital:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
 			Osi.AddCustomVisualOverride(uuid, newGenital)
 		end)
 	end
 
-	Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- MOD EVENT
+	-- Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- SE EVENT
+	Event:new("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- MOD EVENT - Events.lua
 
 end
 
 -- Add a genital to a non NPC if they do not have one (only penises)
 -- @param uuid              - uuid of entity that will receive the genital
-function Genitals:AddGenitalIfHasNone(uuid)
+function Genital:AddGenitalIfHasNone(uuid)
 	-- _P("[BG3SX][Genitals.lua] - AddGenitalIfHasNone")
 
 	if (Osi.IsTagged(uuid, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
 	or Osi.IsTagged(uuid, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
 	and Osi.IsTagged(uuid, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0 then
 		-- _P("[BG3SX][Genitals.lua] - AddGenitalIfHasNone triggered with uuid: ", uuid)
-		if Entity:HasPenis(uuid) and not Genitals:GetCurrentGenital(uuid) then
+		if Entity:HasPenis(uuid) and not Genital:GetCurrentGenital(uuid) then
 			-- _P("[BG3SX][Genitals.lua] - ActorHasPenis and not getCurrentGenital - AddCustomVisualOverride triggered")
-			Osi.AddCustomVisualOverride(uuid, Genitals:GetNextGenital("BG3SX_VanillaFlaccid", uuid))
+			Osi.AddCustomVisualOverride(uuid, Genital:GetNextGenital("BG3SX_VanillaFlaccid", uuid))
 			-- _P("[BG3SX][Genitals.lua] - getNextGenital = ", getNextGenital("BG3SX_VanillaFlaccid", uuid))
 		end
 	end

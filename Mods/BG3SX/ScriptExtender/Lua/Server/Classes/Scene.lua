@@ -35,8 +35,10 @@ function Scene:new(entities)
         startLocations  = {}, -- Never changes - Used to teleport everyone back on Scene:Destroy()
         timerHandles    = {}
     }, Scene)
+    _P("ENTITIES DUMP")
+    _D(entities)
 
-    initialize(self) -- Automatically calls the Iinitialize function on creation
+    initialize(instance) -- Automatically calls the Iinitialize function on creation
     
 
     return instance
@@ -64,11 +66,14 @@ local BODY_SCALE_DELAY = 2000
 
 -- Sets an entities start location before possibly getting teleported during a scene for an easy reset on Scene:Destroy() with getStartLocation
 ---@param entity string - UUID of the entity 
-local function setStartLocation(entity)
-    local position = Osi.GetPosition(entity)
-    local rotationHelper = Entity:SaveEntityRotation(uuid)
+local function setStartLocations(scene)
+    for _,entity in pairs(scene.entities) do
+        local position = Osi.GetPosition(entity)
+        local rotationHelper = Entity:SaveEntityRotation(entity)
 
-    table.insert(startLocations, {entity = entity, position = position, rotationHelper = rotation})
+        table.insert(scene.startLocations, {entity = entity, position = position, rotationHelper = rotationHelper})
+    end
+    _D(scene.startLocations)
 end
 
 -- Gets an entities start location for a location reset of an entity on Scene:Destroy()
@@ -85,9 +90,8 @@ local function getStartLocation(entity)
 end
 
 
-local function getEntityPosition(entity)
-    local scene = Scene:FindSceneByEntity(entity)
-    for _, startLoca in pairs(scene.startLcations) do
+local function getEntityPosition(scene, entity)
+    for _, startLoca in pairs(scene.startLocations) do
         if entity == startLoca.entity then
             return startLoca.positon
         end
@@ -100,9 +104,10 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
+-- Finds a
 ---@param entity uuid
-function Scene:FindSceneByEntity(entityToSearch, SAVEDSCENES)
-    for _, scene in pairs(SAVEDSCENES) do
+function Scene:FindSceneByEntity(entityToSearch)
+    for i, scene in ipairs(SAVEDSCENES) do
         for _, entities in pairs(scene.entities) do
             for _, entity in pairs(entities) do
                 if entityToSearch == entity then
@@ -111,7 +116,7 @@ function Scene:FindSceneByEntity(entityToSearch, SAVEDSCENES)
             end
         end
     end
-    _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any scenes!")
+    _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any existing scenes! Returning nil")
 end
 
 
@@ -142,8 +147,8 @@ end
 
 -- Temporary teleport the original away a bit to give room for the proxy
 ---@param entity uuid
-function Scene:MakeSpace(entity)
-    local startPos = getEntityPosition(entity)
+function Scene:MakeSpace(scene, entity)
+    local startPos = getEntityPosition(scene, entity)
     Osi.TeleportToPosition(entity, startPos.x + 1.3, startPos.x.y, startPos.x.z + 1.3, "", 0, 0, 0, 0, 1)
 
     _P("[BG3SX][Scene.lua] - Scene:MakeSpace - For ", entity)
@@ -154,9 +159,9 @@ end
 ---@param entity uuid
 function Scene:SetCamera(entity)
     if Osi.IsPartyMember(entity, 0) == 1 then
-        local curScale = Entity:TryGetEntityValue(entity, "GameObjectVisual", "Scale", nil, nil)
+        local curScale = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
         if curScale then
-            actorData.OldVisualScale = curScale
+            entity.OldVisualScale = curScale
             entity.GameObjectVisual.Scale = 0.5
             entity:Replicate("GameObjectVisual")
         end
@@ -168,7 +173,7 @@ end
 -- Scale entity for camera
 ---@param entity uuid
 function Scene:ScaleEntity(entity)
-    local startScale = Entity:TryGetEntityValue(entity, {"GameObjectVisual", "Scale"})
+    local startScale = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
     table.insert(self.entityScales, {entity = entity, scale = startScale})
     Entity:Scale(entity, 0.5)
 
@@ -176,7 +181,7 @@ function Scene:ScaleEntity(entity)
 end
 
 -- After this is called, wait 400 ms
-function Scene:Setup(self)
+function Scene:Setup()
     for _, entity in pairs(self.entities) do
         Scene:MakeSpace(entity)
         Scene:SetCamera(entity)
@@ -194,8 +199,13 @@ end
 
 ---@param self Scene
 local function finalizeScene(self)
-
+local targetIsCaster
     for _, actor in pairs(self.actors) do
+        if actor == targetIsCaster then
+            break
+        else
+            targetIsCaster = actor
+        end
 
         -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
         _P("[BG3SX][Scene.lua] - finilizeScene(self) - Entity:TryCopyEntityComponent - AppearanceOverride")
@@ -212,10 +222,10 @@ local function finalizeScene(self)
         Entity:TryCopyEntityComponent(actor.parent, actor, "DisplayName")
         -- Entity:TryCopyEntityComponent(actorEntity, proxyEntity, "CustomName")
 
-        if #actor.equipment > 0 then
-            _P("[BG3SX][Scene.lua] - finilizeScene(self) - actor:DressActor()")
-            actor:DressActor()
-        end
+        -- if #actor.equipment > 0 then
+        --     _P("[BG3SX][Scene.lua] - finilizeScene(self) - actor:DressActor()")          -- Already used per Actor:new in its initialize function
+        --     actor:DressActor()
+        -- end
 
         _P("[BG3SX][Scene.lua] - finilizeScene(self) - Teleport and rotate every actor to actor.parent startlocation")
         for _, startLocation in pairs(self.startLocations) do
@@ -233,11 +243,12 @@ local function finalizeScene(self)
 
     end
 
-    _P("[BG3SX][Scene.lua] - finilizeScene(self) - add new scene to list of SAVEDSCENES:")
-    table.insert(SAVEDSCENES, self)
+    _P("[BG3SX][Scene.lua] - finilizeScene(self) - Scene Created:")
+    -- table.insert(SAVEDSCENES, self)
     _D(SAVEDSCENES)
 
-    Ext.Net.BroadcastMessage("BG3SX_SceneCreated", Ext.Json.Stringify(self)) -- MOD EVENT
+    -- Ext.Net.BroadcastMessage("BG3SX_SceneCreated", Ext.Json.Stringify(self)) -- SE EVENT
+    Event:new("BG3SX_SceneCreated", Ext.Json.Stringify(self)) -- MOD EVENT
 
 end
 
@@ -251,10 +262,18 @@ end
 -- Initializes the actor
 ---@param self instance - "self" to actually be applied to the Actor:new instance
 initialize = function(self)
+
+    _P("[BG3SX][Scene.lua] - initialize(self) - add new scene to list of SAVEDSCENES:")
+    table.insert(SAVEDSCENES, self)
+    _D(SAVEDSCENES)
     
-    Ext.Net.BroadcastMessage("BG3SX_SceneInit", Ext.Json.Stringify(self)) -- MOD EVENT
+    -- Ext.Net.BroadcastMessage("BG3SX_SceneInit", Ext.Json.Stringify(self)) -- SE EVENT
+    -- Event:new("BG3SX_SceneInit", self) -- MOD EVENT
+    Event:new("BG3SX_SceneInit", Ext.Json.Stringify(self))
     _P("[BG3SX][Scene.lua] - Scene:new() - initialize")
     
+    setStartLocations(self) -- Save start location of each entity to later teleport them back
+
     -- Iterate over every entity thats involved in a new scene
     for _, entity in pairs(self.entities) do
 
@@ -262,7 +281,6 @@ initialize = function(self)
 
         Effect:Fade(entity, 2000) -- 2sec Fade duration on scene creation
 
-        setStartLocation(entity) -- Save start location of each entity to later teleport them back
 
         -- Create a new actor for each entity involved in the scene
         _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Actor:new( ", entity, " )")
@@ -293,7 +311,7 @@ initialize = function(self)
 
     _P("-----------------------------------------------------------")
 
-    Scene:Setup(self)
+    self:Setup()
     
     _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Begin WaitFor Timer with 0.4s delay to call Scene:FinilizeSetup")
     Ext.Timer.WaitFor(400, function()
@@ -357,7 +375,8 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     _D(newLocation)
     _P("--------------------------------------------------------------------")
 
-    Ext.Net.BroadcastMessage("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- MOD EVENT
+    -- Ext.Net.BroadcastMessage("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- SE EVENT
+    Event:new("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- MOD EVENT
 
 end
 
@@ -394,7 +413,7 @@ function Scene:Destroy()
 
             -- Requips everything which may have been removed during scene initialization
             if Entity:HasEquipment(actor.parent) then
-                Entity:Redress(actor.parent)
+                Entity:Redress(actor.parent, actor.oldArmourSet, actor.oldEquipment)
             end
 
             -- Delete actor
