@@ -7,13 +7,13 @@ Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(caster,
     if spell == "BG3SX_ChangeSceneLocation" then
         local scene = Scene:FindSceneByEntity(caster)
         -- Ext.Net.BroadcastMessage("BG3SX_SceneSwitchPlacesBefore", Ext.Json.Stringify({scene.actors})) -- SE EVENT
-        Event:new("BG3SX_SceneSwitchPlacesBefore", Ext.Json.Stringify({scene.actors})) -- MOD EVENT
+        Event:new("BG3SX_SceneSwitchPlacesBefore", scene.actors) -- MOD EVENT
 
         Scene:MoveSceneToLocation(caster, location)
         Sex:PlayAnimation(caster, scene.currentAnimation) -- Plays the prior to teleport selected animation again
 
         -- Ext.Net.BroadcastMessage("BG3SX_SceneSwitchPlacesAfter", Ext.Json.Stringify({scene.actors})) -- SE EVENT
-        Event:new("BG3SX_SceneSwitchPlacesAfter", Ext.Json.Stringify({scene.actors})) -- MOD EVENT
+        Event:new("BG3SX_SceneSwitchPlacesAfter", scene.actors) -- MOD EVENT
     end
 end)
 

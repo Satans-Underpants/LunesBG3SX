@@ -182,7 +182,7 @@ function Actor:DressActor()
     end
 
     -- Ext.Net.BroadcastMessage("BG3SX_ActorDressed", Ext.Json.Stringify({self, self.equipment})) -- SE EVENT
-    Event:new("BG3SX_ActorDressed", Ext.Json.Stringify({self, self.equipment})) -- MOD EVENT - Events.lua
+    Event:new("BG3SX_ActorDressed", {self.uuid, self.equipment}) -- MOD EVENT - Events.lua
 
     -- self.armour = nil
     -- self.equipment = nil
@@ -221,7 +221,7 @@ local function finalizeSetup(self)
     disableActorMovement(self.parent)
 
     -- Ext.Net.BroadcastMessage("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- SE EVENT
-    Event:new("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- MOD EVENT - Events.lua
+    Event:new("BG3SX_ActorCreated", self) -- MOD EVENT - Events.lua
 
 end
 

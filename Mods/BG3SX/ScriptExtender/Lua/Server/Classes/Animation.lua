@@ -13,13 +13,13 @@ Animation.__index = Animation
 
 local playAnimation
 function Animation:new(actor, animationData, animation)
-    local instance      = setmetatable({
+    local instance = setmetatable({
         actor = actor,
         animationData = animationData,
         animation = animation
     }, Animation)
 
-    playAnimation(self) -- Automatically calls this function on creation
+    playAnimation(instance) -- Automatically calls this function on creation
 
     return instance
 end
@@ -36,14 +36,14 @@ end
 ---@param animationData Table   - The chosen animations data table
 ---@param animation     string  - The actual animation to play because there could be multiple ("Top"/"Bottom")
 playAnimation = function(self)
-    Osi.PlayAnimation(self.actor, "") -- First, stop current animation on actor
+    Osi.PlayAnimation(self.actor.uuid, "") -- First, stop current animation on actor
     if self.animationData.Loop == true then
-        Osi.PlayLoopingAnimation(self.actor, "", self.animation, "", "", "", "", "")
+        Osi.PlayLoopingAnimation(self.actor.uuid, "", self.animation, "", "", "", "", "")
     else
-        Osi.PlayAnimation(self.actor, self.animation)
+        Osi.PlayAnimation(self.actor.uuid, self.animation)
     end
 
-    _P("[BG3SX][Animations.lua] - Animation:new() - playAnimation - Begin to play ", self.animation, " on ", self.actor)
+    _P("[BG3SX][Animations.lua] - Animation:new() - playAnimation - Begin to play ", self.animation, " on ", self.actor.uuid)
 end
 
 

@@ -24,7 +24,7 @@ function Sound:new(actor, soundTable, duration)
         duration = duration
     }, Animation)
 
-    playSound(self) -- Automatically calls this function on creation
+    playSound(instance) -- Automatically calls this function on creation
 
     return instance
 end
@@ -38,17 +38,18 @@ playSound = function(self)
     local minRepeatTime = self.duration - 200
     local maxRepeatTime = self.duration + 200
     
-    Osi.PlaySound(self.actor, "") -- First, stop current sound
+    Osi.PlaySound(self.actor.uuid, "") -- First, stop current sound
 
     local sound = self.soundTable[math.random(1, #self.soundTable)]
-    Osi.PlaySound(self.actor, sound) -- Plays a random entry of sounds on an actor
+    Osi.PlaySound(self.actor.uuid, sound) -- Plays a random entry of sounds on an actor
     
     -- Will be an infinite loop until registered timer gets canceled on Scene:Destroy()
-    local newSoundTimer = Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), function()
-        playSound(self)
-    end)
+    -- local newSoundTimer = Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), function()
+    --     playSound(self)
+    -- end)
+    -- scene:RegisterNewSoundTimer(newSoundTimer)
 
-    scene:RegisterNewSoundTimer(newSoundTimer)
+    scene:RegisterNewSoundTimer(sound)
 
-    _P("[BG3SX][Sounds.lua] - Sound:new() - playSound - Begin to play ", sound, " on ", self.actor)
+    _P("[BG3SX][Sounds.lua] - Sound:new() - playSound - Begin to play ", sound, " on ", self.actor.uuid)
 end

@@ -326,8 +326,9 @@ end
 ---@param uuid  string  - The entity UUID to scale
 ---@param value float   - The value to increase or decrease the entity scale with
 function Entity:Scale(uuid, value)
-    uuid.GameObjectVisual.Scale = value
-    uuid:Replicate("GameObjectVisual")
+    local entity = Ext.Entity.Get(uuid)
+    entity.GameObjectVisual.Scale = value
+    entity:Replicate("GameObjectVisual")
 end
 
 --- func desc

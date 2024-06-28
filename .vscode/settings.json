@@ -1,5 +1,5 @@
 {
-    "bg3ModHelper.rootModPath": "/home/satan/Documents/BG3_MODDING/Mods/LunesBG3SX",
+    "bg3ModHelper.rootModPath": "c:\\Users\\janda\\Desktop\\BG3 Modding\\Mods\\LunesBG3SX",
     "bg3ModHelper.packingPriority": 0,
     "bg3ModHelper.modName": "BG3SX",
     "Lua.diagnostics.globals": [
@@ -8,6 +8,7 @@
     "Lua.diagnostics.disable": [
         "undefined-global",
         "param-type-mismatch",
-        "undefined-doc-name"
+        "undefined-doc-name",
+        "redundant-parameter"
     ]
 }

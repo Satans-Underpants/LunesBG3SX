@@ -13,7 +13,7 @@ local initialize
 --------------------------------------------------------------
 
 ---@param entities          table   - Table with Entitie uuids to use for a scene
----@param rootposition      table   - Table of x,y,z coordinates
+---@param rootPosition      table   - Table of x,y,z coordinates
 ---@param rotation          table   - Table with x,y,z,w 
 ---@param actors            table   - Table of all actors in a scene
 ---@param currentAnimation  table   - Table of the current animation being played
@@ -25,7 +25,7 @@ local initialize
 function Scene:new(entities)
     local instance      = setmetatable({
         entities        = entities,
-        rootposition    = Osi.GetPosition(entities[1]),
+        rootPosition    = {},
         rotation        = Osi.GetRotation(entities[1]),
         actors          = {},
         currentAnimation= {},
@@ -35,6 +35,8 @@ function Scene:new(entities)
         startLocations  = {}, -- Never changes - Used to teleport everyone back on Scene:Destroy()
         timerHandles    = {}
     }, Scene)
+    -- Somehow can't set rootPosition within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
+    instance.rootPosition.x, instance.rootPosition.y, instance.rootPosition.z = Osi.GetPosition(entities[1])
     _P("ENTITIES DUMP")
     _D(entities)
 
@@ -68,11 +70,14 @@ local BODY_SCALE_DELAY = 2000
 ---@param entity string - UUID of the entity 
 local function setStartLocations(scene)
     for _,entity in pairs(scene.entities) do
-        local position = Osi.GetPosition(entity)
+        local position = {}
+        position.x, position.y, position.z = Osi.GetPosition(entity)
+        _D(position)
         local rotationHelper = Entity:SaveEntityRotation(entity)
 
         table.insert(scene.startLocations, {entity = entity, position = position, rotationHelper = rotationHelper})
     end
+    _P("------------------STARTLOCATIONS-------------")
     _D(scene.startLocations)
 end
 
@@ -80,8 +85,8 @@ end
 ---@param entity    string  - UUID of the entity 
 ---@return          table   - The entities position
 ---@return          table   - The entities rotation
-local function getStartLocation(entity)
-    local scene = Scene:FindSceneByEntity(entity)
+local function getStartLocation(scene, entity)
+    _D(scene.startLocations)
     for _, entry in pairs(scene.startLocations) do
         if entry.entity == entity then
             return entry.position, entry.rotationHelper
@@ -91,9 +96,9 @@ end
 
 
 local function getEntityPosition(scene, entity)
-    for _, startLoca in pairs(scene.startLocations) do
-        if entity == startLoca.entity then
-            return startLoca.positon
+    for _, entry in pairs(scene.startLocations) do
+        if entity == entry.entity then
+            return entry.position
         end
     end
 end
@@ -108,12 +113,12 @@ end
 ---@param entity uuid
 function Scene:FindSceneByEntity(entityToSearch)
     for i, scene in ipairs(SAVEDSCENES) do
-        for _, entities in pairs(scene.entities) do
-            for _, entity in pairs(entities) do
+        for _, entity in pairs(scene.entities) do
+            -- for _, entity in pairs(entities) do
                 if entityToSearch == entity then
                     return scene
                 end
-            end
+            -- end
         end
     end
     _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any existing scenes! Returning nil")
@@ -147,9 +152,9 @@ end
 
 -- Temporary teleport the original away a bit to give room for the proxy
 ---@param entity uuid
-function Scene:MakeSpace(scene, entity)
-    local startPos = getEntityPosition(scene, entity)
-    Osi.TeleportToPosition(entity, startPos.x + 1.3, startPos.x.y, startPos.x.z + 1.3, "", 0, 0, 0, 0, 1)
+function Scene:MakeSpace(entity)
+    local startPos = getEntityPosition(self, entity)
+    Osi.TeleportToPosition(entity, startPos.x + 1.3, startPos.y, startPos.z + 1.3, "", 0, 0, 0, 0, 1)
 
     _P("[BG3SX][Scene.lua] - Scene:MakeSpace - For ", entity)
 end
@@ -183,9 +188,9 @@ end
 -- After this is called, wait 400 ms
 function Scene:Setup()
     for _, entity in pairs(self.entities) do
-        Scene:MakeSpace(entity)
-        Scene:SetCamera(entity)
-        Scene:ScaleEntity(entity)
+        self:MakeSpace(entity)
+        self:SetCamera(entity)
+        self:ScaleEntity(entity)
     end
     _P("[BG3SX][Scene.lua] - Scene:Setup() finished")
 end
@@ -209,9 +214,9 @@ local targetIsCaster
 
         -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
         _P("[BG3SX][Scene.lua] - finilizeScene(self) - Entity:TryCopyEntityComponent - AppearanceOverride")
-        if Entity:TryCopyEntityComponent(actor.parent, actor, "AppearanceOverride") then
-            if actor.GameObjectVisual.Type ~= 2 then
-                actor.GameObjectVisual.Type = 2
+        if Entity:TryCopyEntityComponent(actor.parent, actor.uuid, "AppearanceOverride") then
+            if actor.uuid.GameObjectVisual.Type ~= 2 then
+                actor.uuid.GameObjectVisual.Type = 2
                 actor:Replicate("GameObjectVisual")
             end
         end
@@ -219,7 +224,7 @@ local targetIsCaster
 
         -- Copy actor's display name to proxy (mostly for Tavs)
         _P("[BG3SX][Scene.lua] - finilizeScene(self) - Entity:TryCopyEntityComponent - DisplayName")
-        Entity:TryCopyEntityComponent(actor.parent, actor, "DisplayName")
+        Entity:TryCopyEntityComponent(actor.parent, actor.uuid, "DisplayName")
         -- Entity:TryCopyEntityComponent(actorEntity, proxyEntity, "CustomName")
 
         -- if #actor.equipment > 0 then
@@ -230,8 +235,8 @@ local targetIsCaster
         _P("[BG3SX][Scene.lua] - finilizeScene(self) - Teleport and rotate every actor to actor.parent startlocation")
         for _, startLocation in pairs(self.startLocations) do
             if actor.parent == startLocation.entity then
-                Osi.TeleportToPosition(actor, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
-                Entity:RotateEntity(actor, startLocation.rotationHelper)
+                Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
+                Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
             end
         end
 
@@ -248,7 +253,7 @@ local targetIsCaster
     _D(SAVEDSCENES)
 
     -- Ext.Net.BroadcastMessage("BG3SX_SceneCreated", Ext.Json.Stringify(self)) -- SE EVENT
-    Event:new("BG3SX_SceneCreated", Ext.Json.Stringify(self)) -- MOD EVENT
+    Event:new("BG3SX_SceneCreated", self) -- MOD EVENT
 
 end
 
@@ -269,7 +274,7 @@ initialize = function(self)
     
     -- Ext.Net.BroadcastMessage("BG3SX_SceneInit", Ext.Json.Stringify(self)) -- SE EVENT
     -- Event:new("BG3SX_SceneInit", self) -- MOD EVENT
-    Event:new("BG3SX_SceneInit", Ext.Json.Stringify(self))
+    Event:new("BG3SX_SceneInit", self)
     _P("[BG3SX][Scene.lua] - Scene:new() - initialize")
     
     setStartLocations(self) -- Save start location of each entity to later teleport them back
@@ -332,7 +337,7 @@ end
 ---@param newLocation - x, y, z
 function Scene:MoveSceneToLocation(entity, newLocation)
     local scene = Scene:FindSceneByEntity(entity)
-    local oldLocation = scene.rootposition
+    local oldLocation = scene.rootPosition
 
     for _, actor in pairs(scene.actors) do
         oldLocation = {actor.position.x, actor.position.y, actor.position.z}
@@ -366,7 +371,7 @@ function Scene:MoveSceneToLocation(entity, newLocation)
         
     end
 
-    scene.rootposition = newLocation -- Always update rootposition of a scene if it changes
+    scene.rootPosition = newLocation -- Always update rootPosition of a scene if it changes
 
     _P("--------------------------------------------------------------------")
     _P("[BG3SX][Scene.lua] - Scene:MoveSceneToLocation - Moving scene from:")
@@ -376,7 +381,7 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     _P("--------------------------------------------------------------------")
 
     -- Ext.Net.BroadcastMessage("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- SE EVENT
-    Event:new("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- MOD EVENT
+    Event:new("BG3SX_SceneTeleport", {scene, oldLocation, newLocation}) -- MOD EVENT
 
 end
 
@@ -406,7 +411,7 @@ function Scene:Destroy()
         for _, actor in pairs(self.actors) do
 
             -- Teleport actors parent (the main entity) back to its startLocation
-            local startLocation = getStartLocation(actor.parent)
+            local startLocation = getStartLocation(self, actor.parent)
             Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.z)
             -- TODO: Osi.SteerTo(actor.parent, helper object which we need to create on scene creation,1)
             Osi.SetVisible(actor, 1)

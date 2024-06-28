@@ -513,7 +513,7 @@ function Genital:OverrideGenital(newGenital, uuid)
 	end
 
 	-- Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- SE EVENT
-	Event:new("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- MOD EVENT - Events.lua
+	Event:new("BG3SX_GenitalChange", {uuid, newGenital}) -- MOD EVENT - Events.lua
 
 end
 

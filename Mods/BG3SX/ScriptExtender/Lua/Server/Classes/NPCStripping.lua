@@ -137,7 +137,7 @@ function stripNPC(uuid)
 
     local payload = {naked = naked, resource = resource}
     -- Ext.Net.BroadcastMessage("BG3SX_NPCStrip", Ext.Json.Stringify(payload)) -- SE EVENT
-    Event:new("BG3SX_NPCStrip", Ext.Json.Stringify(payload)) -- MOD EVENT - Events.lua
+    Event:new("BG3SX_NPCStrip", payload) -- MOD EVENT - Events.lua
 end
 
  -- redress the NPC (give original template)
@@ -158,7 +158,7 @@ function redress(uuid)
 
             local payload = {dressed = dressed, resource = resource}
             -- Ext.Net.BroadcastMessage("BG3SX_NPCDress", Ext.Json.Stringify(payload)) -- SE EVENT
-            Event:new("BG3SX_NPCDress", Ext.Json.Stringify(payload)) -- MOD EVENT - Events.lua
+            Event:new("BG3SX_NPCDress", payload) -- MOD EVENT - Events.lua
             return
         end
     end

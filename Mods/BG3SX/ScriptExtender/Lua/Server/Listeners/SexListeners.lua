@@ -9,7 +9,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
             Sex:StartSexSpellUsed(caster, {target}, spellData) -- Checks which spell it was and initiates a scene
 
             -- Ext.Net.BroadcastMessage("BG3SX_SexStartSpellUsed", Ext.Json.Stringify({caster, target, spellData})) -- SE EVENT
-            Event:new("BG3SX_SexStartSpellUsed", Ext.Json.Stringify({caster, target, spellData})) -- MOD EVENT
+            Event:new("BG3SX_SexStartSpellUsed", {caster, target, spellData}) -- MOD EVENT
         end
     end
 
@@ -19,7 +19,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
             Sex:PlayAnimation(caster, animationData)
             
             -- Ext.Net.BroadcastMessage("BG3SX_SexAnimationChange", Ext.Json.Stringify({caster, animationData})) -- SE EVENT
-            Event:new("BG3SX_SexAnimationChange", Ext.Json.Stringify({caster, animationData})) -- MOD EVENT
+            Event:new("BG3SX_SexAnimationChange", {caster, animationData}) -- MOD EVENT
         end
     end
 end)

@@ -30,13 +30,15 @@ end
 function Sex:DetermineSceneType(scene)
     local involvedEntities = 0
     local penises = 0
+    _P("---------------------------------------------------------------------------------------------------")
+    _D(scene.entities)
     for _, entity in pairs(scene.entities) do
         involvedEntities = involvedEntities+1
         if Entity:HasPenis(entity) then
             penises = penises+1
         end
     end
-    for _,entry in SCENETYPES do
+    for _,entry in pairs(SCENETYPES) do
         if involvedEntities == entry.involvedEntities and penises == entry.penises then
             return entry.sceneType
         end
@@ -68,18 +70,26 @@ local function playAnimationAndSound(actor, animationData, position)
     if position == "Top" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animation)
-        newSound = Sound:new(actor, animationData.SoundTop, animationData.Duration)
+        _P("---------------------------------ANIMATIONDATA--------------------------------")
+        _D(animationData)
+        newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
         
     elseif position == "Bottom" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
-        newSound = Sound:new(actor, animationData.SoundBottom, animationData.Duration)
+        _P("---------------------------------ANIMATIONDATA--------------------------------")
+        _D(animationData)
+        if animationData.SoundBottom then
+            newSound = Sound:new(actor, animationData.SoundBottom, animationData.AnimLength)
+        else
+            newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
+        end
     end
 
     -- Ext.Net.BroadcastMessage("BG3SX_AnimationChange", Ext.Json.Stringify(newAnimation)) -- SE EVENT
     -- Ext.Net.BroadcastMessage("BG3SX_SoundChange", Ext.Json.Stringify(newSound)) -- SE EVENT
-    Event:new("BG3SX_AnimationChange", Ext.Json.Stringify(newAnimation)) -- MOD EVENT
-    Event:new("BG3SX_SoundChange", Ext.Json.Stringify(newSound)) -- MOD EVENT
+    Event:new("BG3SX_AnimationChange", newAnimation) -- MOD EVENT
+    Event:new("BG3SX_SoundChange", newSound) -- MOD EVENT
 
     _P("[BG3SX][Sex.lua] Sex:PlayAnimation - playAnimationAndSound - Scene animation and sound change for actor: ", actor, " for animation table:")
     _D(animationData)
@@ -180,11 +190,12 @@ end
 -- Adds additional sex spells for an entity
 ---@param entity    string  - The entity UUID to give additional spells to
 local function addAdditionalSexOptions(entity)
+    local scene = Scene:FindSceneByEntity(entity)
     local spellCount = 1
     for _,spell in pairs(ADDITIONALSEXOPTIONS) do
         -- If iteration lands on SwitchPlaces spell, check which scene type the entity is in and only add it if its not a solo one
         if spell == "BG3SX_SwitchPlaces" then
-            local sceneType = Sex:DetermineSceneType(entity)
+            local sceneType = Sex:DetermineSceneType(scene)
             if not sceneType == "MasturbateFemale" or not sceneType == "MasturbateMale" then
                 _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
                 Ext.Timer.WaitFor(spellCount*200, function()
@@ -213,7 +224,7 @@ function Sex:InitSexSpells(scene)
     for _, entity in pairs(scene.entities) do -- For each entity involved
         if Entity:IsPlayable(entity) then -- Check if they are playable to not do this with NPCs
 
-            for _, entry in SCENETYPES do
+            for _, entry in pairs(SCENETYPES) do
                 if sceneType == entry.sceneType then
                     Osi.AddSpell(entity, entry.container) -- Add correct spellcontainer based on sceneType
                 end
@@ -263,7 +274,7 @@ function Sex:ChangeCameraHeight(entity)
     end
 
     -- Ext.Net.BroadcastMessage("BG3SX_CameraHeightChange", Ext.Json.Stringify(entity)) -- SE MOD
-    Event:new("BG3SX_CameraHeightChange", Ext.Json.Stringify(entity)) -- MOD EVENT
+    Event:new("BG3SX_CameraHeightChange", entity) -- MOD EVENT
 
     _P("[BG3SX][Sex.lua] - Sex:ChangeCameraHeight for ", entity)
     
