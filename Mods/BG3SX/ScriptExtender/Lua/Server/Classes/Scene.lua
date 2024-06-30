@@ -26,7 +26,7 @@ function Scene:new(entities)
     local instance      = setmetatable({
         entities        = entities,
         rootPosition    = {},
-        rotation        = Osi.GetRotation(entities[1]),
+        rotation        = {},
         actors          = {},
         currentAnimation= {},
         currentSounds   = {},
@@ -35,8 +35,9 @@ function Scene:new(entities)
         startLocations  = {}, -- Never changes - Used to teleport everyone back on Scene:Destroy()
         timerHandles    = {}
     }, Scene)
-    -- Somehow can't set rootPosition within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
+    -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
     instance.rootPosition.x, instance.rootPosition.y, instance.rootPosition.z = Osi.GetPosition(entities[1])
+    instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(entities[1])
     _P("ENTITIES DUMP")
     _D(entities)
 
@@ -339,8 +340,8 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     local scene = Scene:FindSceneByEntity(entity)
     local oldLocation = scene.rootPosition
 
-    for _, actor in pairs(scene.actors) do
-        oldLocation = {actor.position.x, actor.position.y, actor.position.z}
+    for _, actor in ipairs(scene.actors) do
+        oldLocation = actor.position
         local dx = newLocation.x - actor.position.x
         local dy = newLocation.y - actor.position.y
         local dz = newLocation.z - actor.position.z
@@ -356,7 +357,7 @@ function Scene:MoveSceneToLocation(entity, newLocation)
         --Osi.SetDetached(casterData.Actor, 1)
 
         -- Move stuff
-        Osi.CharacterMoveToPosition(actor, newLocation.x, newLocation.y, newLocation.z, "", "")
+        Osi.CharacterMoveToPosition(actor.uuid, newLocation.x, newLocation.y, newLocation.z, "", "")
         Osi.CharacterMoveToPosition(actor.parent, newLocation.x, newLocation.y, newLocation.z, "", "")
         
         -- TODO - when we use props we probably want to "bind" them to a specific actor

@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------
 
 Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(caster, x, y, z, spell, spellType, spellElement, storyActionID)
-    local location = {x,y,z}
+    local location = {x = x, y = y, z = z}
     if spell == "BG3SX_ChangeSceneLocation" then
         local scene = Scene:FindSceneByEntity(caster)
         -- Ext.Net.BroadcastMessage("BG3SX_SceneSwitchPlacesBefore", Ext.Json.Stringify({scene.actors})) -- SE EVENT

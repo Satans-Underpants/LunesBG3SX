@@ -30,14 +30,17 @@ function Actor:new(parent)
         oldArmourSet     = Osi.GetArmourSet(parent),
         oldEquipment     = Entity:UnequipAll(parent),
         isStripped       = Entity:HasEquipment(parent),
-        positon          = Osi.GetPosition(parent),
-        rotation         = Osi.GetRotation(parent),
+        position          = {},
+        rotation         = {},
         currentAnimation = "",
         uuid             = Osi.CreateAtObject(Osi.GetTemplate(parent), parent, 1, 0, "", 1),
         visual           = "",
         equipment        = {},
         armour           = {},
     }, Actor)
+    -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
+    instance.position.x, instance.position.y, instance.position.z = Osi.GetPosition(parent)
+    instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(parent)
 
     initialize(instance) -- Automatically calls the Itinitialize function on creation
 

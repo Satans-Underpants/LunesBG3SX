@@ -108,8 +108,9 @@ function Sex:PlayAnimation(entity, animationData)
     if sceneType == "MasturbateFemale" or sceneType == "MasturbateMale" then
         playAnimationAndSound(scene.actors[1], animationData, "Bottom")
     elseif sceneType == "Lesbian" or sceneType == "Gay" then
-        playAnimationAndSound(scene.actor[1], animationData, "Top")
-        playAnimationAndSound(scene.actor[2], animationData, "Bottom")
+        _D(scene.actors)
+        playAnimationAndSound(scene.actors[1], animationData, "Top")
+        playAnimationAndSound(scene.actors[2], animationData, "Bottom")
     elseif sceneType == "Straight" then
         local actor1 = scene.actors[1]
         local actor2 = scene.actors[2]
@@ -145,8 +146,8 @@ end
 ----------------------------------------------------------------------------------------------------
 
 --- Handles the StartSexSpellUsed Event by starting new animations based on spell used
----@param caster            string  - The casters UUID
----@param targets            table  - The targets UUID
+---@param caster            string  - The caster UUID
+---@param targets           table   - The targets UUIDs
 ---@param animationData     table   - The animation data to use
 function Sex:StartSexSpellUsed(caster, targets, animationData)
     local scene
@@ -156,8 +157,9 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
 
         for _,target in pairs(targets) do
             -- for masturbation caster == target
-            if not target == caster then
+            if target ~= caster then
                 table.insert(sexHavers, target)
+                _P("ADDED " , target , " TO SEXHAVERS")
             end
         end
 
