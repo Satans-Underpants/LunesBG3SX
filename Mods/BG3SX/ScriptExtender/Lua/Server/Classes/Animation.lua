@@ -36,10 +36,9 @@ end
 ---@param animationData Table   - The chosen animations data table
 ---@param animation     string  - The actual animation to play because there could be multiple ("Top"/"Bottom")
 playAnimation = function(self)
-    Osi.PlayAnimation(self.actor.uuid, "") -- First, stop current animation on actor
+  --  Osi.PlayAnimation(self.actor.uuid, "") -- First, stop current animation on actor
     if self.animationData.Loop == true then
         Osi.PlayLoopingAnimation(self.actor.uuid, "", self.animation, "", "", "", "", "")
-        _P("Osi.PlayLoopingAnimation(" , self.actor.uuid, ", \"\", ", self.animation, ", \"\", \"\", \"\", \"\", \"\")")
     else
         Osi.PlayAnimation(self.actor.uuid, self.animation)
     end

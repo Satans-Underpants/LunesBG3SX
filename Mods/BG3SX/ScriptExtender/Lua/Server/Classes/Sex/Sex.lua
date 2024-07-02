@@ -105,9 +105,14 @@ function Sex:PlayAnimation(entity, animationData)
     scene.currentAnimation = animationData -- Saves the newly selected animationData table to the scene
     
     _P("[BG3SX][Sex.lua] - Sex:PlayAnimation - determines Scene to be of sceneType ", sceneType)
-    if sceneType == "MasturbateFemale" or sceneType == "MasturbateMale" then
+    if sceneType == "MasturbateFemale" then
         playAnimationAndSound(scene.actors[1], animationData, "Bottom")
+
+    elseif sceneType == "MasturbateMale" then
+        playAnimationAndSound(scene.actors[1], animationData, "Top")
+
     elseif sceneType == "Lesbian" or sceneType == "Gay" then
+    
        -- _D(scene.actors)
         playAnimationAndSound(scene.actors[1], animationData, "Top")
         playAnimationAndSound(scene.actors[2], animationData, "Bottom")
@@ -116,14 +121,9 @@ function Sex:PlayAnimation(entity, animationData)
         local actor2 = scene.actors[2]
         -- In case of actor1 not being male, swap them around to still assign correct animations
         if not Entity:HasPenis(scene.actors[1].parent) then
-            --_P("[BG3SX][Sex.lua] - Sex:PlayAnimation - scene.actors before setup switch")
-          --  _D(scene.actors)
-
-            actor2 = actor1
+            actor1 = scene.actors[2]
             actor2 = scene.actors[1]
-            
-            --_P("[BG3SX][Sex.lua] - Sex:PlayAnimation - scene.actors after setup switch")
-            --_D(scene.actors)
+
         end
         playAnimationAndSound(actor1, animationData, "Top")
         playAnimationAndSound(actor2, animationData, "Bottom")
@@ -136,14 +136,6 @@ function Sex:PlayAnimation(entity, animationData)
     elseif sceneType == "MMM" then
 
     end
-
-
-
-    --for i=1,10000 do 
-     --   _P("attempting masturbation for ",scene.actors[1].uuid)
-     --   Osi.PlayAnimation(scene.actors[1].uuid, "fd91f2cc-e570-68dc-0473-2fae1ded6c0e") -- female masturbation
-   -- end
-
 end
 
 

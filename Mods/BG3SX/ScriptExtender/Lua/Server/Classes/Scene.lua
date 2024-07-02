@@ -205,14 +205,8 @@ end
 
 ---@param self Scene
 local function finalizeScene(self)
-local targetIsCaster
     for _, actor in pairs(self.actors) do
-        if actor == targetIsCaster then
-            break
-        else
-            targetIsCaster = actor
-        end
-
+        
         -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
         _P("[BG3SX][Scene.lua] - finilizeScene(self) - Entity:TryCopyEntityComponent - AppearanceOverride")
         if Entity:TryCopyEntityComponent(actor.parent, actor.uuid, "AppearanceOverride") then
@@ -234,12 +228,17 @@ local targetIsCaster
         -- end
 
         _P("[BG3SX][Scene.lua] - finilizeScene(self) - Teleport and rotate every actor to actor.parent startlocation")
-        for _, startLocation in pairs(self.startLocations) do
-            if actor.parent == startLocation.entity then
+
+        local startLocation = self.startLocations[1]
+
+        --for _, startLocation in pairs(self.startLocations) do
+            --_P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
+           -- if actor.parent == startLocation.entity then
+               -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
                 Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
                 Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
-            end
-        end
+           -- end
+        --end
 
         Osi.SetVisible(actor.parent, 0)
 
@@ -281,8 +280,16 @@ initialize = function(self)
     setStartLocations(self) -- Save start location of each entity to later teleport them back
 
     -- Iterate over every entity thats involved in a new scene
+    local entityIteratedOverBefore
+    local entityRemoved
     for _, entity in pairs(self.entities) do
-
+        if entity == entityIteratedOverBefore then
+            entityRemoved = entity
+            break -- Safeguard check to not create another actor if entity may have been added twice into scene (e.g. masturbation (caster/target))
+        else
+            entityIteratedOverBefore = entity
+        end
+        
         _P("---------------New entity in the new scene----------------")
 
         Effect:Fade(entity, 2000) -- 2sec Fade duration on scene creation
@@ -301,10 +308,8 @@ initialize = function(self)
         for _, spell in pairs(ILLEGAL_DURING_ANIMATION_SPELLS) do
             Osi.RemoveSpell(entity, spell)
         end
-       
-
+        
         -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening
-
         if Osi.GetFlag(FLAG_COMPANION_IN_CAMP, entity) == 1 then
             Osi.ClearFlag(FLAG_COMPANION_IN_CAMP, entity)
         end
@@ -313,6 +318,10 @@ initialize = function(self)
         local entityBodyShape = Entity:GetBodyShape(entity)
         local entityHeightClass = Entity:GetHeightClass(entity)
 
+    end
+
+    if entityRemoved then
+        table.remove(self.entities, entityRemoved)
     end
 
     _P("-----------------------------------------------------------")
@@ -410,8 +419,15 @@ function Scene:Destroy()
         for _, actor in pairs(self.actors) do
 
             -- Teleport actors parent (the main entity) back to its startLocation
-            local startLocation = getStartLocation(self, actor.parent)
-            Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.z)
+            local startLocation
+            for i, entry in iparis(self.startLocations)
+                if entry.entity == actor.parent then
+                    startLocation = entry
+                end
+            end
+            Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
+            Entity:RotateEntity(actor.parent, startLocation.rotationHelper)
+
             -- TODO: Osi.SteerTo(actor.parent, helper object which we need to create on scene creation,1)
             Osi.SetVisible(actor, 1)
 

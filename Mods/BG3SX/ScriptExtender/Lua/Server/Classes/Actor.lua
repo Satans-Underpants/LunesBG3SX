@@ -234,7 +234,8 @@ end
 initialize = function(self)
 
     -- Ext.Net.BroadcastMessage("BG3SX_ActorInit", Ext.Json.Stringify(self)) -- SE EVENT
-    Event:new("BG3SX_ActorInit", self) -- MOD EVENT - Events.lua
+    Event:new("BG3SX_ActorInit", self) -- MOD EVENT - Events.
+    -- _D(self)
 
     Osi.Transform(self.uuid, Actor:GetLooks(self.parent), "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
     self.visual = self.uuid.OriginalTemplate
