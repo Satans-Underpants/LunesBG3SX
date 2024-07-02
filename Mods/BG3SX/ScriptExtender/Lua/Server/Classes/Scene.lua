@@ -38,8 +38,8 @@ function Scene:new(entities)
     -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
     instance.rootPosition.x, instance.rootPosition.y, instance.rootPosition.z = Osi.GetPosition(entities[1])
     instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(entities[1])
-    _P("ENTITIES DUMP")
-    _D(entities)
+    --_P("ENTITIES DUMP")
+    --_D(entities)
 
     initialize(instance) -- Automatically calls the Iinitialize function on creation
     
@@ -73,13 +73,13 @@ local function setStartLocations(scene)
     for _,entity in pairs(scene.entities) do
         local position = {}
         position.x, position.y, position.z = Osi.GetPosition(entity)
-        _D(position)
+        --_D(position)
         local rotationHelper = Entity:SaveEntityRotation(entity)
 
         table.insert(scene.startLocations, {entity = entity, position = position, rotationHelper = rotationHelper})
     end
     _P("------------------STARTLOCATIONS-------------")
-    _D(scene.startLocations)
+    --_D(scene.startLocations)
 end
 
 -- Gets an entities start location for a location reset of an entity on Scene:Destroy()
@@ -87,7 +87,7 @@ end
 ---@return          table   - The entities position
 ---@return          table   - The entities rotation
 local function getStartLocation(scene, entity)
-    _D(scene.startLocations)
+    --_D(scene.startLocations)
     for _, entry in pairs(scene.startLocations) do
         if entry.entity == entity then
             return entry.position, entry.rotationHelper
@@ -133,7 +133,7 @@ function Scene:RegisterNewSoundTimer(newSoundTimer)
     table.insert(self.timerHandles, newSoundTimer)
 
     _P("[BG3SX][Scene.lua] - Scene:RegisterNewSoundTimer - Current List of Timers:")
-    _D(self.timerHandles)
+    --_D(self.timerHandles)
 end
 function Scene:CancelAllSoundTimers()
     for _,handle in pairs(self.timerHandles) do
@@ -251,7 +251,7 @@ local targetIsCaster
 
     _P("[BG3SX][Scene.lua] - finilizeScene(self) - Scene Created:")
     -- table.insert(SAVEDSCENES, self)
-    _D(SAVEDSCENES)
+    --_D(SAVEDSCENES)
 
     -- Ext.Net.BroadcastMessage("BG3SX_SceneCreated", Ext.Json.Stringify(self)) -- SE EVENT
     Event:new("BG3SX_SceneCreated", self) -- MOD EVENT
@@ -271,7 +271,7 @@ initialize = function(self)
 
     _P("[BG3SX][Scene.lua] - initialize(self) - add new scene to list of SAVEDSCENES:")
     table.insert(SAVEDSCENES, self)
-    _D(SAVEDSCENES)
+    --_D(SAVEDSCENES)
     
     -- Ext.Net.BroadcastMessage("BG3SX_SceneInit", Ext.Json.Stringify(self)) -- SE EVENT
     -- Event:new("BG3SX_SceneInit", self) -- MOD EVENT
@@ -319,10 +319,8 @@ initialize = function(self)
 
     self:Setup()
     
-    _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Begin WaitFor Timer with 0.4s delay to call Scene:FinilizeSetup")
-    Ext.Timer.WaitFor(400, function()
-        finalizeScene(self)
-    end)
+    _P("[BG3SX][Scene.lua] - Scene:new() - initialize")
+    finalizeScene(self)
 end
 
 
@@ -376,9 +374,9 @@ function Scene:MoveSceneToLocation(entity, newLocation)
 
     _P("--------------------------------------------------------------------")
     _P("[BG3SX][Scene.lua] - Scene:MoveSceneToLocation - Moving scene from:")
-    _D(oldLocation)
+    --_D(oldLocation)
     _P("to")
-    _D(newLocation)
+    --_D(newLocation)
     _P("--------------------------------------------------------------------")
 
     -- Ext.Net.BroadcastMessage("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- SE EVENT
@@ -397,7 +395,7 @@ end
 function Scene:Destroy()
 
     _P("[BG3SX][Scene.lua] - Scene:Destroy() - Initiating scene termination for scene:")
-    _D(self)
+    --_D(self)
 
     if self.entities then
         for _, entity in pairs(self.entities) do  -- Initial entity for-loop solely for a Fadeout
@@ -424,7 +422,7 @@ function Scene:Destroy()
 
             -- Delete actor
             _P("[BG3SX][Scene.lua] - Scene:Destroy() - actor:Destroy() - Initiating actor termination for actor:")
-            _D(actor)
+            --_D(actor)
             actor:Destroy()
         end
     end
@@ -484,7 +482,7 @@ function Scene:Destroy()
             
             _P("[BG3SX][Scene.lua] - Scene:Destroy() - Scene removed from SAVEDSCENES")
             _P("[BG3SX][Scene.lua] - Scene:Destroy() - SAVEDSCENES Current Status:")
-            _D(SAVEDSCENES)
+            --_D(SAVEDSCENES)
         end
     end
 end

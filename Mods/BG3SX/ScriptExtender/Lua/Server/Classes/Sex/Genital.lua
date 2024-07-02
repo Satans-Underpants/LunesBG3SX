@@ -241,7 +241,7 @@ function Genital:InitializeChangeGenitals()
 
 	local baseSpells = {"BG3SX_VanillaVulva", "BG3SX_VanillaFlaccid", "BG3SX_SimpleErections", "BG3SX_OtherGenitals"}
 
-	local container = (Ext.Stats.Get("BG3SX_ChangeGenitals"))
+	local container = Ext.Stats.Get("BG3SX_ChangeGenitals")
 
 	for _,spell in pairs(baseSpells) do 
 		local spellsInContainer = container.ContainerSpells
@@ -285,7 +285,7 @@ function Genital:Initialize()
 
 	-- TODO - will be moved to UI, thus the uselessness 
 	local spell = "BG3SX_OtherGenitals"
-	local container = (Ext.Stats.Get("BG3SX_ChangeGenitals"))
+	local container = Ext.Stats.Get("BG3SX_ChangeGenitals")
 	local spellsInContainer = container.ContainerSpells
 	container.ContainerSpells = spellsInContainer..";" .. spell
 	container:Sync()

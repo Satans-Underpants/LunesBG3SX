@@ -39,13 +39,13 @@ playAnimation = function(self)
     Osi.PlayAnimation(self.actor.uuid, "") -- First, stop current animation on actor
     if self.animationData.Loop == true then
         Osi.PlayLoopingAnimation(self.actor.uuid, "", self.animation, "", "", "", "", "")
+        _P("Osi.PlayLoopingAnimation(" , self.actor.uuid, ", \"\", ", self.animation, ", \"\", \"\", \"\", \"\", \"\")")
     else
         Osi.PlayAnimation(self.actor.uuid, self.animation)
     end
 
     _P("[BG3SX][Animations.lua] - Animation:new() - playAnimation - Begin to play ", self.animation, " on ", self.actor.uuid)
 end
-
 
 
 ----------------------------------------------------------------------------------------------------

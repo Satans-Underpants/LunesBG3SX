@@ -49,9 +49,9 @@ local function calculateWaitTime(event)
     -- Adjust wait time in ms based on payload size and subscriber count (1000 = 1sec)
     local waitTime = payloadSize * 2 + subscriberCount * 5
 
-    _P("[BG3SX][Events.lua] Calculated waitTime for ", Ext.Json.Stringify(event.Channel), " Event to be: ", waitTime)
-    _P("[BG3SX][Events.lua] subscriberCount = ", subscriberCount, " *5ms")
-    _P("[BG3SX][Events.lua] payloadSize = ", payloadSize, " *2ms")
+   -- _P("[BG3SX][Events.lua] Calculated waitTime for ", Ext.Json.Stringify(event.Channel), " Event to be: ", waitTime)
+   -- _P("[BG3SX][Events.lua] subscriberCount = ", subscriberCount, " *5ms")
+   -- _P("[BG3SX][Events.lua] payloadSize = ", payloadSize, " *2ms")
 
     return waitTime
 end
@@ -135,10 +135,10 @@ function Event:Throw(event)
     -- Iterate over all subscribers
     for _, sub in ipairs(globalSubscribers) do
         local handler = sub.Handler
-        _P("EVENT THROWN")
+        --_P("EVENT THROWN")
         -- Call the handler with the event
         local ok, result = xpcall(handler, debug.traceback, event)
-        _P("EVENT OK")
+       -- _P("EVENT OK")
         if not ok then
             Ext.Utils.PrintError("[BG3SX][Events.lua] Error while dispatching event " .. event.Channel .. ": ", result)
         end

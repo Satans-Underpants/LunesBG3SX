@@ -31,7 +31,7 @@ function Sex:DetermineSceneType(scene)
     local involvedEntities = 0
     local penises = 0
     _P("---------------------------------------------------------------------------------------------------")
-    _D(scene.entities)
+    --_D(scene.entities)
     for _, entity in pairs(scene.entities) do
         involvedEntities = involvedEntities+1
         if Entity:HasPenis(entity) then
@@ -70,19 +70,19 @@ local function playAnimationAndSound(actor, animationData, position)
     if position == "Top" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animation)
-        _P("---------------------------------ANIMATIONDATA--------------------------------")
-        _D(animationData)
-        newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
+        --_P("---------------------------------ANIMATIONDATA--------------------------------")
+        --_D(animationData)
+        --newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
         
     elseif position == "Bottom" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
-        _P("---------------------------------ANIMATIONDATA--------------------------------")
-        _D(animationData)
+        --_P("---------------------------------ANIMATIONDATA--------------------------------")
+        --_D(animationData)
         if animationData.SoundBottom then
-            newSound = Sound:new(actor, animationData.SoundBottom, animationData.AnimLength)
+           -- newSound = Sound:new(actor, animationData.SoundBottom, animationData.AnimLength)
         else
-            newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
+            --newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
         end
     end
 
@@ -108,7 +108,7 @@ function Sex:PlayAnimation(entity, animationData)
     if sceneType == "MasturbateFemale" or sceneType == "MasturbateMale" then
         playAnimationAndSound(scene.actors[1], animationData, "Bottom")
     elseif sceneType == "Lesbian" or sceneType == "Gay" then
-        _D(scene.actors)
+       -- _D(scene.actors)
         playAnimationAndSound(scene.actors[1], animationData, "Top")
         playAnimationAndSound(scene.actors[2], animationData, "Bottom")
     elseif sceneType == "Straight" then
@@ -116,14 +116,14 @@ function Sex:PlayAnimation(entity, animationData)
         local actor2 = scene.actors[2]
         -- In case of actor1 not being male, swap them around to still assign correct animations
         if not Entity:HasPenis(scene.actors[1].parent) then
-            _P("[BG3SX][Sex.lua] - Sex:PlayAnimation - scene.actors before setup switch")
-            _D(scene.actors)
+            --_P("[BG3SX][Sex.lua] - Sex:PlayAnimation - scene.actors before setup switch")
+          --  _D(scene.actors)
 
             actor2 = actor1
             actor2 = scene.actors[1]
             
-            _P("[BG3SX][Sex.lua] - Sex:PlayAnimation - scene.actors after setup switch")
-            _D(scene.actors)
+            --_P("[BG3SX][Sex.lua] - Sex:PlayAnimation - scene.actors after setup switch")
+            --_D(scene.actors)
         end
         playAnimationAndSound(actor1, animationData, "Top")
         playAnimationAndSound(actor2, animationData, "Bottom")
@@ -136,6 +136,14 @@ function Sex:PlayAnimation(entity, animationData)
     elseif sceneType == "MMM" then
 
     end
+
+
+
+    --for i=1,10000 do 
+     --   _P("attempting masturbation for ",scene.actors[1].uuid)
+     --   Osi.PlayAnimation(scene.actors[1].uuid, "fd91f2cc-e570-68dc-0473-2fae1ded6c0e") -- female masturbation
+   -- end
+
 end
 
 
@@ -167,6 +175,7 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
 
         Sex:InitSexSpells(scene)
         Sex:PlayAnimation(caster, animationData)
+
     end
 end
 

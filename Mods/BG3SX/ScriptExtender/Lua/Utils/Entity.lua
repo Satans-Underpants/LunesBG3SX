@@ -268,7 +268,7 @@ function Entity:TryGetEntityValue(uuid, previousComponent, components)
     end
 
     -- recursion
-    _D(components)
+    --_D(components)
     for i, component in pairs(components) do
         if not previousComponent then
             local currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)

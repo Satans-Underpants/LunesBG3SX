@@ -13,7 +13,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         end
     end
 
-    -- Checks to see if the spell used matches any animation spells
+    -- For changing positions
     for _, animationData in ipairs(ANIMATIONS) do
         if spell == animationData.AnimName then
             Sex:PlayAnimation(caster, animationData)

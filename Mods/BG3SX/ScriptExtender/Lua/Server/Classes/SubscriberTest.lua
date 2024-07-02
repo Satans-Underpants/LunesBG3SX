@@ -3,7 +3,7 @@ Event:Subscribe(function(e)
     if e.Channel then
         _P("-------------------EVENT RECIEVED-------------------")
         _P(e.Channel)
-        _D(e.Payload)
+        --_D(e.Payload)
     end
 end)
 

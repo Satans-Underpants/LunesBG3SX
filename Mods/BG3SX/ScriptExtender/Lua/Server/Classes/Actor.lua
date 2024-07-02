@@ -98,14 +98,14 @@ end
 --- Gets parent entities looks including attachments like Wylls Horns
 ---@return lookTemplate string   - uuid - The looks of a parent entity
 function Actor:GetLooks(parent)
-    _P("DUMP PARENT 1")
-    _D(parent)
+    --_P("DUMP PARENT 1")
+    --_D(parent)
     local visTemplate = Entity:TryGetEntityValue(parent, nil, {"GameObjectVisual", "RootTemplateId"})
     local origTemplate = Entity:TryGetEntityValue(parent, nil, {"OriginalTemplate", "OriginalTemplate"})
 
     local lookTemplate = parent
-    _P("DUMP LOOKTEMPLATE 1")
-    _D(lookTemplate)
+    --_P("DUMP LOOKTEMPLATE 1")
+    --_D(lookTemplate)
     -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
     -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
     if visTemplate then
@@ -114,16 +114,16 @@ function Actor:GetLooks(parent)
             _P("Has origTemplate")
             if origTemplate ~= visTemplate then
                 lookTemplate = visTemplate
-                _P("DUMP LOOKTEMPLATE 2")
-                _D(lookTemplate)
+                --_P("DUMP LOOKTEMPLATE 2")
+                --_D(lookTemplate)
             end
         elseif origTemplate == nil then -- It's Tav?
             _P("origTemplate == nil")
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
             if Osi.HasAppliedStatusOfType(parent, "POLYMORPHED") == 1 or parent.AppearanceOverride then
                 lookTemplate = visTemplate
-                _P("DUMP LOOKTEMPLATE 3")
-                _D(lookTemplate)
+                --_P("DUMP LOOKTEMPLATE 3")
+                --_D(lookTemplate)
             end
         end
     end
@@ -170,7 +170,7 @@ function Actor:DressActor()
     -- Apparently there is a function to equip an ArmourSet directly but not Equipment
     Osi.SetArmourSet(self.uuid, self.oldArmourSet) -- Equips a set of possibly copied armour
 
-    _D(self.oldEquipment)
+    --_D(self.oldEquipment)
     for _, itemData in pairs(self.oldEquipment) do -- Equips every item found in possibly copied equipment table
         local item = Osi.GetItemByTemplateInInventory(itemData, self.uuid)
         if item then

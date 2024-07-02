@@ -25,19 +25,21 @@ Ext.Require("Utils/Entity.lua")
 Ext.Require("Utils/Helper.lua")
 -- Ext.Require("Utils/UIHelper.lua") - [NYI]
 
--- Initialize General Classes (Order intentional)
+-- Sex
+Ext.Require("Server/Classes/Sex/Genital.lua")
+Ext.Require("Server/Classes/Sex/NPCStripping.lua")
+Ext.Require("Server/Classes/Sex/Sex.lua")
+
+-- Initialize General Classes
 Ext.Require("Server/Classes/Effect.lua")
 Ext.Require("Server/Classes/Sound.lua")
 Ext.Require("Server/Classes/Animation.lua")
-Ext.Require("Server/Classes/Genital.lua")
 Ext.Require("Server/Classes/Actor.lua")
 Ext.Require("Server/Classes/Scene.lua")
-Ext.Require("Server/Classes/Sex.lua")
+
 -- Ext.Require("Server/Classes/Spells.lua") - [NYI]
 -- Ext.Require("Server/Classes/Objects.lua") - [NYI]
 
--- Initialize NPCStripping
-Ext.Require("Server/Classes/NPCStripping.lua")
 
 -- Initialize Main Class and Usersettings
 Ext.Require("Server/Classes/Main.lua")

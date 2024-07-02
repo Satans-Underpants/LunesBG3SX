@@ -46,3 +46,4 @@ Ext.Events.GameStateChanged:Subscribe(function(e)
         _P("[BG3SX][Main.lua] - Sex:TerminateAllScenes")
     end
 end)
+
