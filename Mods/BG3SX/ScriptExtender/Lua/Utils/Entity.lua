@@ -284,6 +284,37 @@ end
 
 
 
+local function entityvaluetest(uuid, previousComponent, components)
+
+    local entity = Ext.Entity.Get(uuid)
+
+    -- end of recursion
+    if #components == 1 then
+        if not previousComponent then
+            _P(Helper:GetPropertyOrDefault(entity, components[1], nil))
+            -- return Helper:GetPropertyOrDefault(entity, components[1], nil)
+        else
+            _P(Helper:GetPropertyOrDefault(previousComponent, components[1], nil))
+            -- return Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
+        end
+    end
+
+    -- recursion
+    --_D(components)
+    for i, component in pairs(components) do
+        if not previousComponent then
+            local currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
+        else
+            local currentComponent = Helper:GetPropertyOrDefault(previousComponent, components[1])
+        end
+
+        table.remove(components, 1)
+        Entity:TryGetEntityValue(uuid, nil, {components})
+    end
+end
+Ext.RegisterConsoleCommand("entityvaluetest", entityvaluetest);
+
+
 
 
 
@@ -307,13 +338,10 @@ end
 
 
 -- Re-equips all equipment of an entity
----@param uuid      string      - The entity UUID to equip
+---@param entity      string      - The entity UUID to equip
 ---@param armorset  ArmorSet    - The entities prior armorset
-function Entity:Redress(uuid, oldArmourSet, oldEquipment)
-    local entity = Ext.Entity.Get(uuid)
-
+function Entity:Redress(entity, oldArmourSet, oldEquipment)
     Osi.SetArmourSet(entity, oldArmourSet)
-
     for _, item in ipairs(oldEquipment) do
         Osi.Equip(entity, item)
     end

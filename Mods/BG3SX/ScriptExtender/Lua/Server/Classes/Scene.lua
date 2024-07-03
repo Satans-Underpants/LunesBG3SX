@@ -179,8 +179,11 @@ end
 -- Scale entity for camera
 ---@param entity uuid
 function Scene:ScaleEntity(entity)
+
     local startScale = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
+    _D(startScale)
     table.insert(self.entityScales, {entity = entity, scale = startScale})
+    _D(self.entityScales)
     Entity:Scale(entity, 0.5)
 
     _P("[BG3SX][Scene.lua] - Scene:ScaleEntity - ", entity, " scaled to 0.5")
@@ -420,7 +423,7 @@ function Scene:Destroy()
 
             -- Teleport actors parent (the main entity) back to its startLocation
             local startLocation
-            for i, entry in iparis(self.startLocations)
+            for i, entry in ipairs(self.startLocations) do
                 if entry.entity == actor.parent then
                     startLocation = entry
                 end
@@ -429,7 +432,7 @@ function Scene:Destroy()
             Entity:RotateEntity(actor.parent, startLocation.rotationHelper)
 
             -- TODO: Osi.SteerTo(actor.parent, helper object which we need to create on scene creation,1)
-            Osi.SetVisible(actor, 1)
+            Osi.SetVisible(actor.parent, 1) -- 1 visible, 0 invisible
 
             -- Requips everything which may have been removed during scene initialization
             if Entity:HasEquipment(actor.parent) then
@@ -456,7 +459,8 @@ function Scene:Destroy()
     
             -- Sets scale back to a saved value during scene initialization
             local startScale
-            for _, entry in self.entityScale do
+            _D(self.entityScales)
+            for _, entry in pairs(self.entityScales) do
                 if entity == entry.entity then
                     startScale = entry.scale
                 end
