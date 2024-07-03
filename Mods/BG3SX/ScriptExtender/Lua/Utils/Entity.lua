@@ -251,71 +251,53 @@ end
 ---@param components            table       - Sorted list of component path
 ---@return                      Value       - Returns the value of a field within a component
 ---@example
--- local helmetIsInvisible = Entity:TryGetEntityValue(entity, {"ServerCharacter", "PlayerData", "HelmetOption"})
--- print(helmetIsInvisible) -- Should return either 0 or 1
--- Its essentially like using Ext.Entity.Get(entity).ServerCharacter.PlayerData.HelmetOption
 function Entity:TryGetEntityValue(uuid, previousComponent, components)
 
-    local entity = Ext.Entity.Get(uuid)
-
-    -- end of recursion
-    if #components == 1 then
-        if not previousComponent then
-            return Helper:GetPropertyOrDefault(entity, components[1], nil)
-        else
-            return Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
-        end
-    end
-
-    -- recursion
-    --_D(components)
-    for i, component in pairs(components) do
-        if not previousComponent then
-            local currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
-        else
-            local currentComponent = Helper:GetPropertyOrDefault(previousComponent, components[1])
-        end
-
-        table.remove(components, 1)
-        Entity:TryGetEntityValue(uuid, nil, {components})
-    end
-
-end
-
-
-
-local function entityvaluetest(uuid, previousComponent, components)
+    _P("prevComp ", previousComponent)
 
     local entity = Ext.Entity.Get(uuid)
 
     -- end of recursion
     if #components == 1 then
         if not previousComponent then
-            _P(Helper:GetPropertyOrDefault(entity, components[1], nil))
-            -- return Helper:GetPropertyOrDefault(entity, components[1], nil)
+            _P("Previous component does not exist")
+            local value = Helper:GetPropertyOrDefault(entity, components[1], nil)
+            return value
         else
-            _P(Helper:GetPropertyOrDefault(previousComponent, components[1], nil))
-            -- return Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
+            _P("Previous component exists. Returning ", Helper:GetPropertyOrDefault(previousComponent, components[1], nil))
+            _P("Components was ", components[1])
+
+            local value = Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
+            return value
         end
     end
 
     -- recursion
-    --_D(components)
-    for i, component in pairs(components) do
-        if not previousComponent then
-            local currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
-        else
-            local currentComponent = Helper:GetPropertyOrDefault(previousComponent, components[1])
-        end
-
-        table.remove(components, 1)
-        Entity:TryGetEntityValue(uuid, nil, {components})
+    local currentComponent
+    if not previousComponent then
+        currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
+        _P("Getting value for ", uuid, " ", components[1])
+        _P("IF NIL THEN currentComponent ", currentComponent)
+    else
+        currentComponent = Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
+        _P("ELSE (PREVIOUS EXISTS) currentComponent ", currentComponent)
     end
+
+    table.remove(components, 1)
+    -- Return the result of the recursive call
+    return Entity:TryGetEntityValue(uuid, currentComponent, components)
 end
-Ext.RegisterConsoleCommand("entityvaluetest", entityvaluetest);
 
 
 
+-- function Helper:GetPropertyOrDefault(obj, propertyName, defaultValue)
+--     local success, value = pcall(function() return uuid[components[1]] end)
+--     if success then
+--         return value or defaultValue
+--     else
+--         return defaultValue
+--     end
+-- end
 
 
 -- Unequips all equipment from an entity

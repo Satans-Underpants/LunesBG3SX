@@ -109,16 +109,16 @@ function Actor:GetLooks(parent)
     -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
     -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
     if visTemplate then
-        _P("Has visTemplate")
+        -- _P("Has visTemplate")
         if origTemplate then
-            _P("Has origTemplate")
+            -- _P("Has origTemplate")
             if origTemplate ~= visTemplate then
                 lookTemplate = visTemplate
                 --_P("DUMP LOOKTEMPLATE 2")
                 --_D(lookTemplate)
             end
         elseif origTemplate == nil then -- It's Tav?
-            _P("origTemplate == nil")
+            -- _P("origTemplate == nil")
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
             if Osi.HasAppliedStatusOfType(parent, "POLYMORPHED") == 1 or parent.AppearanceOverride then
                 lookTemplate = visTemplate
@@ -127,7 +127,7 @@ function Actor:GetLooks(parent)
             end
         end
     end
-    _P(lookTemplate)
+    -- _P(lookTemplate)
     return lookTemplate
 end
 

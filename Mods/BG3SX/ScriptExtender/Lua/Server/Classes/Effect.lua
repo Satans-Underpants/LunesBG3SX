@@ -18,7 +18,7 @@ Effect.__index = Effect
 local function clearFade(entity)
     Osi.ClearScreenFade(entity, 0.1, "ScreenFade", 0)
     
-    _P("[BG3SX][Effects.lua] - Effect:Fade - clearFade - ScreenFade cleared for ", entity)
+    -- _P("[BG3SX][Effects.lua] - Effect:Fade - clearFade - ScreenFade cleared for ", entity)
 end
 
 
@@ -30,7 +30,7 @@ function Effect:Fade(entity, duration)
         Osi.ScreenFadeTo(entity, 0.1, 0.1, "ScreenFade") -- Might need to rename string to "AnimFade"
         --Ext.Timer.WaitFor(duration ,clearFade(entity))
 
-        _P("[BG3SX][Effects.lua] - Effect:Fade - ScreenFade started for ", entity)
+        -- _P("[BG3SX][Effects.lua] - Effect:Fade - ScreenFade started for ", entity)
 
         Ext.Timer.WaitFor(duration, function()
             clearFade(entity)
@@ -58,5 +58,5 @@ end
 function Effect:Trigger(entity, effect)
     Osi.ApplyStatus(entity, effect, 1)
 
-    _P("[BG3SX][Effects.lua] - Effect:Trigger - Effect ", effect, " added to ", entity)
+    -- _P("[BG3SX][Effects.lua] - Effect:Trigger - Effect ", effect, " added to ", entity)
 end

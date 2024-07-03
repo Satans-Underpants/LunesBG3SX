@@ -92,7 +92,7 @@ local function playAnimationAndSound(actor, animationData, position)
     Event:new("BG3SX_SoundChange", newSound) -- MOD EVENT
 
     _P("[BG3SX][Sex.lua] Sex:PlayAnimation - playAnimationAndSound - Scene animation and sound change for actor: ", actor, " for animation table:")
-    _D(animationData)
+    -- _D(animationData)
 end
 
 

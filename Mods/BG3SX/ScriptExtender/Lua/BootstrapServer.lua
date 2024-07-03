@@ -52,7 +52,7 @@ Ext.Require("Server/Listeners/SceneListeners.lua")
 Ext.Require("Server/Listeners/SexListeners.lua")
 
 
-_P("[BG3SX] - BootstrapServer.lua Initialized")
+-- _P("[BG3SX] - BootstrapServer.lua Initialized")
 
 
 -- TODO: ModVariables are not prefered anymore - Use Ext.Mod.GetMod(moduuid) to then use a mods functions instead like this: TheMod.Class:Function or TheMod.Class.Variable or TheMod.Class.TABLE
