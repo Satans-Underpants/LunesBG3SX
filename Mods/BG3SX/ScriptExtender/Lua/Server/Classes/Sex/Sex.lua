@@ -267,14 +267,24 @@ end
 -- Changes the camera height by scaling an entity
 -- Camera will zoom out on the entity which will look nicer on scene start
 ---@param entity string - uuid of the entity 
-function Sex:ChangeCameraHeight(entity)
-    if entity.GameObjectVisual.Scale == 0.5 then
-        entity.GameObjectVisual.Scale = 0.05
-        entity:Replicate("GameObjectVisual")
-    elseif entity.GameObjectVisual.Scale ~= 0.5 then
+function Sex:ChangeCameraHeight(uuid)
+    local entity = Ext.Entity.Get(uuid)
+    local currentEntityScale = Entity:TryGetEntityValue(uuid, nil, {"GameObjectVisual", "Scale"})
+    _P("Scale Before")
+    _D(entity.GameObjectVisual.Scale)
+
+    -- floating point shenanigangs
+    if currentEntityScale > 0.99 then
         entity.GameObjectVisual.Scale = 0.5
-        entity:Replicate("GameObjectVisual")
+    elseif currentEntityScale > 0.51 and currentEntityScale < 0.49 then
+        entity.GameObjectVisual.Scale = 0.05
+    else
+        entity.GameObjectVisual.Scale = 1.0
     end
+    entity:Replicate("GameObjectVisual")
+
+    _P("Scale After")
+    _D(entity.GameObjectVisual.Scale)
 
     -- Ext.Net.BroadcastMessage("BG3SX_CameraHeightChange", Ext.Json.Stringify(entity)) -- SE MOD
     Event:new("BG3SX_CameraHeightChange", entity) -- MOD EVENT
