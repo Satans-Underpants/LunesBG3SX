@@ -356,25 +356,25 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     local scene = Scene:FindSceneByEntity(entity)
     local oldLocation = scene.rootPosition
 
+    _D(newLocation)
+    _D(newLocation.x)
     for _, actor in ipairs(scene.actors) do
-        oldLocation = actor.position
-        local dx = newLocation.x - actor.position.x
-        local dy = newLocation.y - actor.position.y
-        local dz = newLocation.z - actor.position.z
-        -- TODO: Figure out why the old location gets substracted from the new location
+        -- oldLocation = actor.position
         
         -- Do nothing if the new location is too far from the caster's start position,
-        -- so players would not abuse it to get to some "no go" places.
-        -- TODO: Understand this equation
-        if math.sqrt(dx * dx + dy * dy + dz * dz) >= 4 then
-            return
-        end
+        -- so players would not abuse it to get to some "no no" places.
+        -- local dx = newLocation.x - actor.position.x -- get the difference per axis
+        -- local dy = newLocation.y - actor.position.y
+        -- local dz = newLocation.z - actor.position.z
+        -- if math.sqrt(dx * dx + dy * dy + dz * dz) >= 4 then -- if difference is greater than 4 units
+        --     return
+        -- end
         
         --Osi.SetDetached(casterData.Actor, 1)
 
         -- Move stuff
-        Osi.CharacterMoveToPosition(actor.uuid, newLocation.x, newLocation.y, newLocation.z, "", "")
-        Osi.CharacterMoveToPosition(actor.parent, newLocation.x, newLocation.y, newLocation.z, "", "")
+        Osi.TeleportToPosition(actor.uuid, newLocation.x, newLocation.y, newLocation.z)
+        Osi.TeleportToPosition(actor.parent, newLocation.x, newLocation.y, newLocation.z)
         
         -- TODO - when we use props we probably want to "bind" them to a specific actor
         -- Teleports all props of a scene to the new rootlocation as well
@@ -509,7 +509,7 @@ function Scene:Destroy()
             
             -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Scene removed from SAVEDSCENES")
             -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - SAVEDSCENES Current Status:")
-            --_D(SAVEDSCENES)
+            -- _D(SAVEDSCENES)
         end
     end
 end

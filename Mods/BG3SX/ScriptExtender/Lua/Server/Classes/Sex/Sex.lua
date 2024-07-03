@@ -206,6 +206,13 @@ local function addAdditionalSexOptions(entity)
                     _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - ", spell, " for ", entity, " added")
                     spellCount = spellCount+1
                 end)
+            else
+                _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
+                Ext.Timer.WaitFor(spellCount*200, function()
+                    Osi.AddSpell(entity, spell)
+                    _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - ", spell, " for ", entity, " added")
+                    spellCount = spellCount+1
+                end)
             end
         else
             _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
