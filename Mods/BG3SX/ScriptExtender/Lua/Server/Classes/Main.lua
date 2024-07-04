@@ -34,7 +34,6 @@ function OnSessionLoaded()
     end)
 end
 
-
 -- Subscribes to the SessionLoaded event and executes our OnSessionLoaded function
 Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 
@@ -46,4 +45,3 @@ Ext.Events.GameStateChanged:Subscribe(function(e)
         -- _P("[BG3SX][Main.lua] - Sex:TerminateAllScenes")
     end
 end)
-

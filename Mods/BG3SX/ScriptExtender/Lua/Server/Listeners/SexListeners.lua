@@ -23,7 +23,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
     -- For changing positions
     for _, animationData in pairs(ANIMATIONS) do
         if spell == animationData.AnimName then
-            _P("[BG3SX SexListeners] Corresponding Animname ", animationData.AnimName)
+            -- _P("[BG3SX SexListeners] Corresponding Animname ", animationData.AnimName)
             Sex:PlayAnimation(caster, animationData)
             
             -- Ext.Net.BroadcastMessage("BG3SX_SexAnimationChange", Ext.Json.Stringify({caster, animationData})) -- SE EVENT

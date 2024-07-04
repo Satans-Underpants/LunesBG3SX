@@ -55,7 +55,6 @@ end
 -- META
 --------------------------------------------------------------
 
-
 -- Cleans up the actor
 function Actor:Destroy()
 
@@ -64,9 +63,7 @@ function Actor:Destroy()
     Osi.SetOnStage(self.uuid, 0) -- to disable AI
     Osi.RequestDeleteTemporary(self.uuid)
 
-
-    -- Then destroy element from Scene.lua saved actors table
-    
+    -- Scene.lua now destroys element in saved actors table
 end
 
 -- Helpers
@@ -202,7 +199,7 @@ local function finalizeSetup(self)
     -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
     if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
         -- Type is special Appearance Edit Enhanced thing?
-        if self.uuid.GameObjectVisual.Type ~= 2 then
+        if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 2 then
             self.uuid.GameObjectVisual.Type = 2
             self.uuid:Replicate("GameObjectVisual")
         end

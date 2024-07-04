@@ -2,31 +2,8 @@
         -- Init Classes --
 ------------------------------------
 
--- NPC Stripping Sync across clients
-Ext.Require("Client/NPCSync.lua")
+-- Reenable the first 2 scripts whenever Event.lua is able to sync over clients
+-- Ext.Require("Shared/Data/EventSubscriber.lua") -- To have access to global subscriber table
+-- Ext.Require("Shared/Utils/Event.lua") -- To be able to use event subscriptions
 
-
-
-
-
-------------------------------------
-        -- Mod Variables --
-------------------------------------
-
--- Ext.Vars.RegisterUserVariable("ActorData", {
---     Server = true,
---     Client = true, 
---     SyncToClient = true
--- })
-
--- Ext.Vars.RegisterUserVariable("PairData", {
---     Server = true,
---     Client = true, 
---     SyncToClient = true
--- })
-
--- Ext.Vars.RegisterUserVariable("SoloData", {
---     Server = true,
---     Client = true, 
---     SyncToClient = true
--- })
+Ext.Require("Client/NPCSync.lua") -- Where we use event subscriptions

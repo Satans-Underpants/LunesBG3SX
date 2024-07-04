@@ -111,19 +111,17 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
--- Finds a
----@param entity uuid
+-- Goes through every currently running scene until it finds the entityToSearch
+---@param entityToSearch uuid
 function Scene:FindSceneByEntity(entityToSearch)
     for i, scene in ipairs(SAVEDSCENES) do
         for _, entity in pairs(scene.entities) do
-            -- for _, entity in pairs(entities) do
-                if entityToSearch == entity then
-                    return scene
-                end
-            -- end
+            if entityToSearch == entity then
+                return scene
+            end
         end
     end
-    -- _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any existing scenes! Returning nil")
+    _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any existing scenes! Returning nil")
 end
 
 
@@ -151,15 +149,31 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
+-- Scale entity for camera
+---@param entity uuid
+function Scene:ScaleEntity(entity)
+
+    -- _P("[BG3SX][Scene.lua] - Calling Try Get Entity Value")
+    local startScale = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
+    -- _P("Start Scale = " , startScale)
+    table.insert(self.entityScales, {entity = entity, scale = startScale})
+    -- _D(self.entityScales)
+    Entity:Scale(entity, 0.5)
+
+    -- _P("[BG3SX][Scene.lua] - Scene:ScaleEntity - ", entity, " scaled to 0.5")
+end
+
+-- Disabled the remaining setup functions because we already iterate over every entity in a scene and currently only use Scene:ScaleEntity(entity)
+--------------------------------------------
 
 -- Temporary teleport the original away a bit to give room for the proxy
 ---@param entity uuid
-function Scene:MakeSpace(entity)
-    local startPos = getEntityPosition(self, entity)
-    Osi.TeleportToPosition(entity, startPos.x + 1.3, startPos.y, startPos.z + 1.3, "", 0, 0, 0, 0, 1)
+-- function Scene:MakeSpace(entity)
+--     local startPos = getEntityPosition(self, entity)
+--     Osi.TeleportToPosition(entity, startPos.x + 1.3, startPos.y, startPos.z + 1.3, "", 0, 0, 0, 0, 1)
 
-    -- _P("[BG3SX][Scene.lua] - Scene:MakeSpace - For ", entity)
-end
+--     -- _P("[BG3SX][Scene.lua] - Scene:MakeSpace - For ", entity)
+-- end
 
 
 -- Scale party members down so the camera would be closer to the action.
@@ -179,29 +193,15 @@ end
 --     -- _P("[BG3SX][Scene.lua] - Scene:SetCamera - For ", entity)
 -- end
 
--- Scale entity for camera
----@param entity uuid
-function Scene:ScaleEntity(entity)
-
-    _P("[BG3SX][Scene.lua] - Calling Try Get Entity Value")
-    local startScale = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
-    _P("Start Scale = " , startScale)
-    table.insert(self.entityScales, {entity = entity, scale = startScale})
-    _D(self.entityScales)
-    Entity:Scale(entity, 0.5)
-
-    _P("[BG3SX][Scene.lua] - Scene:ScaleEntity - ", entity, " scaled to 0.5")
-end
-
 -- After this is called, wait 400 ms
-function Scene:Setup()
-    for _, entity in pairs(self.entities) do
-        -- self:MakeSpace(entity)
-        -- self:SetCamera(entity)
-        self:ScaleEntity(entity)
-    end
-    -- _P("[BG3SX][Scene.lua] - Scene:Setup() finished")
-end
+-- function Scene:Setup()
+--     for _, entity in pairs(self.entities) do
+--         -- self:MakeSpace(entity)
+--         -- self:SetCamera(entity)
+--         self:ScaleEntity(entity)
+--     end
+--     -- _P("[BG3SX][Scene.lua] - Scene:Setup() finished")
+-- end
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -217,9 +217,13 @@ local function finalizeScene(self)
         -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
         -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - Entity:TryCopyEntityComponent - AppearanceOverride")
         if Entity:TryCopyEntityComponent(actor.parent, actor.uuid, "AppearanceOverride") then
-            if actor.uuid.GameObjectVisual.Type ~= 2 then
+            if actor.uuid.GameObjectVisual and actor.uuid.GameObjectVisual.Type ~= 2 then
                 actor.uuid.GameObjectVisual.Type = 2
                 actor:Replicate("GameObjectVisual")
+            elseif not actor.uuid.GameObjectVisual then
+                _P("[BG3SX][Scene.lua] Trying to create Actor for entity without GameObjectVisual Component.")
+                _P("[BG3SX][Scene.lua] This can happen with some scenery NPC's.")
+                _P("[BG3SX][Scene.lua] Safeguards have been put in place, nothing will break. Please end the Scene and choose another target.")
             end
         end
 
@@ -356,8 +360,8 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     local scene = Scene:FindSceneByEntity(entity)
     local oldLocation = scene.rootPosition
 
-    _D(newLocation)
-    _D(newLocation.x)
+    -- _D(newLocation)
+    -- _D(newLocation.x)
     for _, actor in ipairs(scene.actors) do
         -- oldLocation = actor.position
         
@@ -427,17 +431,17 @@ function Scene:Destroy()
         -- Iterates over every saved actor for a given scene instance
         for _, actor in pairs(self.actors) do
 
-            -- Teleport actors parent (the main entity) back to its startLocation
+            -- Gets the original locations per parent
             local startLocation
             for i, entry in ipairs(self.startLocations) do
                 if entry.entity == actor.parent then
                     startLocation = entry
                 end
             end
+            -- Positioning
             Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
             Entity:RotateEntity(actor.parent, startLocation.rotationHelper)
 
-            -- TODO: Osi.SteerTo(actor.parent, helper object which we need to create on scene creation,1)
             Osi.SetVisible(actor.parent, 1) -- 1 visible, 0 invisible
 
             -- Requips everything which may have been removed during scene initialization
@@ -465,24 +469,23 @@ function Scene:Destroy()
     
             -- Sets scale back to a saved value during scene initialization
             local startScale
-            _D(self.entityScales)
+            -- _D(self.entityScales)
             for _, entry in pairs(self.entityScales) do
                 if entity == entry.entity then
                     startScale = entry.scale
                 end
             end
+
             -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Entity:Scale for ", entity)
             Entity:Scale(entity, startScale)
 
-            
             -- Removes any spells given
             -- TODO and any other animation specific spells  
             -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Sex:RemoveSexSceneSpells for ", entity)
             Sex:RemoveSexSceneSpells(entity)
 
-
             -- Readds the regular sex spells (StartSex, Options, ChangeGenitals)
-            -- TODO  - readd any other legal animation spells in the future
+            -- TODO: Add any other legal animation spells back in the future
             if Osi.IsPartyMember(entity, 0) == 1 then
                 -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Sex:AddMainSexSpells for ", entity)
                 Sex:AddMainSexSpells(entity)

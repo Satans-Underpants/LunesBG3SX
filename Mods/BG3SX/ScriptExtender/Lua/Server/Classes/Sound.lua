@@ -51,5 +51,5 @@ playSound = function(self)
 
     scene:RegisterNewSoundTimer(sound)
 
-    _P("[BG3SX][Sounds.lua] - Sound:new() - playSound - Begin to play ", sound, " on ", self.actor.uuid)
+    -- _P("[BG3SX][Sound.lua] - Sound:new() - playSound - Begin to play ", sound, " on ", self.actor.uuid)
 end
