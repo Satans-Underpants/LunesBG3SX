@@ -445,9 +445,11 @@ function Entity:SaveEntityRotation(uuid)
     -- 1 = distance
     local x = (entityPosition.x + 1) * math.cos(entityDegree)
     local y = (entityPosition.y + 1) * math.sin(entityDegree)
-
-    -- creates helper object that entity can look at
-    return Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", x, y, entityPosition.z, 0, 0, "")
+    local z = entityPosition.z
+    
+    -- creates helper object that entity can look at with a distance
+    local helper = Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", x, y, z, 0, 0, "")
+    return helper
 end
 
 -- use a helper object and Osi to make an entity rotate

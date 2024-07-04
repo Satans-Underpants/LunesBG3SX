@@ -41,7 +41,8 @@ ADDITIONALSEXOPTIONS = {
     "BG3SX_StopAction",
     "BG3SX_SwitchPlaces",
     "BG3SX_ChangeSceneLocation",
-    "BG3SX_ChangeCameraHeight"
+    "BG3SX_ChangeCameraHeight",
+    "BG3SX_RotateScene",
 }  
 
 SEXSCENESPELLS = {
@@ -57,6 +58,7 @@ SEXSCENESPELLS = {
     "BG3SX_ChangeCameraHeight",
     "BG3SX_ChangeSceneLocation",
     "BG3SX_SwitchPlaces",
+    "BG3SX_RotateScene",
 }
 
 -- Additional data thats included when using a spell equal to AnimName
