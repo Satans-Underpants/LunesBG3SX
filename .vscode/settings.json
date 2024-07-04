@@ -4,6 +4,7 @@
     "bg3ModHelper.modName": "BG3SX",
     "Lua.diagnostics.globals": [
         "Osi"
+        
     ],
     "Lua.diagnostics.disable": [
         "undefined-global",

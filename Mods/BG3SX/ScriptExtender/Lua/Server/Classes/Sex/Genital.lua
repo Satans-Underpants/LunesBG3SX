@@ -155,11 +155,11 @@ end
 function getAdditionalGenitals(allGenitals)
     -- Default genitals that come with BG3SX
     local setVanilla = {
-        Helper:ListToSet(getVanillaGenitals("VULVA", false)),
-        Helper:ListToSet(getVanillaGenitals("PENIS", false)),
-        Helper:ListToSet(getVanillaGenitals("VULVA", true)),
-        Helper:ListToSet(getVanillaGenitals("PENIS", true)),
-        Helper:ListToSet(getFunErections())
+        Table:ListToSet(getVanillaGenitals("VULVA", false)),
+        Table:ListToSet(getVanillaGenitals("PENIS", false)),
+        Table:ListToSet(getVanillaGenitals("VULVA", true)),
+        Table:ListToSet(getVanillaGenitals("PENIS", true)),
+        Table:ListToSet(getFunErections())
     }
 
     local additionalGenitals = {}

@@ -156,8 +156,15 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
 
         scene = Scene:new(sexHavers)
 
-        Sex:InitSexSpells(scene)
-        Sex:PlayAnimation(caster, animationData)
+        -- Delay the rest as well, since scene initilization is delayed for 1 second to avoid user seeing behind the scenes stuff
+
+        function haveSex()
+            Sex:InitSexSpells(scene)
+            Sex:PlayAnimation(caster, animationData)
+        end
+
+        Ext.Timer.WaitFor(1500, function() haveSex() end)
+        
 
     end
 end

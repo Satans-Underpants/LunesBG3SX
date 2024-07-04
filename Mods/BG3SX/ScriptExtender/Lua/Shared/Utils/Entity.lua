@@ -436,16 +436,18 @@ end
 ---@return helper uuid - helper object that the entity will look towards with Osi.SteerTo
 function Entity:SaveEntityRotation(uuid)
 
-    local entityX,entityY,entityZ = Osi.GetPosition(uuid)
-    local rotationX,rotationY,rotationZ = Osi.GetRotation(uuid)
-    local entityRotation = Math:DegreeToRadian(rotationY)
+    local entityPosition = {}
+    entityPosition.x,entityPosition.y,entityPosition.z = Osi.GetPosition(uuid)
+    local entityRotation = {}
+    entityRotation.x,entityRotation.y,entityRotation.z = Osi.GetRotation(uuid)
+    local entityDegree = Math:DegreeToRadian(entityRotation.y)
 
     -- 1 = distance
-    local x = (entityX + 1) * math.cos(entityRotation)
-    local y = (entityY + 1) * math.sin(entityRotation)
+    local x = (entityPosition.x + 1) * math.cos(entityDegree)
+    local y = (entityPosition.y + 1) * math.sin(entityDegree)
 
     -- creates helper object that entity can look at
-    return Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", x, y, entityZ, 0, 0, "")
+    return Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", x, y, entityPosition.z, 0, 0, "")
 end
 
 -- use a helper object and Osi to make an entity rotate

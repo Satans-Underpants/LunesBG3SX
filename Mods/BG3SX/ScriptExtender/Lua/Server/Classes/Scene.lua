@@ -42,8 +42,12 @@ function Scene:new(entities)
     --_P("ENTITIES DUMP")
     --_D(entities)
 
-    initialize(instance) -- Automatically calls the Iinitialize function on creation
+    -- for _,entity in pairs(instance.entities) do 
+    --     Effect:Fade(entity, 2000) -- 2sec Fade duration on scene creation
+    -- end
     
+    -- Delay so user doesn't see setup
+    Ext.Timer.WaitFor(1000, function() initialize(instance)end)
 
     return instance
 end
@@ -168,12 +172,10 @@ end
 
 -- Temporary teleport the original away a bit to give room for the proxy
 ---@param entity uuid
--- function Scene:MakeSpace(entity)
---     local startPos = getEntityPosition(self, entity)
---     Osi.TeleportToPosition(entity, startPos.x + 1.3, startPos.y, startPos.z + 1.3, "", 0, 0, 0, 0, 1)
-
---     -- _P("[BG3SX][Scene.lua] - Scene:MakeSpace - For ", entity)
--- end
+function Scene:MakeSpace(entity)
+     local startPos = getEntityPosition(self, entity)
+     Osi.TeleportToPosition(entity, startPos.x + 1.3, startPos.y, startPos.z + 1.3, "", 0, 0, 0, 0, 1)
+ end
 
 
 -- Scale party members down so the camera would be closer to the action.
@@ -246,12 +248,10 @@ local function finalizeScene(self)
             --_P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
            -- if actor.parent == startLocation.entity then
                -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
-                Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
-                Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
+                -- Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
+                -- Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
            -- end
         --end
-
-        Osi.SetVisible(actor.parent, 0)
 
         -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - disableActorMovement for ", actor.parent)
         -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - disableActorMovement - IS CURRENTLY MISSING AS A FUNCTION")
@@ -303,13 +303,15 @@ initialize = function(self)
         
         -- _P("---------------New entity in the new scene----------------")
 
-        Effect:Fade(entity, 2000) -- 2sec Fade duration on scene creation
-
+        Osi.SetVisible(entity, 0)
+    
+        -- Delay so user doesn't see setup
 
         -- Create a new actor for each entity involved in the scene
         -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Actor:new( ", entity, " )")
+        -- local actor = Actor:new(entity)
         table.insert(self.actors, Actor:new(entity))  
-
+        
         -- Make entity untargetable and detached from party to stop party members from following
         Osi.SetDetached(entity, 1)
         Osi.DetachFromPartyGroup(entity)
@@ -326,11 +328,13 @@ initialize = function(self)
         end
 
         -- Save the entities body heightclass for animation matching
+        -- TODO: Implement Animation Heightmatching
         local entityBodyShape = Entity:GetBodyShape(entity)
         local entityHeightClass = Entity:GetHeightClass(entity)
 
+        -- Osi.TeleportToPosition(entity, actor.position.x, actor.position.y, actor.position.z, "", 0, 0, 0, 0, 0)
         self:ScaleEntity(entity)
-
+        -- self:MakeSpace(entity)
     end
 
     if entityRemoved then
@@ -340,6 +344,7 @@ initialize = function(self)
     -- _P("-----------------------------------------------------------")
 
     -- self:Setup()
+    
     
     -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize")
     finalizeScene(self)
@@ -440,7 +445,7 @@ function Scene:Destroy()
             end
             -- Positioning
             Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
-            Entity:RotateEntity(actor.parent, startLocation.rotationHelper)
+            -- Entity:RotateEntity(actor.parent, startLocation.rotationHelper)
 
             Osi.SetVisible(actor.parent, 1) -- 1 visible, 0 invisible
 

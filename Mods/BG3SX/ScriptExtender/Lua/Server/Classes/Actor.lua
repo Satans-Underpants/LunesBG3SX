@@ -11,7 +11,7 @@ local initialize
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
----@param parent            Entity  - Entity that the proxy is based on
+---@param parent            string  - uuid of Entity that the proxy is based on
 ---@param genital           string  - Visual (UUID) of the actors genital
 ---@param autoErection      bool    - Whether auto erections are currently enabled or not
 ---@param isStripped        bool    - Whether actor is stripped of their clothes
@@ -30,7 +30,7 @@ function Actor:new(parent)
         oldArmourSet     = Osi.GetArmourSet(parent),
         oldEquipment     = Entity:UnequipAll(parent),
         isStripped       = Entity:HasEquipment(parent),
-        position          = {},
+        position         = {},
         rotation         = {},
         currentAnimation = "",
         uuid             = Osi.CreateAtObject(Osi.GetTemplate(parent), parent, 1, 0, "", 1),
@@ -41,6 +41,33 @@ function Actor:new(parent)
     -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
     instance.position.x, instance.position.y, instance.position.z = Osi.GetPosition(parent)
     instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(parent)
+    -- Osi.TeleportToPosition(instance.uuid, instance.position.x, instance.position.y, instance.position.z, "", 0, 0, 0, 0, 0)
+    -- (sourceObject, x, y, z, event, teleportLinkedCharacters, teleportPartyFollowers, teleportSummons, leaveCombat, snapToGround)
+
+    -- Osi.AppearAt(instance.uuid, instance.parent, 0, "", "", 0)
+    -- Osi.AppearAt(character, target, playSpawn, customSpawnAnimation, appearedEvent, preventTeleportOnFailure)
+    
+    -- Osi.CreateAtObject(Osi.GetTemplate(parent), parent, 1, 0, "", 1)
+
+    -- instance.uuid = Osi.CreateAt(Osi.GetTemplate(parent), instance.position.x, instance.position.y, instance.position.z, 1, 0, "")
+
+    -- Osi.TeleportTo(instance.uuid, parent, "", 0, 0, 0, 0, 0)
+
+    -- _P("Goal Teleportation")
+    -- _D(instance.position)
+
+    -- _P("Actual Position")
+    -- local actualPosition = {}
+    -- actualPosition.x, actualPosition.y, actualPosition.z = Osi.GetPosition(instance.uuid)
+    -- _D(actualPosition)
+
+    -- _P("Teleporting now")
+    -- Osi.TeleportToPosition(instance.uuid, instance.position.x, instance.position.y, instance.position.z)
+
+    -- _P("Position after Teleport")
+    -- local afterPosition = {}
+    -- afterPosition.x, afterPosition.y, afterPosition.z = Osi.GetPosition(instance.uuid)
+    -- _D(afterPosition)
 
     initialize(instance) -- Automatically calls the Itinitialize function on creation
 

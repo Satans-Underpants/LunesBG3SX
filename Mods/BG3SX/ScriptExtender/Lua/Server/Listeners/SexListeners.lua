@@ -4,6 +4,7 @@
 
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
 
+
     -- Checks to see if the name of the spell used matches any of the setup spells in SexAnimations.lua
     for _, spellData in pairs(STARTSEXSPELLS) do
         if spell == spellData.AnimName then
@@ -19,6 +20,7 @@ end)
 
 
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)  
+
     
     -- For changing positions
     for _, animationData in pairs(ANIMATIONS) do

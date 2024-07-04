@@ -114,7 +114,7 @@ data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 
 //-------------------------------------------------
-// Teleport Spells
+// Teleport/Rotation Spells
 //-------------------------------------------------
 
 new entry "BG3SX_ChangeSceneLocation"
@@ -124,6 +124,25 @@ data "SpellProperties" ""
 data "TargetConditions" ""
 data "Requirements" "!Combat"
 data "Icon" "Spell_Transmutation_Haste"
+data "DisplayName" "h8cc6d8e0ga472g4b25gb556g7ab2e08e6149;1"
+data "Description" "h3ae22e3ag2aeag4d6ag8fbcgd9c4215cc7ec;1"
+data "PrepareSound" "Instrument_Bard_Silence"
+data "CastSound" "Instrument_Bard_Silence"
+data "TargetSound" "Instrument_Bard_Silence"
+data "IgnoreVisionBlock" "Yes"
+data "Autocast" "No"
+data "CastTextEvent" "None"
+data "SpellFlags" "Temporary;ImmediateCast"
+data "HitAnimationType" "None"
+data "SpellAnimationIntentType" "None"
+
+new entry "BG3SX_RotateScene"
+type "SpellData"
+data "SpellType" "Zone"
+data "SpellProperties" ""
+data "TargetConditions" ""
+data "Requirements" "!Combat"
+data "Icon" "Spell_Evocation_Moonbeam"
 data "DisplayName" "h8cc6d8e0ga472g4b25gb556g7ab2e08e6149;1"
 data "Description" "h3ae22e3ag2aeag4d6ag8fbcgd9c4215cc7ec;1"
 data "PrepareSound" "Instrument_Bard_Silence"

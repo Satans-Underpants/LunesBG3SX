@@ -18,9 +18,9 @@ end)
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
     -- If UI is used then use UI listener instead
     if spell == "BG3SX_AutoErections" then
-        Genital:SetAutoErection(1)
+        UserSettings:SetAutoErection(1)
     elseif spell == "BG3SX_ManualErections" then
-        Genital:SetAutoErection(0)
+        UserSettings:SetAutoErection(0)
     end
 end)
 
@@ -38,6 +38,8 @@ end)
 -- Auto-Erections handling on Sex start
 -- TODO - access Scene/PairsData instead
 local sexPairs = {}
+
+
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
     local autoErections = UserSettings:GetAutoErection()
     if (autoErections == 1) and (spell == "BG3SX_AskForSex")  then
@@ -91,17 +93,18 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
     end
 end)
 
+
 -- Auto-Erection handling for masturbating
 -- TODO - access Scene/PairsData instead
-local masturbators = {}
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
     local autoErections = UserSettings:GetAutoErection()
+    
 
     if (autoErections == 1) and (spell == "BG3SX_StartMasturbating") then
         -- Save previous genitals
         local casterGenital = Genital:GetCurrentGenital(caster)
         local masturbator = {caster = caster; casterGenital = casterGenital}
-        table.insert(masturbators, masturbator)
+        table.insert(sexPairs, masturbator)
 
         if Entity:HasPenis(caster) then
             Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
@@ -111,9 +114,9 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
     if (autoErections == 1) and spell =="BG3SX_StopMasturbating" then
         local previousGenital = ""
 
-        for _, masturbator in ipairs(masturbators) do
+        for _, masturbator in ipairs(sexPairs) do
             if masturbator.caster == caster then
-                previousGenital= masturbator.casterGenital
+                previousGenital= sexPairs.casterGenital
             end
         end
 
@@ -121,6 +124,6 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
             Genital:OverrideGenital(previousGenital, caster)
         end
 
-        masturbators[caster] = nil
+        sexPairs[caster] = nil
     end
 end)
