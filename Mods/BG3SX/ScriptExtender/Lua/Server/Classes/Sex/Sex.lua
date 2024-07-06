@@ -47,7 +47,7 @@ end
 -- Removes the sex spells on an entity when scene has ended
 ---@param entity    Entity  - The entity uuid to remove the spells from
 function Sex:RemoveSexSceneSpells(entity)
-    for _, spell in pairs(SEXSCENESPELLS) do
+    for _, spell in pairs(SEXSCENESPELLS) do -- Configurable in Shared/Data/Spells.lua
      Osi.RemoveSpell(entity, spell)
     end
 end
@@ -179,9 +179,9 @@ function Sex:AddMainSexSpells(entity)
         or Osi.IsTagged(entity, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
         and Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
     then
-        Osi.AddSpell(entity, "BG3SX_MainContainer")
-        Osi.AddSpell(entity, "BG3SX_ChangeGenitals")
-        Osi.AddSpell(entity, "BG3SX_Options")
+        for _, spell in pairs(MAINSEXSPELLS) do -- Configurable in Shared/Data/Spells.lua
+            Osi.AddSpell(entity, spell)
+        end
     end
 
     -- _P("[BG3SX][Sex.lua] - Sex:AddMainSexSpells executed for ", entity)
@@ -190,26 +190,26 @@ end
 
 -- Adds additional sex spells for an entity
 ---@param entity    string  - The entity UUID to give additional spells to
-local function addAdditionalSexOptions(entity)
+local function addAdditionalSexActions(entity)
     local scene = Scene:FindSceneByEntity(entity)
     local spellCount = 1
-    for _,spell in pairs(ADDITIONALSEXOPTIONS) do
+    for _,spell in pairs(ADDITIONALSEXACTIONS) do  -- Configurable in Shared/Data/Spells.lua
         -- If iteration lands on SwitchPlaces spell, check which scene type the entity is in and only add it if its not a solo one
         if spell == "BG3SX_SwitchPlaces" then
             local sceneType = Sex:DetermineSceneType(scene)
             if sceneType ~= "MasturbateFemale" and sceneType ~= "MasturbateMale" then
-                -- _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
+                -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
                 Ext.Timer.WaitFor(spellCount*200, function()
                     Osi.AddSpell(entity, spell)
-                    -- _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - ", spell, " for ", entity, " added")
+                    -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - ", spell, " for ", entity, " added")
                     spellCount = spellCount+1
                 end)
             end
         else
-            -- _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
+            -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
             Ext.Timer.WaitFor(spellCount*200, function()
                 Osi.AddSpell(entity, spell)
-                -- _P("[BG3SX][Sex.lua] - addAdditionalSexOptions - ", spell, " for ", entity, " added")
+                -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - ", spell, " for ", entity, " added")
                 spellCount = spellCount+1
             end)
         end
@@ -231,7 +231,7 @@ function Sex:InitSexSpells(scene)
                 end
             end
 
-            addAdditionalSexOptions(entity)
+            addAdditionalSexActions(entity)
         end
         -- _P("[BG3SX][Sex.lua] - Sex:InitSexSpells executed for ", entity)
     end

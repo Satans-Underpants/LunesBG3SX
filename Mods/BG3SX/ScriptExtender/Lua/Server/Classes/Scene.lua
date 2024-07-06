@@ -27,26 +27,25 @@ function Scene:new(entities)
         entities        = entities,
         rootPosition    = {},
         rotation        = {},
+        startLocations  = {}, -- Should never change after initialize - Used to teleport everyone back on Scene:Destroy()
+        entityScales    = {},
         actors          = {},
         currentAnimation= {},
         currentSounds   = {},
-        props           = {},
-        entityScales    = {},
-        startLocations  = {}, -- Never changes - Used to teleport everyone back on Scene:Destroy()
         timerHandles    = {},
-        cameraZoom      = {}
+        cameraZoom      = {},
+        props           = {},
     }, Scene)
+
     -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
     instance.rootPosition.x, instance.rootPosition.y, instance.rootPosition.z = Osi.GetPosition(entities[1])
     instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(entities[1])
-    --_P("ENTITIES DUMP")
-    --_D(entities)
 
-    -- for _,entity in pairs(instance.entities) do 
-    --     Effect:Fade(entity, 2000) -- 2sec Fade duration on scene creation
-    -- end
+    for _,entity in pairs(instance.entities) do 
+        -- Effect:Fade(entity, 2000) -- 2sec Fade duration on scene creation
+    end
     
-    -- Delay so user doesn't see setup
+    -- Delay so user doesn't see setup during fadeout
     Ext.Timer.WaitFor(1000, function() initialize(instance)end)
 
     return instance
@@ -57,7 +56,7 @@ end
 --------------------------------------------------------------
 
 local FLAG_COMPANION_IN_CAMP = "161b7223-039d-4ebe-986f-1dcd9a66733f"
-local BODY_SCALE_DELAY = 2000
+-- local BODY_SCALE_DELAY = 2000 -- 
 
 
 -- METHODS
@@ -308,9 +307,12 @@ initialize = function(self)
     local entityIteratedOverBefore
     local entityRemoved
     for _, entity in pairs(self.entities) do
+        
+        -- Safeguard check to not create another actor if entity may have been added twice into scene (e.g. masturbation (caster/target))
+        -- Must stay on top of entity iteration to immediately break out of the loop if it happens
         if entity == entityIteratedOverBefore then
             entityRemoved = entity
-            break -- Safeguard check to not create another actor if entity may have been added twice into scene (e.g. masturbation (caster/target))
+            break
         else
             entityIteratedOverBefore = entity
         end
@@ -324,6 +326,7 @@ initialize = function(self)
         -- Create a new actor for each entity involved in the scene
         -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Actor:new( ", entity, " )")
         -- local actor = Actor:new(entity)
+        Osi.AddBoosts(entity, "CanWalkThrough(true)", "", "") -- Could enable spawning of actor inside entity
         table.insert(self.actors, Actor:new(entity))  
         
         -- Make entity untargetable and detached from party to stop party members from following
@@ -332,7 +335,7 @@ initialize = function(self)
 
         -- Remove the main spells -- does nothing if they are already removed. We can just purge all animstart spells here
         -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Remove Main Spells for ", entity, " during Scene")
-        for _, spell in pairs(ILLEGAL_DURING_ANIMATION_SPELLS) do
+        for _, spell in pairs(MAINSEXSPELLS) do  -- Configurable in Shared/Data/Spells.lua
             Osi.RemoveSpell(entity, spell)
         end
         
@@ -355,13 +358,12 @@ initialize = function(self)
         table.remove(self.entities, entityRemoved)
     end
 
-    -- _P("-----------------------------------------------------------")
-
     -- self:Setup()
-    
     
     -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize")
     finalizeScene(self)
+
+    -- TODO: Check if we could not just add everything of finalizeScene(self) in here
 end
 
 
@@ -377,13 +379,15 @@ end
 ---@param newLocation - x, y, z
 function Scene:MoveSceneToLocation(entity, newLocation)
     local scene = Scene:FindSceneByEntity(entity)
-    local oldLocation = scene.rootPosition
+    local oldLocation = scene.rootPosition -- Only used for Event:new payload
 
     -- _D(newLocation)
     -- _D(newLocation.x)
     for _, actor in ipairs(scene.actors) do
         -- oldLocation = actor.position
         
+        -- Keep this in case we want to re-enable it if you choose a specific option we could create
+        ---------------------------------------------------------------------------------------
         -- Do nothing if the new location is too far from the caster's start position,
         -- so players would not abuse it to get to some "no no" places.
         -- local dx = newLocation.x - actor.position.x -- get the difference per axis
@@ -392,23 +396,19 @@ function Scene:MoveSceneToLocation(entity, newLocation)
         -- if math.sqrt(dx * dx + dy * dy + dz * dz) >= 4 then -- if difference is greater than 4 units
         --     return
         -- end
-        
-        --Osi.SetDetached(casterData.Actor, 1)
 
         -- Move stuff
         Osi.TeleportToPosition(actor.uuid, newLocation.x, newLocation.y, newLocation.z)
         Osi.TeleportToPosition(actor.parent, newLocation.x, newLocation.y, newLocation.z)
         
         -- TODO - when we use props we probably want to "bind" them to a specific actor
-        -- Teleports all props of a scene to the new rootlocation as well
+            -- No they should all be located at rootlocation and animators would create an animation for them as well based on rootlocation
+        -- Teleports all props of a scene to the new rootlocation
         if #scene.props > 0 then
             for _, prop in pairs(scene.props) do
                 Osi.TeleportToPosition(prop, newLocation.x, newLocation.y, newLocation.z)
             end
-        end
-    
-        --Osi.SetDetached(casterData.Actor, 0)
-        
+        end        
     end
 
     scene.rootPosition = newLocation -- Always update rootPosition of a scene if it changes
@@ -447,6 +447,8 @@ function Scene:Destroy()
     self:CancelAllSoundTimers() -- Should cancel all sound timers to not infinite loop random new ones 
 
     if self.actors then
+
+        -- TODO: Clean this up to basically only be actor:Destroy()
         -- Iterates over every saved actor for a given scene instance
         for _, actor in pairs(self.actors) do
 
@@ -484,7 +486,7 @@ function Scene:Destroy()
             Osi.PlaySound(entity, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)])
 
             -- Unlocks movement
-            Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
+            Entity:ToggleMovement(entity)
     
             -- Sets scale back to a saved value during scene initialization
             local startScale

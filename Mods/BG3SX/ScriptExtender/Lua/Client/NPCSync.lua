@@ -17,6 +17,25 @@ end)
 -- USE THIS INSTEAD WHENEVER THE NEW EVENT CLASS CAN SYNC TO CLIENTS
 
 -- ---@diagnostic disable: missing-parameter
+
+
+-- BG3SX = Mods.BG3SX
+-- _D(BG3SX)
+-- BG3SX.Event:Subscribe(function(e)
+--     if e.Channel == "BG3SX_SceneInit" then
+--         local payload = Ext.Json.Parse(e.Payload)
+--         _P("-----------------------------------")
+--         _P("-----------------------------------")
+--         _P("-------------Subscribed------------")
+--         _P(payload)
+--         _D(payload)
+--         _P("-----------------------------------")
+--     end
+
+--     if e.Channel == "BG3SX_SceneCreated" then
+--     end
+-- end)
+
 -- Event:Subscribe(function(e)
 --     if e.Channel == "BG3SX_NPCStrip" then
 --         _P("---------------------------------------------------")

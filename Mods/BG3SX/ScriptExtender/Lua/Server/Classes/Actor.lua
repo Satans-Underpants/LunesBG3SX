@@ -93,28 +93,6 @@ function Actor:Destroy()
     -- Scene.lua now destroys element in saved actors table
 end
 
--- Helpers
---------------------------------------------------------------
-
-
-
-
--- Actor Movement
---------------------------------------------------------------
-
-
--- Blocks the actors movement
----@param entity string  - uuid of entity
-local function disableActorMovement(entity)
-    Osi.AddBoosts(entity, "ActionResourceBlock(Movement)", "", "")
-end
-
--- Unlocks movement
----@param entity string  - uuid of entity
-local function enableActorMovement(entity)
-    Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
-end
-
 
 -- Visuals
 --------------------------------------------------------------
@@ -235,17 +213,19 @@ local function finalizeSetup(self)
     -- Copy actor's display name to proxy (mostly for Tavs)
     Entity:TryCopyEntityComponent(self.parent, self.uuid, "DisplayName")
 
+    -- TODO: Maybe re-enable - Disabled while testing new Osi.Transform rule to see if we can trim this
+    ---------------------------------------------------
     -- TODO: Currently parent entitiy never gets stripped if they don't have the block enabled
     -- Copy and dress actor like the parent entity
-    self:CopyEquipmentFromParent()
-    if Osi.HasActiveStatus(self.parent, "BG3SX_ToggleStrippingBlock") == 0 then
-        Effect:Trigger(self.parent, "DARK_JUSTICIAR_VFX")
-    end
-    if self.equipment then
-        self:DressActor()
-    end
+    -- self:CopyEquipmentFromParent()
+    -- if Osi.HasActiveStatus(self.parent, "BG3SX_ToggleStrippingBlock") == 0 then
+    --     Effect:Trigger(self.parent, "DARK_JUSTICIAR_VFX")
+    -- end
+    -- if self.equipment then
+    --     self:DressActor()
+    -- end
 
-    disableActorMovement(self.parent)
+
 
     -- Ext.Net.BroadcastMessage("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- SE EVENT
     Event:new("BG3SX_ActorCreated", self) -- MOD EVENT - Events.lua
@@ -260,24 +240,27 @@ initialize = function(self)
     -- Ext.Net.BroadcastMessage("BG3SX_ActorInit", Ext.Json.Stringify(self)) -- SE EVENT
     Event:new("BG3SX_ActorInit", self) -- MOD EVENT - Events.
     -- _D(self)
-
-    Osi.Transform(self.uuid, Actor:GetLooks(self.parent), "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9")
-    self.visual = self.uuid.OriginalTemplate
+    
     Osi.SetDetached(self.uuid, 1)
-    disableActorMovement(self.uuid)
-
+    Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1)
+    Entity:ToggleMovement(self.uuid)
+    Entity:ToggleMovement(self.parent)
     -- Copy Voice component to the proxy because Osi.CreateAtObject does not do this and we want the proxy to play vocals
     Entity:TryCopyEntityComponent(self.parent, self.uuid, "Voice")
 
-    -- Copy MaterialParameterOverride component if present.
+    -- Osi.Transform(self.uuid, Actor:GetLooks(self.parent), "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Old Rule is "InvokeDuplicity" - "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9"
+    -- self.visual = self.uuid.OriginalTemplate
+    Osi.Transform(self.uuid, self.parent, "8ec4cf19-e98e-465e-8e46-eba3a6204a39")
+
+
     -- This fixes the white Shadowheart going back to her original black hair as a proxy.
     Entity:TryCopyEntityComponent(self.parent, self.uuid, "MaterialParameterOverride")
 
-    Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1)
 
     -- Wait for 0.2 seconds for everything to finalize, then call the last step of the finalize function
     Ext.Timer.WaitFor(200, finalizeSetup(self))
 
+    -- TODO: Maybe just include everything in finalizeSetup(self) in here instead
 end
 
 

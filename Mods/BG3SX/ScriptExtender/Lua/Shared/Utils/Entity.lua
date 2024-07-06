@@ -31,6 +31,20 @@ function Entity:GetAvailableAnimations(uuid)
     return availableAnimations[uuid]
 end
 
+-- Entity Movement
+-----------------------------
+
+-- Blocks the actors movement
+---@param entity string  - uuid of entity
+function Entity:ToggleMovement(entity)
+    if Osi.HasAppliedStatus(entity, "ActionResourceBlock(Movement)") then
+        Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
+    else
+        Osi.AddBoosts(entity, "ActionResourceBlock(Movement)", "", "")
+    end
+end
+
+
 -- Return Status
 -------------------------------
 
