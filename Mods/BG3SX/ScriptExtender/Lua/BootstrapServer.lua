@@ -2,13 +2,17 @@
         -- Init Classes --
 ------------------------------------
 
+ -- Just for it to not throw errors because it can't be loaded, will get removed later
+ -- Will structure will need to be added to every single AnimationData
+Ext.Require("Shared/Data/AnimHeightMatching.lua")
+
 -- Initialize Debug and Events
 Ext.Require("Shared/Utils/_DEBUG.lua")
 Ext.Require("Shared/Data/EventSubscriber.lua") -- Global storage space for all event subscriber instances
 Ext.Require("Shared/Utils/Event.lua")
 
 -- Initialize Data
-Ext.Require("Shared/Data/SexAnimations.lua")
+Ext.Require("Shared/Data/AnimationData.lua")
 Ext.Require("Shared/Data/BodyLibrary.lua")
 Ext.Require("Shared/Data/EntityScale.lua")
 Ext.Require("Shared/Data/Equipment.lua")

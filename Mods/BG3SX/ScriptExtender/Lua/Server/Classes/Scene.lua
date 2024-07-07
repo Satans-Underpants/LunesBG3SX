@@ -241,15 +241,15 @@ local function finalizeScene(self)
 
         -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - Teleport and rotate every actor to actor.parent startlocation")
 
-        -- local startLocation = self.startLocations[1]
+        local startLocation = self.startLocations[1]
 
         --for _, startLocation in pairs(self.startLocations) do
             --_P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
            -- if actor.parent == startLocation.entity then
                -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
             
-                -- Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
-                -- Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
+                Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
+                Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
            -- end
         --end
 
@@ -258,19 +258,14 @@ local function finalizeScene(self)
         --disableActorMovement(actor.parent)
     end
 
-    if #self.entities >1 then
-        local test = {}
-        test.x, test.y, test.z = Osi.GetPosition(self.startLocations[1].rotationHelper)
-        _D(test)
-        -- Entity:SaveEntityRotation(self.actors[1])
-        for i = 2, #self.actors do
-            local actor = self.actors[i]
-            local startLocation = self.startLocations[1]
-            -- Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
-            -- Rotate all other actors in same direction as the first one
-            Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
-        end
-    end
+    -- if #self.actors >1 then
+    --     for i = 2, #self.actors do
+    --         local actor = self.actors[i]
+    --         local startLocation = self.startLocations[1]
+    --         Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
+    --         Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
+    --     end
+    -- end
 
     -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - Scene Created:")
     -- table.insert(SAVEDSCENES, self)

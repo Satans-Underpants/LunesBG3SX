@@ -18,24 +18,16 @@ Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(caster,
 
     if spell == "BG3SX_RotateScene" then
         local scene = Scene:FindSceneByEntity(caster)
-        local rotateTarget = Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", location.x, location.y, location.z, 0, 0, "")
-        local sceneType = Sex:DetermineSceneType(scene)
-        if sceneType == "MasturbateMale" or sceneType == "MasturbateFemale" then
-
-            for _, actor in pairs(scene.actors) do
-                Osi.StopAnimation(actor.uuid, 1)
-                Osi.SteerTo(actor.uuid, rotateTarget, 1)
-                
-                -- Ext.Timer.WaitFor(150, function()
-                    Sex:PlayAnimation(caster, scene.currentAnimation) -- Small delay to handle SteerTo/StopAnimation lockout
-                -- end)
-
-
-
-                -- Sex:PlayAnimation(caster, scene.currentAnimation)
-                -- Entity:RotateEntity(actor.uuid, rotateTarget)
-            end
+        local helper = Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", location.x, location.y, location.z, 0, 0, "")
+        -- local sceneType = Sex:DetermineSceneType(scene)
+        -- if sceneType == "MasturbateMale" or sceneType == "MasturbateFemale" then
+        for _, actor in pairs(scene.actors) do
+            Osi.StopAnimation(actor.uuid, 1) -- To enable steering
+            -- _D(Ext.Entity.Get(actor.uuid).ServerCharacter.Template.SteeringSpeed_MovingCurve) -- Maybe we need to create a custom curve
+            Osi.SteerTo(actor.uuid, helper, 1) -- 1 = instant
         end
+        Osi.RequestDeleteTemporary(helper)
+        Sex:PlayAnimation(caster, scene.currentAnimation)
     end
 end)
 

@@ -15,8 +15,6 @@ MOANING_SOUNDS = {
     "LoveMoanClosed_PlayerCharacter_Cine",
     "LoveMoanOpen_PlayerCharacter_Cine"
 }
-
-
 KISSING_SOUNDS = {
     "CAMP_Karlach_CRD_ROM_Date_SexKiss2",
     "CAMP_Karlach_CRD_ROM_Date_SexKiss3",
@@ -24,4 +22,3 @@ KISSING_SOUNDS = {
     "CAMP_Karlach_CRD_ROM_Date_SexKiss7",
     "CAMP_Karlach_CRD_ROM_Date_SexKiss9",
 }
-

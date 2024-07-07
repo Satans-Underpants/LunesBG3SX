@@ -446,8 +446,8 @@ end
 
 
 -- use a helper object and Osi to make an entity rotate
----@param entity uuid
----@return helper uuid - helper object that the entity will look towards with Osi.SteerTo
+---@param uuid string
+---@return helper uuid - Helper object that the entity can later look towards with Osi.SteerTo
 function Entity:SaveEntityRotation(uuid)
 
     local entityPosition = {}
@@ -456,14 +456,31 @@ function Entity:SaveEntityRotation(uuid)
     entityRotation.x,entityRotation.y,entityRotation.z = Osi.GetRotation(uuid)
     local entityDegree = Math:DegreeToRadian(entityRotation.y)
 
-    -- 1 = distance
-    local x = (entityPosition.x + 1) * math.cos(entityDegree)
-    local y = (entityPosition.y + 1) * math.sin(entityDegree)
+    local distanceAwayFromEntity = 1 -- Can be changed
+    local x = entityPosition.x + (distanceAwayFromEntity * math.cos(entityDegree))
+    local y = entityPosition.y + (distanceAwayFromEntity * math.sin(entityDegree))
     local z = entityPosition.z
-    
-    -- creates helper object that entity can look at with a distance
+
+    -- Creates and returns the helper object spawned at a distance based on entity rotation to store it to later steer towards
     local helper = Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", x, y, z, 0, 0, "")
     return helper
+end
+
+-- Finds the angle degree of an entity based on position difference to a target
+---@param entity string - The entities uuid
+---@param target string - The targets uuid
+function Entity:FindAngleToTarget(entity, target)
+    local entityPos = {}
+    local targetPos = {}
+    entityPos.y, entityPos.x,entityPos.z = Osi.GetPosition(entity)
+    targetPos.y, targetPos.x,targetPos.z = Osi.GetPosition(target)
+    local dif = {
+        y = entityPos.y - targetPos.y,
+        x = entityPos.x - targetPos.x,
+        z = entityPos.z - targetPos.z,  
+    }
+    local degree = math.atan(dif.y, dif.x)
+    return degree
 end
 
 -- use a helper object and Osi to make an entity rotate
@@ -472,7 +489,6 @@ end
 function Entity:RotateEntity(uuid, helper)
     Osi.SteerTo(uuid, helper, 1)
 end
-
 
 
 -- Returns the allowed animations for a character (based on whether they are an Origin, bodytype [and maybe race - waiting for test results])
