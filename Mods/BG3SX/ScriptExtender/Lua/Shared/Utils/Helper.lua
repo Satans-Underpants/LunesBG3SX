@@ -32,6 +32,7 @@ function Helper:GenerateUUID()
     end)
 end
 
+
 -- Checks if a number is even
 ---@param n int - The number to check
 ---@example
@@ -46,12 +47,12 @@ function Helper:isEven(n)
     return n % 2 == 0
 end
 
+
 -- Checks if a number is odd
 ---@param n int - The number to check
 function Helper:isOdd(n)
     return n % 2 ~= 0
 end
-
 
 
 -- Credit: Yoinked from Morbyte (Norbyte?)
@@ -72,12 +73,14 @@ function Helper:TryToReserializeObject(srcObject, dstObject)
     return nil
 end
 
+
 -- Function to clean the prefix and return only the ID
 function Helper:CleanPrefix(fullString)
     -- Use pattern matching to extract the ID part
     local id = fullString:match(".*_(.*)")
     return id
 end
+
 
 -- Function to check if not all values are false
 function Helper:NotAllFalse(data)
@@ -87,13 +90,6 @@ function Helper:NotAllFalse(data)
         end
     end
     return false
-end
-
----Prints a debug message to the console and logs it if logging is enabled.
----@param content any The content of the error message to be printed and logged.
----@param textColor? number The ANSI color code for the text. Defaults to blue if not provided.
-function BasicDebug(content, textColor)
-    BasicPrint(content, "DEBUG", textColor)
 end
 
 

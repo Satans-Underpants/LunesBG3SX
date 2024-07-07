@@ -80,10 +80,8 @@ local function playAnimationAndSound(actor, animationData, position)
         end
     end
 
-    Event:new("BG3SX_AnimationChange", newAnimation) -- MOD EVENT
-    Event:new("BG3SX_SoundChange", newSound) -- MOD EVENT
-    -- _P("[BG3SX][Sex.lua] Sex:PlayAnimation - playAnimationAndSound - Scene animation and sound change for actor: ", actor, " for animation table:")
-    -- _D(animationData)
+    Event:new("BG3SX_AnimationChange", newAnimation)
+    Event:new("BG3SX_SoundChange", newSound)
 end
 
 
@@ -93,9 +91,9 @@ end
 function Sex:PlayAnimation(entity, animationData)
     local scene = Scene:FindSceneByEntity(entity)
     local sceneType = Sex:DetermineSceneType(scene)
-    scene.currentAnimation = animationData -- Saves the newly selected animationData table to the scene
-    
-    -- _P("[BG3SX][Sex.lua] - Sex:PlayAnimation - determines Scene to be of sceneType ", sceneType)
+   
+    -- Saves the newly selected animationData table to the scene to recall after teleporting/rotating
+    scene.currentAnimation = animationData
 
     if sceneType == "MasturbateFemale" then
         playAnimationAndSound(scene.actors[1], animationData, "Bottom")
@@ -107,7 +105,7 @@ function Sex:PlayAnimation(entity, animationData)
         playAnimationAndSound(scene.actors[1], animationData, "Top")
         playAnimationAndSound(scene.actors[2], animationData, "Bottom")
 
-    elseif sceneType == "Straight" then
+    elseif sceneType == "Straight" then -- Handle this in a different way to enable actor swapping even for straight animations
         local actor1 = scene.actors[1]
         local actor2 = scene.actors[2]
         -- In case of actor1 not being male, swap them around to still assign correct animations
@@ -143,29 +141,24 @@ end
 function Sex:StartSexSpellUsed(caster, targets, animationData)
     local scene
     if animationData then
-        _P("----------------------------- [BG3SX][Sex.lua] - Creating new scene -----------------------------")
+        -- _P("----------------------------- [BG3SX][Sex.lua] - Creating new scene -----------------------------")
         local sexHavers = {caster}
 
         for _,target in pairs(targets) do
-            -- for masturbation caster == target
-            if target ~= caster then
+            if target ~= caster then -- To not add caster twice if it might also be the target
                 table.insert(sexHavers, target)
-                -- _P("ADDED " , target , " TO SEXHAVERS")
             end
         end
 
         scene = Scene:new(sexHavers)
 
         -- Delay the rest as well, since scene initilization is delayed for 1 second to avoid user seeing behind the scenes stuff
-
-        function haveSex()
+        -- function haveSex()
             Sex:InitSexSpells(scene)
             Sex:PlayAnimation(caster, animationData)
-        end
+        -- end
 
-        Ext.Timer.WaitFor(1500, function() haveSex() end)
-        
-
+        -- Ext.Timer.WaitFor(1500, function() haveSex() end)
     end
 end
 
@@ -173,7 +166,6 @@ end
 --- Adds the main sex spells to an entity
 ---@param entity    string  - The entities UUID
 function Sex:AddMainSexSpells(entity)
-    -- Add "Start Sex" and "Sex Options" spells only if entity is PLAYABLE or HUMANOID or FIEND, and is not a child (KID)
     if (Entity:IsPlayable(entity)
         or Osi.IsTagged(entity, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
         or Osi.IsTagged(entity, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
@@ -183,8 +175,6 @@ function Sex:AddMainSexSpells(entity)
             Osi.AddSpell(entity, spell)
         end
     end
-
-    -- _P("[BG3SX][Sex.lua] - Sex:AddMainSexSpells executed for ", entity)
 end
 
 
@@ -197,19 +187,15 @@ local function addAdditionalSexActions(entity)
         -- If iteration lands on SwitchPlaces spell, check which scene type the entity is in and only add it if its not a solo one
         if spell == "BG3SX_SwitchPlaces" then
             local sceneType = Sex:DetermineSceneType(scene)
-            if sceneType ~= "MasturbateFemale" and sceneType ~= "MasturbateMale" then
-                -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
-                Ext.Timer.WaitFor(spellCount*200, function()
+            if not (sceneType == "MasturbateFemale" or sceneType == "MasturbateMale" or sceneType == "Straight") then
+                Ext.Timer.WaitFor(spellCount * 200, function()
                     Osi.AddSpell(entity, spell)
-                    -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - ", spell, " for ", entity, " added")
-                    spellCount = spellCount+1
+                    spellCount = spellCount + 1
                 end)
-            end
+            end            
         else
-            -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - Adding: ", spell, " for ", entity, " with delay of ", spellCount * 200)
             Ext.Timer.WaitFor(spellCount*200, function()
                 Osi.AddSpell(entity, spell)
-                -- _P("[BG3SX][Sex.lua] - addAdditionalSexActions - ", spell, " for ", entity, " added")
                 spellCount = spellCount+1
             end)
         end
@@ -233,25 +219,21 @@ function Sex:InitSexSpells(scene)
 
             addAdditionalSexActions(entity)
         end
-        -- _P("[BG3SX][Sex.lua] - Sex:InitSexSpells executed for ", entity)
     end
 end
 
 
+-- UNUSED
 --- Strips an actor of an entity
 ---@param scene Scene
 ---@param entity uuid
 function Sex:PairedSexStrip(scene, entity)
-
-    -- for _, actor in scene.actors do
-    --     if actor.parent == entity do 
-    --         Osi.ApplyStatus(actor, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
-    --         Entity:UnequipAll(actor)
-    --     end
-    -- end
-
-    Osi.ApplyStatus(entity, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
-    Entity:UnequipAll(entity)
+    for _, actor in scene.actors do
+        if actor.parent == entity then
+            Osi.ApplyStatus(actor, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
+            Entity:UnequipAll(actor)
+        end
+    end
 end
 
 
@@ -267,8 +249,6 @@ end
 function Sex:ChangeCameraHeight(uuid)
     local entity = Ext.Entity.Get(uuid)
     local currentEntityScale = Entity:TryGetEntityValue(uuid, nil, {"GameObjectVisual", "Scale"})
-    -- _P("Scale Before")
-    -- _D(entity.GameObjectVisual.Scale)
 
     -- floating point shenanigangs
     if entity.GameObjectVisual then -- Safeguard against someone trying to create a scene with Scenery NPCs
@@ -282,21 +262,5 @@ function Sex:ChangeCameraHeight(uuid)
         entity:Replicate("GameObjectVisual")
     end
 
-    -- if currentEntityScale > 0.99 then
-    --     entity.GameObjectVisual.Scale = 0.5
-    -- elseif currentEntityScale > 0.51 and currentEntityScale < 0.49 then
-    --     entity.GameObjectVisual.Scale = 0.05
-    -- else
-    --     entity.GameObjectVisual.Scale = 1.0
-    -- end
-
-    -- _P("Scale After")
-    -- _D(entity.GameObjectVisual.Scale)
-
-    -- Ext.Net.BroadcastMessage("BG3SX_CameraHeightChange", Ext.Json.Stringify(entity)) -- SE MOD
-    Event:new("BG3SX_CameraHeightChange", entity) -- MOD EVENT
-
-    -- _P("[BG3SX][Sex.lua] - Sex:ChangeCameraHeight for ", entity)
-    
+    Event:new("BG3SX_CameraHeightChange", entity) -- MOD EVENT   
 end
-

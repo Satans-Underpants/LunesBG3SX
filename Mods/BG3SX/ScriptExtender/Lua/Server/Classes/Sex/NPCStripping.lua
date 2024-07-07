@@ -96,7 +96,6 @@ function saveVisualSet_Slots(uuid)
     local slots = serializeVisualSetSlots(uuid)
     local entry = {uuid = uuid, slots = slots}
     table.insert(OriginalTemplates, entry)
-    -- _D(slots)
 end
 
 

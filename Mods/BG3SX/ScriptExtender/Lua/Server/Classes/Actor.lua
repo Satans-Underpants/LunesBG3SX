@@ -41,33 +41,6 @@ function Actor:new(parent)
     -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
     instance.position.x, instance.position.y, instance.position.z = Osi.GetPosition(parent)
     instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(parent)
-    -- Osi.TeleportToPosition(instance.uuid, instance.position.x, instance.position.y, instance.position.z, "", 0, 0, 0, 0, 0)
-    -- (sourceObject, x, y, z, event, teleportLinkedCharacters, teleportPartyFollowers, teleportSummons, leaveCombat, snapToGround)
-
-    -- Osi.AppearAt(instance.uuid, instance.parent, 0, "", "", 0)
-    -- Osi.AppearAt(character, target, playSpawn, customSpawnAnimation, appearedEvent, preventTeleportOnFailure)
-    
-    -- Osi.CreateAtObject(Osi.GetTemplate(parent), parent, 1, 0, "", 1)
-
-    -- instance.uuid = Osi.CreateAt(Osi.GetTemplate(parent), instance.position.x, instance.position.y, instance.position.z, 1, 0, "")
-
-    -- Osi.TeleportTo(instance.uuid, parent, "", 0, 0, 0, 0, 0)
-
-    -- _P("Goal Teleportation")
-    -- _D(instance.position)
-
-    -- _P("Actual Position")
-    -- local actualPosition = {}
-    -- actualPosition.x, actualPosition.y, actualPosition.z = Osi.GetPosition(instance.uuid)
-    -- _D(actualPosition)
-
-    -- _P("Teleporting now")
-    -- Osi.TeleportToPosition(instance.uuid, instance.position.x, instance.position.y, instance.position.z)
-
-    -- _P("Position after Teleport")
-    -- local afterPosition = {}
-    -- afterPosition.x, afterPosition.y, afterPosition.z = Osi.GetPosition(instance.uuid)
-    -- _D(afterPosition)
 
     initialize(instance) -- Automatically calls the Itinitialize function on creation
 
@@ -84,12 +57,10 @@ end
 
 -- Cleans up the actor
 function Actor:Destroy()
-
     Osi.StopAnimation(self.uuid, 1)
     Osi.TeleportToPosition(self.uuid, 0,0,0) -- hide from viewer
     Osi.SetOnStage(self.uuid, 0) -- to disable AI
     Osi.RequestDeleteTemporary(self.uuid)
-
     -- Scene.lua now destroys element in saved actors table
 end
 
@@ -100,36 +71,24 @@ end
 --- Gets parent entities looks including attachments like Wylls Horns
 ---@return lookTemplate string   - uuid - The looks of a parent entity
 function Actor:GetLooks(parent)
-    --_P("DUMP PARENT 1")
-    --_D(parent)
     local visTemplate = Entity:TryGetEntityValue(parent, nil, {"GameObjectVisual", "RootTemplateId"})
     local origTemplate = Entity:TryGetEntityValue(parent, nil, {"OriginalTemplate", "OriginalTemplate"})
-
     local lookTemplate = parent
-    --_P("DUMP LOOKTEMPLATE 1")
-    --_D(lookTemplate)
+
     -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
     -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
     if visTemplate then
-        -- _P("Has visTemplate")
         if origTemplate then
-            -- _P("Has origTemplate")
             if origTemplate ~= visTemplate then
                 lookTemplate = visTemplate
-                --_P("DUMP LOOKTEMPLATE 2")
-                --_D(lookTemplate)
             end
         elseif origTemplate == nil then -- It's Tav?
-            -- _P("origTemplate == nil")
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
             if Osi.HasAppliedStatusOfType(parent, "POLYMORPHED") == 1 or parent.AppearanceOverride then
                 lookTemplate = visTemplate
-                --_P("DUMP LOOKTEMPLATE 3")
-                --_D(lookTemplate)
             end
         end
     end
-    -- _P(lookTemplate)
     return lookTemplate
 end
 
@@ -171,23 +130,21 @@ end
 function Actor:DressActor()
     -- Apparently there is a function to equip an ArmourSet directly but not Equipment
     Osi.SetArmourSet(self.uuid, self.oldArmourSet) -- Equips a set of possibly copied armour
-
-    --_D(self.oldEquipment)
     for _, itemData in pairs(self.oldEquipment) do -- Equips every item found in possibly copied equipment table
         local item = Osi.GetItemByTemplateInInventory(itemData, self.uuid)
         if item then
             -- Copy the dye applied to the source item
-            TryCopyEntityComponent(itemData.SourceItem, item, "ItemDye")
+            Entity:TryCopyEntityComponent(itemData.SourceItem, item, "ItemDye")
 
             Osi.Equip(self.uuid, item)
             table.insert(self.equipment, item)
         else
-            -- _P("[SexActor.lua] Actor:DressActor: couldn't find an item of template " .. itemTemplate .. " in the proxy")
+            _P("[SexActor.lua] Actor:DressActor: couldn't find an item of template " .. item .. " on the actor")
         end
     end
 
-    -- Ext.Net.BroadcastMessage("BG3SX_ActorDressed", Ext.Json.Stringify({self, self.equipment})) -- SE EVENT
-    Event:new("BG3SX_ActorDressed", {self.uuid, self.equipment}) -- MOD EVENT - Events.lua
+
+    Event:new("BG3SX_ActorDressed", {self.uuid, self.equipment})
 
     -- self.armour = nil
     -- self.equipment = nil
@@ -225,42 +182,52 @@ local function finalizeSetup(self)
     --     self:DressActor()
     -- end
 
-
-
-    -- Ext.Net.BroadcastMessage("BG3SX_ActorCreated", Ext.Json.Stringify(self)) -- SE EVENT
-    Event:new("BG3SX_ActorCreated", self) -- MOD EVENT - Events.lua
-
+    Event:new("BG3SX_ActorCreated", self)
 end
-
 
 
 -- Set ups the actor like  detaching them from the group etc.
 initialize = function(self)
-
-    -- Ext.Net.BroadcastMessage("BG3SX_ActorInit", Ext.Json.Stringify(self)) -- SE EVENT
     Event:new("BG3SX_ActorInit", self) -- MOD EVENT - Events.
-    -- _D(self)
     
     Osi.SetDetached(self.uuid, 1)
     Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1)
     Entity:ToggleMovement(self.uuid)
-    Entity:ToggleMovement(self.parent)
-    -- Copy Voice component to the proxy because Osi.CreateAtObject does not do this and we want the proxy to play vocals
+    Entity:ToggleWalkThrough(self.uuid)
+
+    -- Copy Voice component to the proxy because Osi.CreateAtObject does not do this and we want the actor to play vocals
     Entity:TryCopyEntityComponent(self.parent, self.uuid, "Voice")
 
-    -- Osi.Transform(self.uuid, Actor:GetLooks(self.parent), "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Old Rule is "InvokeDuplicity" - "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9"
-    -- self.visual = self.uuid.OriginalTemplate
+    -- Gets the general looks and customization
     Osi.Transform(self.uuid, self.parent, "8ec4cf19-e98e-465e-8e46-eba3a6204a39")
-
 
     -- This fixes the white Shadowheart going back to her original black hair as a proxy.
     Entity:TryCopyEntityComponent(self.parent, self.uuid, "MaterialParameterOverride")
 
-
+    -- Re-enable finalizeSetup(self) with a delay if it creates problems
+    -------------------------------------
     -- Wait for 0.2 seconds for everything to finalize, then call the last step of the finalize function
-    Ext.Timer.WaitFor(200, finalizeSetup(self))
+    -- Ext.Timer.WaitFor(200, finalizeSetup(self))
+    -------------------------------------
+    -- Then disable/delete anything else under this row
 
-    -- TODO: Maybe just include everything in finalizeSetup(self) in here instead
+    -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
+    if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
+        -- Type is special Appearance Edit Enhanced thing?
+        if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 2 then
+            self.uuid.GameObjectVisual.Type = 2
+            self.uuid:Replicate("GameObjectVisual")
+        elseif not self.uuid.GameObjectVisual then
+            _P("[BG3SX][Actor.lua] Trying to create Actor for entity without GameObjectVisual Component.")
+            _P("[BG3SX][Actor.lua] This can happen with some scenery NPC's.")
+            _P("[BG3SX][Actor.lua] Safeguards have been put in place, nothing will break. Please end the Scene and choose another target.")
+        end
+    end
+
+    -- Copy actor's display name to proxy (mostly for Tavs)
+    Entity:TryCopyEntityComponent(self.parent, self.uuid, "DisplayName") -- Currently doesn't work
+
+    Event:new("BG3SX_ActorCreated", self)
 end
 
 

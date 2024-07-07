@@ -31,6 +31,7 @@ function Entity:GetAvailableAnimations(uuid)
     return availableAnimations[uuid]
 end
 
+
 -- Entity Movement
 -----------------------------
 
@@ -41,6 +42,17 @@ function Entity:ToggleMovement(entity)
         Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
     else
         Osi.AddBoosts(entity, "ActionResourceBlock(Movement)", "", "")
+    end
+end
+
+
+-- Toggles WalkTrough
+---@param entity string  - uuid of entity
+function Entity:ToggleWalkThrough(entity)
+    if Osi.HasAppliedStatus(entity, "CanWalkThrough(true)") then
+        Osi.AddBoosts(entity, "CanWalkThrough(false)", "", "")
+    else
+        Osi.AddBoosts(entity, "CanWalkThrough(true)", "", "")
     end
 end
 
@@ -303,17 +315,6 @@ function Entity:TryGetEntityValue(uuid, previousComponent, components)
 end
 
 
-
--- function Helper:GetPropertyOrDefault(obj, propertyName, defaultValue)
---     local success, value = pcall(function() return uuid[components[1]] end)
---     if success then
---         return value or defaultValue
---     else
---         return defaultValue
---     end
--- end
-
-
 -- Unequips all equipment from an entity
 ---@param uuid  string  - The entity UUID to unequip
 function Entity:UnequipAll(uuid)
@@ -357,7 +358,9 @@ function Entity:Scale(uuid, value)
     end
 end
 
---- func desc
+
+-- TODO: Save them and reapply them back when a scene is destroyed
+-- Removes any random status effects an eneity might have that manipulate scaling
 ---@param uuid  string  - The entity UUID to purge bodyscale statuses from
 function Entity:PurgeBodyScaleStatuses(entity)
     local result = false
@@ -381,11 +384,8 @@ function Entity:PurgeBodyScaleStatuses(entity)
 end
 
 
-
-
 -- Bodytype/race specific animations
 --------------------------------------------------------------
-
 
 -- returns bodytype and bodyshape of entity
 --@param character string - uuid
@@ -407,7 +407,6 @@ local function getBody(character)
 end
 
 
-
 -- returns the cc bodytype based on entity bodytype/bodyshape
 --@param bodytype  int   - 0 or 1
 --@param bodyshape int   - 0 or 1
@@ -419,6 +418,7 @@ local function getCCBodyType(bodytype, bodyshape)
         end 
     end
 end
+
 
 -- returns race of character - if modded, return human
 --@param character string - uuid
@@ -489,6 +489,18 @@ end
 function Entity:RotateEntity(uuid, helper)
     Osi.SteerTo(uuid, helper, 1)
 end
+
+
+-- Transcribed from LaughingLeader
+-- Written by Focus
+-- Updated to actually work by Skiz
+-- Clears an entities action queue
+---@param character any
+function Entity:ClearActionQueue(character)
+    Osi.FlushOsirisQueue(character)
+    Osi.CharacterMoveTo(character, character, "Walking", "")
+end
+
 
 
 -- Returns the allowed animations for a character (based on whether they are an Origin, bodytype [and maybe race - waiting for test results])

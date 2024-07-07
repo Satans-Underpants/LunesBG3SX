@@ -44,12 +44,12 @@ playSound = function(self)
     Osi.PlaySound(self.actor.uuid, sound) -- Plays a random entry of sounds on an actor
     
     -- Will be an infinite loop until registered timer gets canceled on Scene:Destroy()
-    -- local newSoundTimer = Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), function()
-    --     playSound(self)
-    -- end)
-    -- scene:RegisterNewSoundTimer(newSoundTimer)
+    local newSoundTimer = Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), function()
+        playSound(self)
+    end)
+    scene:RegisterNewSoundTimer(newSoundTimer)
 
-    scene:RegisterNewSoundTimer(sound)
+    -- scene:RegisterNewSoundTimer(sound)
 
     -- _P("[BG3SX][Sound.lua] - Sound:new() - playSound - Begin to play ", sound, " on ", self.actor.uuid)
 end

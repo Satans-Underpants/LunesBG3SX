@@ -2,8 +2,8 @@
         -- Init Classes --
 ------------------------------------
 
- -- Just for it to not throw errors because it can't be loaded, will get removed later
- -- Will structure will need to be added to every single AnimationData
+-- Just for it to not throw errors because it can't be loaded, will get removed later
+-- Structure will probably be added to every single AnimationData
 Ext.Require("Shared/Data/AnimHeightMatching.lua")
 
 -- Initialize Debug and Events
@@ -58,6 +58,7 @@ Ext.Require("Server/Listeners/SexListeners.lua")
 ------------------------------------
 
 -- Please check the very bottom of the Event.lua file on how to subscribe to events
+-- Only works with Server context, not on clients
 
 
 -- Available Events to listen to
@@ -72,7 +73,7 @@ Ext.Require("Server/Listeners/SexListeners.lua")
 -- "BG3SX_ActorCreated"(newActor)                                             - Actor:new(instance) - Fully initialized   - Actor.lua
 -- "BG3SX_AnimationChange"(newAnimation)                                      - Animation:new(instance)                   - Animations.lua
 -- "BG3SX_SoundChange"(newSound)                                              - Sound:new(instance)                       - Sounds.lua
--- "BG3SX_SceneTeleport"({scene, oldLocation, newlocation})                   -                                           - Scene.lua
+-- "BG3SX_SceneMove"({scene, oldLocation, newlocation})             -                                           - Scene.lua
 -- "BG3SX_SceneSwitchPlacesBefore"(scene.actors)                              - List of actors before change              - Scene.lua
 -- "BG3SX_SceneSwitchPlacesAfter"(scene.actors)                               - List of actors after change               - Scene.lua
 -- "BG3SX_CameraHeightChange"(entity)                                         -                                           - Sex.lua

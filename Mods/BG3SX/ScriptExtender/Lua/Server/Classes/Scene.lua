@@ -35,18 +35,20 @@ function Scene:new(entities)
         timerHandles    = {},
         cameraZoom      = {},
         props           = {},
+        switchPlaces    = "false",
     }, Scene)
 
     -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
     instance.rootPosition.x, instance.rootPosition.y, instance.rootPosition.z = Osi.GetPosition(entities[1])
     instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(entities[1])
 
-    for _,entity in pairs(instance.entities) do 
+    for _,entity in pairs(instance.entities) do
         -- Effect:Fade(entity, 2000) -- 2sec Fade duration on scene creation
     end
-    
+
     -- Delay so user doesn't see setup during fadeout
-    Ext.Timer.WaitFor(1000, function() initialize(instance)end)
+    -- Ext.Timer.WaitFor(1000, function() initialize(instance)end)
+        initialize(instance)
 
     return instance
 end
@@ -56,13 +58,7 @@ end
 --------------------------------------------------------------
 
 local FLAG_COMPANION_IN_CAMP = "161b7223-039d-4ebe-986f-1dcd9a66733f"
--- local BODY_SCALE_DELAY = 2000 -- 
-
-
--- METHODS
---------------------------------------------------------------
-
-
+-- local BODY_SCALE_DELAY = 2000 --  -- Not used anymore i think
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -77,13 +73,10 @@ local function setStartLocations(scene)
     for _,entity in pairs(scene.entities) do
         local position = {}
         position.x, position.y, position.z = Osi.GetPosition(entity)
-        --_D(position)
         local rotationHelper = Entity:SaveEntityRotation(entity)
 
         table.insert(scene.startLocations, {entity = entity, position = position, rotationHelper = rotationHelper})
     end
-    -- _P("------------------STARTLOCATIONS-------------")
-    --_D(scene.startLocations)
 end
 
 -- Gets an entities start location for a location reset of an entity on Scene:Destroy()
@@ -91,7 +84,6 @@ end
 ---@return          table   - The entities position
 ---@return          table   - The entities rotation
 local function getStartLocation(scene, entity)
-    --_D(scene.startLocations)
     for _, entry in pairs(scene.startLocations) do
         if entry.entity == entity then
             return entry.position, entry.rotationHelper
@@ -133,16 +125,12 @@ end
 
 function Scene:RegisterNewSoundTimer(newSoundTimer)
     table.insert(self.timerHandles, newSoundTimer)
-
-    -- _P("[BG3SX][Scene.lua] - Scene:RegisterNewSoundTimer - Current List of Timers:")
-    --_D(self.timerHandles)
 end
 function Scene:CancelAllSoundTimers()
     for _,handle in pairs(self.timerHandles) do
         table.remove(self.timerHandles, handle)
         Ext.Timer.Cancel(handle)
     end
-    -- _P("[BG3SX][Scene.lua] - Scene:CancelAllSoundTimers() - All SoundTimers canceled")
 end
 
 
@@ -155,15 +143,9 @@ end
 -- Scale entity for camera
 ---@param entity uuid
 function Scene:ScaleEntity(entity)
-
-    -- _P("[BG3SX][Scene.lua] - Calling Try Get Entity Value")
     local startScale = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
-    -- _P("Start Scale = " , startScale)
     table.insert(self.entityScales, {entity = entity, scale = startScale})
-    -- _D(self.entityScales)
     Entity:Scale(entity, 0.5)
-
-    -- _P("[BG3SX][Scene.lua] - Scene:ScaleEntity - ", entity, " scaled to 0.5")
 end
 
 -- Disabled the remaining setup functions because we already iterate over every entity in a scene and currently only use Scene:ScaleEntity(entity)
@@ -179,30 +161,31 @@ function Scene:MakeSpace(entity)
 
 -- Scale party members down so the camera would be closer to the action.
 ---@param uuid uuid
--- function Scene:SetCamera(uuid)
---     if Osi.IsPartyMember(uuid, 0) == 1 then
---         entity = Ext.Entity.Get(uuid)
---         local zoom = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
---         if zoom then
---             table.insert(self.cameraZoom, {entity = entity, zoom = zoom, previousZoom = previousZoom})
---             for _,entry in pairs(self.cameraZoom) do
---             entity.GameObjectVisual.Scale = 0.5
---             entity:Replicate("GameObjectVisual")
---         end
---     end
+function Scene:SetCamera(uuid)
+    if Osi.IsPartyMember(uuid, 0) == 1 then
+        entity = Ext.Entity.Get(uuid)
+        local zoom = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
+        if zoom then
+            table.insert(self.cameraZoom, {entity = entity, zoom = zoom, previousZoom = previousZoom})
+            for _,entry in pairs(self.cameraZoom) do
+                entity.GameObjectVisual.Scale = 0.5
+                entity:Replicate("GameObjectVisual")
+            end
+        end
+    end
 
---     -- _P("[BG3SX][Scene.lua] - Scene:SetCamera - For ", entity)
--- end
+    -- _P("[BG3SX][Scene.lua] - Scene:SetCamera - For ", entity)
+end
 
 -- After this is called, wait 400 ms
--- function Scene:Setup()
---     for _, entity in pairs(self.entities) do
---         -- self:MakeSpace(entity)
---         -- self:SetCamera(entity)
---         self:ScaleEntity(entity)
---     end
---     -- _P("[BG3SX][Scene.lua] - Scene:Setup() finished")
--- end
+function Scene:Setup()
+    for _, entity in pairs(self.entities) do
+        -- self:MakeSpace(entity)
+        -- self:SetCamera(entity)
+        self:ScaleEntity(entity)
+    end
+    -- _P("[BG3SX][Scene.lua] - Scene:Setup() finished")
+end
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -214,7 +197,7 @@ function Scene:MakeSpace(entity)
 ---@param self Scene
 local function finalizeScene(self)
     for _, actor in pairs(self.actors) do
-        
+
         -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
         -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - Entity:TryCopyEntityComponent - AppearanceOverride")
         if Entity:TryCopyEntityComponent(actor.parent, actor.uuid, "AppearanceOverride") then
@@ -247,7 +230,7 @@ local function finalizeScene(self)
             --_P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
            -- if actor.parent == startLocation.entity then
                -- _P("[BG3SX][Scene.lua] - finilizeScene(self) - iterating over startLocations ", startLocation)
-            
+
                 Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
                 Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
            -- end
@@ -286,44 +269,23 @@ end
 -- Initializes the actor
 ---@param self instance - "self" to actually be applied to the Actor:new instance
 initialize = function(self)
-
-    -- _P("[BG3SX][Scene.lua] - initialize(self) - add new scene to list of SAVEDSCENES:")
     table.insert(SAVEDSCENES, self)
-    --_D(SAVEDSCENES)
-    
-    -- Ext.Net.BroadcastMessage("BG3SX_SceneInit", Ext.Json.Stringify(self)) -- SE EVENT
-    -- Event:new("BG3SX_SceneInit", self) -- MOD EVENT
     Event:new("BG3SX_SceneInit", self)
-    -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize")
-    
+
     setStartLocations(self) -- Save start location of each entity to later teleport them back
+    
+    for _, entity in pairs(self.entities) do
+        Entity:ToggleWalkThrough(entity) -- We do this before in a seperate loop to already be applied
+    end
 
     -- Iterate over every entity thats involved in a new scene
-    local entityIteratedOverBefore
-    local entityRemoved
     for _, entity in pairs(self.entities) do
-        
-        -- Safeguard check to not create another actor if entity may have been added twice into scene (e.g. masturbation (caster/target))
-        -- Must stay on top of entity iteration to immediately break out of the loop if it happens
-        if entity == entityIteratedOverBefore then
-            entityRemoved = entity
-            break
-        else
-            entityIteratedOverBefore = entity
-        end
-        
-        -- _P("---------------New entity in the new scene----------------")
-
         Osi.SetVisible(entity, 0)
-    
-        -- Delay so user doesn't see setup
+        Entity:ToggleMovement(entity) -- TODO: Fix
 
-        -- Create a new actor for each entity involved in the scene
-        -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Actor:new( ", entity, " )")
-        -- local actor = Actor:new(entity)
-        Osi.AddBoosts(entity, "CanWalkThrough(true)", "", "") -- Could enable spawning of actor inside entity
-        table.insert(self.actors, Actor:new(entity))  
-        
+        -- Could enable spawning of actor inside entity then spawn new actor
+        table.insert(self.actors, Actor:new(entity))
+
         -- Make entity untargetable and detached from party to stop party members from following
         Osi.SetDetached(entity, 1)
         Osi.DetachFromPartyGroup(entity)
@@ -333,32 +295,36 @@ initialize = function(self)
         for _, spell in pairs(MAINSEXSPELLS) do  -- Configurable in Shared/Data/Spells.lua
             Osi.RemoveSpell(entity, spell)
         end
-        
+
         -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening
         if Osi.GetFlag(FLAG_COMPANION_IN_CAMP, entity) == 1 then
             Osi.ClearFlag(FLAG_COMPANION_IN_CAMP, entity)
         end
 
-        -- Save the entities body heightclass for animation matching
         -- TODO: Implement Animation Heightmatching
+        -- Save the entities body heightclass for animation matching
         local entityBodyShape = Entity:GetBodyShape(entity)
         local entityHeightClass = Entity:GetHeightClass(entity)
 
-        -- Osi.TeleportToPosition(entity, actor.position.x, actor.position.y, actor.position.z, "", 0, 0, 0, 0, 0)
         self:ScaleEntity(entity)
-        -- self:MakeSpace(entity)
-    end
-
-    if entityRemoved then
-        table.remove(self.entities, entityRemoved)
     end
 
     -- self:Setup()
-    
-    -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize")
-    finalizeScene(self)
 
-    -- TODO: Check if we could not just add everything of finalizeScene(self) in here
+    -- Re-enable finalizeScene(self) if it creates a problem, maybe even with delay
+    -------------------------------------
+    -- finalizeScene(self)
+    -------------------------------------
+    -- Then disable/delete anything else under this row
+    
+    -- Condensed finalizeScene(self)
+    -- Play around with this loop to fix repositioning during scene creation
+    for _, actor in ipairs(self.actors) do
+        local startLocation = self.startLocations[1]
+        Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
+        Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
+    end
+    Event:new("BG3SX_SceneCreated", self) -- MOD EVENT
 end
 
 
@@ -376,12 +342,9 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     local scene = Scene:FindSceneByEntity(entity)
     local oldLocation = scene.rootPosition -- Only used for Event:new payload
 
-    -- _D(newLocation)
-    -- _D(newLocation.x)
     for _, actor in ipairs(scene.actors) do
-        -- oldLocation = actor.position
-        
-        -- Keep this in case we want to re-enable it if you choose a specific option we could create
+
+        -- Keep this in case we want to re-enable a max. distance to teleport
         ---------------------------------------------------------------------------------------
         -- Do nothing if the new location is too far from the caster's start position,
         -- so players would not abuse it to get to some "no no" places.
@@ -395,7 +358,7 @@ function Scene:MoveSceneToLocation(entity, newLocation)
         -- Move stuff
         Osi.TeleportToPosition(actor.uuid, newLocation.x, newLocation.y, newLocation.z)
         Osi.TeleportToPosition(actor.parent, newLocation.x, newLocation.y, newLocation.z)
-        
+
         -- TODO - when we use props we probably want to "bind" them to a specific actor
             -- No they should all be located at rootlocation and animators would create an animation for them as well based on rootlocation
         -- Teleports all props of a scene to the new rootlocation
@@ -403,23 +366,32 @@ function Scene:MoveSceneToLocation(entity, newLocation)
             for _, prop in pairs(scene.props) do
                 Osi.TeleportToPosition(prop, newLocation.x, newLocation.y, newLocation.z)
             end
-        end        
+        end
     end
 
-    scene.rootPosition = newLocation -- Always update rootPosition of a scene if it changes
+    Sex:PlayAnimation(entity, scene.currentAnimation)
 
-    -- _P("--------------------------------------------------------------------")
-    -- _P("[BG3SX][Scene.lua] - Scene:MoveSceneToLocation - Moving scene from:")
-    --_D(oldLocation)
-    -- _P("to")
-    --_D(newLocation)
-    -- _P("--------------------------------------------------------------------")
+    scene.rootPosition = newLocation -- Always update rootPosition of a scene after changing it
 
     -- Ext.Net.BroadcastMessage("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- SE EVENT
-    Event:new("BG3SX_SceneTeleport", {scene, oldLocation, newLocation}) -- MOD EVENT
+    Event:new("BG3SX_SceneMove", {scene, oldLocation, newLocation}) -- MOD EVENT
 
 end
 
+
+-- Rotates a scene by creating an invisible helper the actors can steer to
+---@param caster any
+---@param location any
+function Scene:RotateScene(caster, location)
+    local scene = Scene:FindSceneByEntity(caster)
+    local helper = Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", location.x, location.y, location.z, 0, 0, "")
+    for _, actor in pairs(scene.actors) do
+        Entity:ClearActionQueue(actor.uuid)
+        Osi.SteerTo(actor.uuid, helper, 1) -- 1 = instant
+    end
+    Osi.RequestDeleteTemporary(helper)
+    Sex:PlayAnimation(caster, scene.currentAnimation) -- Play the animation that played before again
+end
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -430,12 +402,9 @@ end
 -- Destroys a scene instance
 function Scene:Destroy()
 
-    -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Initiating scene termination for scene:")
-    --_D(self)
-
     if self.entities then
-        for _, entity in pairs(self.entities) do  -- Initial entity for-loop solely for a Fadeout
-            Effect:Fade(entity, 2000) -- 2sec Fadeout on scene termination
+        for _, entity in pairs(self.entities) do
+            -- Effect:Fade(entity, 2000) -- 2sec Fadeout on scene termination
         end
     end
 
@@ -466,44 +435,37 @@ function Scene:Destroy()
             end
 
             -- Delete actor
-            -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - actor:Destroy() - Initiating actor termination for actor:")
-            --_D(actor)
             actor:Destroy()
         end
     end
 
+    -- TODO: Clean this up to also just be a Scene:ResetEntities() or something
     if self.entities then
         -- Iterates over every saved entity for a given scene instance
         for _, entity in pairs(self.entities) do
             -- Play recovery sound as substitue for orgasms
             -- TODO - change this to a generic sound for when we use this for non-sex instead
-            -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Play Orgasm sound for ", entity)
+
             Osi.PlaySound(entity, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)])
 
             -- Unlocks movement
             Entity:ToggleMovement(entity)
-    
+
             -- Sets scale back to a saved value during scene initialization
             local startScale
-            -- _D(self.entityScales)
             for _, entry in pairs(self.entityScales) do
                 if entity == entry.entity then
                     startScale = entry.scale
                 end
             end
 
-            -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Entity:Scale for ", entity)
             Entity:Scale(entity, startScale)
 
             -- Removes any spells given
-            -- TODO and any other animation specific spells  
-            -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Sex:RemoveSexSceneSpells for ", entity)
             Sex:RemoveSexSceneSpells(entity)
 
             -- Readds the regular sex spells (StartSex, Options, ChangeGenitals)
-            -- TODO: Add any other legal animation spells back in the future
             if Osi.IsPartyMember(entity, 0) == 1 then
-                -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Sex:AddMainSexSpells for ", entity)
                 Sex:AddMainSexSpells(entity)
             end
 
@@ -517,18 +479,13 @@ function Scene:Destroy()
 
             end
         end
-    --Fire a timer to notify other mods that a scene has ended
-    -- Sex:EndSexSceneTimer(actorData)
-    -- Ext.Net.PostMessageToServer("BG3SX_EndSexScene","")
+
+    Event:new("BG3SX_SceneDestroyed", self)
 
     -- Removes itself from SAVEDSCENES list
     for i,scene in ipairs(SAVEDSCENES) do
         if scene == self then
             table.remove(SAVEDSCENES, i)
-            
-            -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - Scene removed from SAVEDSCENES")
-            -- _P("[BG3SX][Scene.lua] - Scene:Destroy() - SAVEDSCENES Current Status:")
-            -- _D(SAVEDSCENES)
         end
     end
 end

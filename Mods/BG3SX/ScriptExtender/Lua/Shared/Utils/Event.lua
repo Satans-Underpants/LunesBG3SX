@@ -11,6 +11,7 @@ Event.__index = Event
 -- Lifetime Management
 -------------------------------
 
+-- TODO: Also count content string length of nested tables
 -- Calculates payload size by characters
 ---@param payload   string  - The payload to evaluate
 local function calculatePayloadSize(payload)
@@ -58,7 +59,6 @@ end
 
 -- CONSTRUCTOR
 --------------------------------------------------------------
-
 
 -- A new Event
 ---@param Channel   string  - The event name - like "MyEvent"

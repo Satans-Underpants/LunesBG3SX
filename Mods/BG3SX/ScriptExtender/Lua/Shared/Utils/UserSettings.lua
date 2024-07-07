@@ -45,6 +45,7 @@ function UserSettings:GetAutoErection()
     return allVariables["autoErection"]
 end
 
+
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 			                        JSON TEMPLATE
@@ -58,7 +59,6 @@ local filename = "BG3SX_Settings.json"
 -- 			                        Saving the settings
 -- 
 ----------------------------------------------------------------------------------------------------
-
 
 -- Save user choices in Settings file
 local function saveSettings()
@@ -74,11 +74,11 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
-
 -- Load user settings and update variables
 local function loadSettings()
     -- If there is no json. instantiate default values and create savefile
 end
+
 
 ----------------------------------------------------------------------------------------------------
 -- 
