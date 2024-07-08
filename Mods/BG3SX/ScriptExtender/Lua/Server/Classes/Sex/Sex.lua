@@ -125,6 +125,13 @@ function Sex:PlayAnimation(entity, animationData)
     elseif sceneType == "MMM" then
 
     end
+
+    if animationData.Props then
+        for _,prop in pairs(animationData.Props) do
+            Osi.CreateAtObject(prop, scene.actor[1].uuid, 1, 0, "", 1)
+            table.insert(scene.props,prop)
+        end
+    end
 end
 
 
@@ -150,15 +157,18 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
             end
         end
 
-        scene = Scene:new(sexHavers)
+        for _,involved in pairs(sexHavers) do
+            -- Effect:Fade(involved, 666)
+        end
 
+        
         -- Delay the rest as well, since scene initilization is delayed for 1 second to avoid user seeing behind the scenes stuff
-        -- function haveSex()
+        -- local function haveSex()
+            scene = Scene:new(sexHavers)
             Sex:InitSexSpells(scene)
             Sex:PlayAnimation(caster, animationData)
         -- end
-
-        -- Ext.Timer.WaitFor(1500, function() haveSex() end)
+        -- Ext.Timer.WaitFor(333, function() haveSex() end)
     end
 end
 
@@ -174,6 +184,11 @@ function Sex:AddMainSexSpells(entity)
         for _, spell in pairs(MAINSEXSPELLS) do -- Configurable in Shared/Data/Spells.lua
             Osi.AddSpell(entity, spell)
         end
+    end
+end
+function Sex:RemoveMainSexSpells(entity)
+    for _, spell in pairs(MAINSEXSPELLS) do  -- Configurable in Shared/Data/Spells.lua
+        Osi.RemoveSpell(entity, spell)
     end
 end
 
@@ -232,6 +247,22 @@ function Sex:PairedSexStrip(scene, entity)
         if actor.parent == entity then
             Osi.ApplyStatus(actor, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
             Entity:UnequipAll(actor)
+        end
+    end
+end
+
+
+-- Checks an uuid against the nonStripper table in EntityListeners.lua
+---@param uuid any
+function Sex:IsStripper(uuid)
+    local isStripper
+    local nonStrippers = Sex:GetNonStrippers()
+    if #nonStrippers > 0 then
+        for i, nonStripper in ipairs(nonStrippers) do
+            if nonStripper == uuid then
+                isStripper = false
+                return isStripper
+            end
         end
     end
 end

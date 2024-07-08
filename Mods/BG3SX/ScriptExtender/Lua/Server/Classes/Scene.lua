@@ -12,22 +12,25 @@ local initialize
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
----@param entities          table   - Table with Entitie uuids to use for a scene
+---@param entities          table   - Table with entity uuids to use for a scene
 ---@param rootPosition      table   - Table of x,y,z coordinates
 ---@param rotation          table   - Table with x,y,z,w 
+---@param startLocations    table   - Saves the start locations (Position/Rotation) of each entity to teleport back to when scene is destroyed
+---@param entityScales      table   - Saves the start entity scales
 ---@param actors            table   - Table of all actors in a scene
 ---@param currentAnimation  table   - Table of the current animation being played
 ---@param currentSounds     table   - Table of currently playing sounds
----@param props             table   - Table of all props currently in a scene
----@param entityScales      table   - Saves the start entity scales
----@param startLocations    table   - Saves the start Locations (Position/Rotation) of each entity to teleport back to when scene is destroyed
 ---@param timerHandles      table   - Timer handles in case they have to be cancelled (failsave)
+---@param cameraZoom        table   - Unused - Was intended to store previous zoom levels per entity - handled differently now
+---@param props             table   - Table of all props currently in a scene
+---@param switchPlaces      boolean - Boolean for PlayAnimation to check if actors have been switched - TODO: need a cleaner way to handle this
+---@param campFlags         table   - Table of entities with campflags applied before scene to reapply on Destroy() - Ignore those who didn't - PleaseStay Mod compatibility
 function Scene:new(entities)
     local instance      = setmetatable({
         entities        = entities,
         rootPosition    = {},
         rotation        = {},
-        startLocations  = {}, -- Should never change after initialize - Used to teleport everyone back on Scene:Destroy()
+        startLocations  = {}, -- NEVER change this after initialize - Used to teleport everyone back on Scene:Destroy()
         entityScales    = {},
         actors          = {},
         currentAnimation= {},
@@ -36,6 +39,7 @@ function Scene:new(entities)
         cameraZoom      = {},
         props           = {},
         switchPlaces    = "false",
+        campFlags       = {},
     }, Scene)
 
     -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
@@ -53,12 +57,6 @@ function Scene:new(entities)
     return instance
 end
 
-
--- CONSTANTS
---------------------------------------------------------------
-
-local FLAG_COMPANION_IN_CAMP = "161b7223-039d-4ebe-986f-1dcd9a66733f"
--- local BODY_SCALE_DELAY = 2000 --  -- Not used anymore i think
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -120,6 +118,26 @@ function Scene:FindSceneByEntity(entityToSearch)
 end
 
 
+-- Campflag Management
+-----------------------------------------------------
+
+local function saveCampFlags(self)
+    for _,entity in pairs(self.entities) do
+        if Osi.GetFlag("161b7223-039d-4ebe-986f-1dcd9a66733f", entity) == 1 then
+            table.insert(self.campFlags, entity)
+        end
+    end
+end
+
+function Scene:ToggleCampFlags(entity)
+    for _,flagEntity in pairs(self.campFlags) do
+        if entity == flagEntity then
+            Entity:ToggleCampFlag(entity)
+        end
+    end
+end
+
+
 -- SceneTimer Management
 -----------------------------------------------------
 
@@ -130,6 +148,18 @@ function Scene:CancelAllSoundTimers()
     for _,handle in pairs(self.timerHandles) do
         table.remove(self.timerHandles, handle)
         Ext.Timer.Cancel(handle)
+    end
+end
+
+
+-- Summons/Follower Management
+-----------------------------------------------------
+function Scene:DetachSummons(entity)
+    local summons = Helper:GetPlayerSummons()
+    -- Maybe need to create an entity entry in self.summons here first
+    for _,summon in pairs(summons) do
+        -- table.insert(self.summons, summon) Save in new instance.table as new entries per summon per each entity
+        Osi.AddBoosts(summon, "ActionResourceBlock(Movement)", "", "")
     end
 end
 
@@ -161,13 +191,14 @@ function Scene:MakeSpace(entity)
 
 -- Scale party members down so the camera would be closer to the action.
 ---@param uuid uuid
-function Scene:SetCamera(uuid)
+function Scene:SetCamera(uuid)  -- TODO: PREVIOUSZOOM NOT DECLARED - should be something like previous entity scale
     if Osi.IsPartyMember(uuid, 0) == 1 then
-        entity = Ext.Entity.Get(uuid)
+        local entity = Ext.Entity.Get(uuid)
         local zoom = Entity:TryGetEntityValue(entity, nil, {"GameObjectVisual", "Scale"})
+        local previousZoom
         if zoom then
             table.insert(self.cameraZoom, {entity = entity, zoom = zoom, previousZoom = previousZoom})
-            for _,entry in pairs(self.cameraZoom) do
+            for _,entity in pairs(self.cameraZoom) do
                 entity.GameObjectVisual.Scale = 0.5
                 entity:Replicate("GameObjectVisual")
             end
@@ -267,46 +298,32 @@ end
 
 
 -- Initializes the actor
----@param self instance - "self" to actually be applied to the Actor:new instance
+---@param self instance - The scene instance
 initialize = function(self)
     table.insert(SAVEDSCENES, self)
     Event:new("BG3SX_SceneInit", self)
 
     setStartLocations(self) -- Save start location of each entity to later teleport them back
-    
+    saveCampFlags(self) -- Saves which entities had campflags applied before
+
+    -- We do this before in a seperate loop to already apply this to all entities before actors are spawned one by one
     for _, entity in pairs(self.entities) do
-        Entity:ToggleWalkThrough(entity) -- We do this before in a seperate loop to already be applied
+        Osi.AddBoosts(entity, "ActionResourceBlock(Movement)", "", "") -- Blocks movement
+        Osi.SetDetached(entity, 1)              -- Make entity untargetable
+        Osi.DetachFromPartyGroup(entity)        -- Detach from party to stop party members from following
+        --self:DetachSummons(entity) -- TODO: Add something to handle summon/follower movement here
+        Osi.SetVisible(entity, 0)               -- 0 = Invisible
+        Entity:ToggleWalkThrough(entity)        -- To prevent interactions with other entities even while invisible and untargetable
+        self:ToggleCampFlags(entity)            -- Toggles camp flags so companions don't return to tents
+        Sex:RemoveMainSexSpells(entity)         -- Removes the regular sex spells
+        
+        local entityBodyShape = Entity:GetBodyShape(entity)         -- TODO: Implement Animation Heightmatching
+        local entityHeightClass = Entity:GetHeightClass(entity)     -- Save the entities body heightclass for animation matching
     end
 
-    -- Iterate over every entity thats involved in a new scene
     for _, entity in pairs(self.entities) do
-        Osi.SetVisible(entity, 0)
-        Entity:ToggleMovement(entity) -- TODO: Fix
-
-        -- Could enable spawning of actor inside entity then spawn new actor
         table.insert(self.actors, Actor:new(entity))
-
-        -- Make entity untargetable and detached from party to stop party members from following
-        Osi.SetDetached(entity, 1)
-        Osi.DetachFromPartyGroup(entity)
-
-        -- Remove the main spells -- does nothing if they are already removed. We can just purge all animstart spells here
-        -- _P("[BG3SX][Scene.lua] - Scene:new() - initialize - Remove Main Spells for ", entity, " during Scene")
-        for _, spell in pairs(MAINSEXSPELLS) do  -- Configurable in Shared/Data/Spells.lua
-            Osi.RemoveSpell(entity, spell)
-        end
-
-        -- Clear FLAG_COMPANION_IN_CAMP to prevent companions from teleporting to their tent while all this is happening
-        if Osi.GetFlag(FLAG_COMPANION_IN_CAMP, entity) == 1 then
-            Osi.ClearFlag(FLAG_COMPANION_IN_CAMP, entity)
-        end
-
-        -- TODO: Implement Animation Heightmatching
-        -- Save the entities body heightclass for animation matching
-        local entityBodyShape = Entity:GetBodyShape(entity)
-        local entityHeightClass = Entity:GetHeightClass(entity)
-
-        self:ScaleEntity(entity)
+        self:ScaleEntity(entity) -- After creating the actor to not create one with a smaller scale
     end
 
     -- self:Setup()
@@ -316,12 +333,11 @@ initialize = function(self)
     -- finalizeScene(self)
     -------------------------------------
     -- Then disable/delete anything else under this row
-    
+
     -- Condensed finalizeScene(self)
-    -- Play around with this loop to fix repositioning during scene creation
     for _, actor in ipairs(self.actors) do
         local startLocation = self.startLocations[1]
-        Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z)
+        -- Osi.TeleportToPosition(actor.uuid, startLocation.position.x, startLocation.position.y, startLocation.position.z) -- now handled correctly in actor initialization
         Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
     end
     Event:new("BG3SX_SceneCreated", self) -- MOD EVENT
@@ -335,16 +351,17 @@ end
 ----------------------------------------------------------------------------------------------------
 
 
---- func desc
----@param entity any
----@param newLocation - x, y, z
+-- Teleports any entity/actor/props to a new location
+---@param entity        uuid    - The caster of the spell and entity to check which scene belongs to them
+---@param newLocation   table   - The new location
 function Scene:MoveSceneToLocation(entity, newLocation)
     local scene = Scene:FindSceneByEntity(entity)
     local oldLocation = scene.rootPosition -- Only used for Event:new payload
+    scene.rootPosition = newLocation -- Always update rootPosition of a scene after changing it
 
     for _, actor in ipairs(scene.actors) do
 
-        -- Keep this in case we want to re-enable a max. distance to teleport
+        -- Keep this in case we want to re-enable a maximum allowed distance to teleport
         ---------------------------------------------------------------------------------------
         -- Do nothing if the new location is too far from the caster's start position,
         -- so players would not abuse it to get to some "no no" places.
@@ -355,13 +372,8 @@ function Scene:MoveSceneToLocation(entity, newLocation)
         --     return
         -- end
 
-        -- Move stuff
         Osi.TeleportToPosition(actor.uuid, newLocation.x, newLocation.y, newLocation.z)
         Osi.TeleportToPosition(actor.parent, newLocation.x, newLocation.y, newLocation.z)
-
-        -- TODO - when we use props we probably want to "bind" them to a specific actor
-            -- No they should all be located at rootlocation and animators would create an animation for them as well based on rootlocation
-        -- Teleports all props of a scene to the new rootlocation
         if #scene.props > 0 then
             for _, prop in pairs(scene.props) do
                 Osi.TeleportToPosition(prop, newLocation.x, newLocation.y, newLocation.z)
@@ -369,13 +381,9 @@ function Scene:MoveSceneToLocation(entity, newLocation)
         end
     end
 
-    Sex:PlayAnimation(entity, scene.currentAnimation)
+    Sex:PlayAnimation(entity, scene.currentAnimation) -- Play prior animation again
 
-    scene.rootPosition = newLocation -- Always update rootPosition of a scene after changing it
-
-    -- Ext.Net.BroadcastMessage("BG3SX_SceneTeleport", Ext.Json.Stringify({scene, oldLocation, newLocation})) -- SE EVENT
     Event:new("BG3SX_SceneMove", {scene, oldLocation, newLocation}) -- MOD EVENT
-
 end
 
 
@@ -386,11 +394,11 @@ function Scene:RotateScene(caster, location)
     local scene = Scene:FindSceneByEntity(caster)
     local helper = Osi.CreateAt("06f96d65-0ee5-4ed5-a30a-92a3bfe3f708", location.x, location.y, location.z, 0, 0, "")
     for _, actor in pairs(scene.actors) do
-        Entity:ClearActionQueue(actor.uuid)
+        Entity:ClearActionQueue(actor.uuid) -- Clears any stuff the actor might be stuck on
         Osi.SteerTo(actor.uuid, helper, 1) -- 1 = instant
     end
-    Osi.RequestDeleteTemporary(helper)
-    Sex:PlayAnimation(caster, scene.currentAnimation) -- Play the animation that played before again
+    Osi.RequestDeleteTemporary(helper) -- Deletes the rotationHelper after rotating
+    Sex:PlayAnimation(caster, scene.currentAnimation) -- Play prior animation again
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -399,90 +407,67 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
+-- Handles the generic stuff to reset on an entity on Scene:Destroy()
+local function sceneEntityReset(entity)
+    local scene = Scene:FindSceneByEntity(entity)
+    local startLocation
+    local startScale
+
+    -- Getting old position and scale
+    for i, entry in ipairs(scene.startLocations) do
+        if entry.entity == entity then
+            startLocation = entry
+        end
+    end
+    for _, entry in pairs(scene.entityScales) do
+        if entity == entry.entity then
+            startScale = entry.scale
+        end
+    end
+
+    Osi.TeleportToPosition(entity, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
+    Entity:RotateEntity(entity, startLocation.rotationHelper) -- Rotate the entity back to what it was looking at prior to the scene
+    Entity:Scale(entity, startScale) -- Sets the entity scale back to its original
+    Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "") -- Unlocks movement
+
+    scene:ToggleCampFlags(entity) -- Toggles camp flags so companions return to tents if they had them before
+    
+    -- Re-attach entity to make it selectable again
+    Osi.SetDetached(entity, 0)
+    Osi.SetVisible(entity, 1) -- 1 visible, 0 invisible
+end
+
+
 -- Destroys a scene instance
 function Scene:Destroy()
 
-    if self.entities then
-        for _, entity in pairs(self.entities) do
-            -- Effect:Fade(entity, 2000) -- 2sec Fadeout on scene termination
-        end
+    self:CancelAllSoundTimers()
+    for _, entity in pairs(self.entities) do -- Go over this seperately so it already is applied to every entity before the other stuff happens
+        -- Effect:Fade(entity, 2000) -- 2sec Fadeout on scene termination
     end
 
-    self:CancelAllSoundTimers() -- Should cancel all sound timers to not infinite loop random new ones 
-
-    if self.actors then
-
-        -- TODO: Clean this up to basically only be actor:Destroy()
-        -- Iterates over every saved actor for a given scene instance
-        for _, actor in pairs(self.actors) do
-
-            -- Gets the original locations per parent
-            local startLocation
-            for i, entry in ipairs(self.startLocations) do
-                if entry.entity == actor.parent then
-                    startLocation = entry
-                end
-            end
-            -- Positioning
-            Osi.TeleportToPosition(actor.parent, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
-            -- Entity:RotateEntity(actor.parent, startLocation.rotationHelper)
-
-            Osi.SetVisible(actor.parent, 1) -- 1 visible, 0 invisible
-
-            -- Requips everything which may have been removed during scene initialization
-            if Entity:HasEquipment(actor.parent) then
-                Entity:Redress(actor.parent, actor.oldArmourSet, actor.oldEquipment)
-            end
-
-            -- Delete actor
-            actor:Destroy()
-        end
+    for _, actor in pairs(self.actors) do
+        actor:Destroy()
     end
 
-    -- TODO: Clean this up to also just be a Scene:ResetEntities() or something
-    if self.entities then
-        -- Iterates over every saved entity for a given scene instance
-        for _, entity in pairs(self.entities) do
-            -- Play recovery sound as substitue for orgasms
-            -- TODO - change this to a generic sound for when we use this for non-sex instead
+    for _, entity in pairs(self.entities) do
+        sceneEntityReset(entity)
+        
+        -- Play recovery sound as substitue for orgasms
+        Osi.PlaySound(entity, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)]) -- TODO - change this to a generic sound for when we use this for non-sex instead
 
-            Osi.PlaySound(entity, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)])
+        -- Removes any spells given for the scene
+        Sex:RemoveSexSceneSpells(entity)
 
-            -- Unlocks movement
-            Entity:ToggleMovement(entity)
-
-            -- Sets scale back to a saved value during scene initialization
-            local startScale
-            for _, entry in pairs(self.entityScales) do
-                if entity == entry.entity then
-                    startScale = entry.scale
-                end
-            end
-
-            Entity:Scale(entity, startScale)
-
-            -- Removes any spells given
-            Sex:RemoveSexSceneSpells(entity)
-
-            -- Readds the regular sex spells (StartSex, Options, ChangeGenitals)
-            if Osi.IsPartyMember(entity, 0) == 1 then
-                Sex:AddMainSexSpells(entity)
-            end
-
-            -- Re-Sets the flag for companions in camp so they can move back to their tents
-            if Ext.Entity.Get(entity).CampPresence ~= nil then
-                Osi.SetFlag(FLAG_COMPANION_IN_CAMP, entity)
-            end
-
-            -- Re-attach entity to make it selectable again
-            Osi.SetDetached(entity, 0)
-
-            end
+        -- Readds the regular sex spells (StartSex, Options, ChangeGenitals)
+        if Osi.IsPartyMember(entity, 0) == 1 then
+            Sex:AddMainSexSpells(entity)
         end
 
+    end
+    
     Event:new("BG3SX_SceneDestroyed", self)
 
-    -- Removes itself from SAVEDSCENES list
     for i,scene in ipairs(SAVEDSCENES) do
         if scene == self then
             table.remove(SAVEDSCENES, i)

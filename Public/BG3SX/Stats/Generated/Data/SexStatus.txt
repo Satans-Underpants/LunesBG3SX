@@ -1,4 +1,4 @@
-new entry BG3SX_SEXACTOR
+new entry "BG3SX_SEXACTOR"
 type "StatusData"
 data "StatusType" "BOOST"
 data "StatusPropertyFlags" "DisableOverhead;DisableCombatlog;DisablePortraitIndicator"

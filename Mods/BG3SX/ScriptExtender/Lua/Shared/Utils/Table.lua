@@ -40,14 +40,24 @@ function Table:ListToSet(list)
 end
 
 
--- for maps
-function Table:GetKey(map, item)
+-- For Maps
+-- Get Key by searchItem
+function Table:GetKey(map, searchItem)
     for key, object in pairs(map) do
-        if object == item then
+        if object == searchItem then
             return key
         end
     end
     return nil
+end
+-- For Lists
+-- Get Index by searchItem
+function Table:GetIndex(list, searchItem)
+    for i, object in ipairs(list) do
+        if object == searchItem then
+            return i
+        end
+    end
 end
 
 

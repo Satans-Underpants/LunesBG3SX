@@ -46,7 +46,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         local casterGenital = Genital:GetCurrentGenital(caster)
         local targetGenital
 
-        if not IsNPC(target) then
+        if not Entity:IsNPC(target) then
             targetGenital = Genital:GetCurrentGenital(target)
         end
 

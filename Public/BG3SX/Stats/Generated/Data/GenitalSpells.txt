@@ -77,7 +77,6 @@ data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 
-
 new entry "BG3SX_GenitalTemplate"
 type "SpellData"
 data "SpellType" "Shout"
@@ -92,5 +91,3 @@ data "CastSound" "Instrument_Bard_Silence"
 data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
-
-

@@ -298,6 +298,33 @@ end
 ----------------------------------------------------------------------------------------------------
 
 
+
+-- Return whether an race is allowed to have genitals - added by modders requests
+-- @param uuis 	    - uuid of entity that will receive the genital
+---return 			- True/False
+local function raceAllowedToHaveGenitals(uuid)
+
+	local race = Entity:TryGetEntityValue(uuid, nil, {"CharacterCreationStats", "Race"})
+	local name = ""	
+
+	if race then
+		for _,entry in pairs(MODDED_RACES) do
+			if entry.uuid == race then
+				name = entry.name
+			end
+		end
+
+		-- these have been added due to requests from modders
+		if not ((name == "CatBug") or (name == "Imp") or (name == "Mephit")) then
+			return true
+		end
+		
+	else
+		-- NPC etc.
+		return true
+	end
+end
+
 -- Get all allowed genitals for entity (Ex: all vulva for human)
 -- @param spell		- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 -- @param uuis 	    - uuid of entity that will receive the genital
@@ -488,32 +515,35 @@ end
 ---@param newGenital	string	- UUID of CharacterCreationAppearaceVisual of type PrivateParts
 ---@param uuid			string	- UUID of entity that will receive the genital
 function Genital:OverrideGenital(newGenital, uuid)
-	-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital for uuid: ", uuid)
-	local currentGenital = Genital:GetCurrentGenital(uuid)
-	-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital = ", currentGenital)
 
-	-- Origins don't have genitals - We have to add one before we can remove it
-	-- if currentGenital and not (currentGenital == newGenital) then
-	-- 	-- Note: This is not a typo, It's actually called Ovirride
-	-- 	Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
-	-- end
+	if raceAllowedToHaveGenitals(uuid) then
+		-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital for uuid: ", uuid)
+		local currentGenital = Genital:GetCurrentGenital(uuid)
+		-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital = ", currentGenital)
 
-	if newGenital then
-		-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - newGenital exists = ", newGenital)
-		if currentGenital then
-			-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital exists = ", currentGenital, "RemoveCustomVisualOvirride triggered")
-			Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
-		else
-			-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital does not exist")
+		-- Origins don't have genitals - We have to add one before we can remove it
+		-- if currentGenital and not (currentGenital == newGenital) then
+		-- 	-- Note: This is not a typo, It's actually called Ovirride
+		-- 	Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
+		-- end
+
+		if newGenital then
+			-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - newGenital exists = ", newGenital)
+			if currentGenital then
+				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital exists = ", currentGenital, "RemoveCustomVisualOvirride triggered")
+				Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
+			else
+				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital does not exist")
+			end
+			Ext.Timer.WaitFor(100, function()
+				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
+				Osi.AddCustomVisualOverride(uuid, newGenital)
+			end)
 		end
-		Ext.Timer.WaitFor(100, function()
-			-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
-			Osi.AddCustomVisualOverride(uuid, newGenital)
-		end)
-	end
 
-	-- Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- SE EVENT
-	Event:new("BG3SX_GenitalChange", {uuid, newGenital}) -- MOD EVENT - Events.lua
+		-- Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- SE EVENT
+		Event:new("BG3SX_GenitalChange", {uuid, newGenital}) -- MOD EVENT - Events.lua
+	end
 
 end
 
@@ -522,14 +552,17 @@ end
 function Genital:AddGenitalIfHasNone(uuid)
 	-- _P("[BG3SX][Genital.lua] - AddGenitalIfHasNone")
 
-	if (Osi.IsTagged(uuid, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
-	or Osi.IsTagged(uuid, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
-	and Osi.IsTagged(uuid, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0 then
-		-- _P("[BG3SX][Genital.lua] - AddGenitalIfHasNone triggered with uuid: ", uuid)
-		if Entity:HasPenis(uuid) and not Genital:GetCurrentGenital(uuid) then
-			-- _P("[BG3SX][Genital.lua] - ActorHasPenis and not getCurrentGenital - AddCustomVisualOverride triggered")
-			Osi.AddCustomVisualOverride(uuid, Genital:GetNextGenital("BG3SX_VanillaFlaccid", uuid))
-			-- _P("[BG3SX][Genital.lua] - getNextGenital = ", getNextGenital("BG3SX_VanillaFlaccid", uuid))
+	if raceAllowedToHaveGenitals(uuid) then
+
+		if (Osi.IsTagged(uuid, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
+		or Osi.IsTagged(uuid, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
+		and Osi.IsTagged(uuid, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0 then
+			-- _P("[BG3SX][Genital.lua] - AddGenitalIfHasNone triggered with uuid: ", uuid)
+			if Entity:HasPenis(uuid) and not Genital:GetCurrentGenital(uuid) then
+				-- _P("[BG3SX][Genital.lua] - ActorHasPenis and not getCurrentGenital - AddCustomVisualOverride triggered")
+				Osi.AddCustomVisualOverride(uuid, Genital:GetNextGenital("BG3SX_VanillaFlaccid", uuid))
+				-- _P("[BG3SX][Genital.lua] - getNextGenital = ", getNextGenital("BG3SX_VanillaFlaccid", uuid))
+			end
 		end
 	end
 end

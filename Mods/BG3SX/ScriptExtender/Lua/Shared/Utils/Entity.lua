@@ -38,7 +38,7 @@ end
 -- Blocks the actors movement
 ---@param entity string  - uuid of entity
 function Entity:ToggleMovement(entity)
-    if Osi.HasAppliedStatus(entity, "ActionResourceBlock(Movement)") then
+    if Osi.HasAppliedStatus(entity, "ActionResourceBlock(Movement)") == 1 then
         Osi.RemoveBoosts(entity, "ActionResourceBlock(Movement)", 0, "", "")
     else
         Osi.AddBoosts(entity, "ActionResourceBlock(Movement)", "", "")
@@ -106,7 +106,7 @@ end
 ---@return          bool    - Returns either true or false
 function Entity:HasEquipment(uuid)
     local entity = Ext.Entity.Get(uuid)
-    if Entity:UnequipAll(uuid) then
+    if Entity:GetEquipment(uuid) then
         return true
     end
     return false
@@ -149,6 +149,18 @@ function Entity:GetHeightClass(uuid)
 end
 
 
+-- NPCs don't have CharacterCreationStats
+function Entity:IsNPC(uuid)
+    local E = Helper:GetPropertyOrDefault(Ext.Entity.Get(uuid),"CharacterCreationStats", nil)
+
+    if E then
+        return false
+    else
+        return true
+    end
+end
+
+
 -- Functions
 -------------------------------
 
@@ -170,7 +182,7 @@ end
 --- Tries to copy an entities component to another entity
 ---@param uuid_1    string          - Source Entities UUID
 ---@param uuid_2    string          - Target Entities UUID
----@param componentName Component   - Component to copy
+---@param componentName string      - Component to copy
 function Entity:TryCopyEntityComponent(uuid_1, uuid_2, componentName)
     local srcEntity = Ext.Entity.Get(uuid_1)
     local trgEntity = Ext.Entity.Get(uuid_2)
@@ -302,6 +314,10 @@ function Entity:TryGetEntityValue(uuid, previousComponent, components)
     local currentComponent
     if not previousComponent then
         currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
+        -- obscure cases
+        if not currentComponent then
+            return nil
+        end
         -- _P("Getting value for ", uuid, " ", components[1])
         -- _P("IF NIL THEN currentComponent ", currentComponent)
     else
@@ -316,17 +332,31 @@ end
 
 
 -- Unequips all equipment from an entity
----@param uuid  string  - The entity UUID to unequip
+---@param uuid          string  - The entity UUID to unequip
+---@return oldEquipment table   - Collection of every previously equipped item
 function Entity:UnequipAll(uuid)
-    -- local entity = Ext.Entity.Get(uuid)
-    Osi.SetArmourSet(uuid, 1)
+    Osi.SetArmourSet(uuid, 0)
     
-    local currentEquipment = {}
+    local oldEquipment = {}
     for _, slotName in ipairs(EQ_SLOTS) do
         local gearPiece = Osi.GetEquippedItem(uuid, slotName)
         if gearPiece then
             Osi.LockUnequip(gearPiece, 0)
             Osi.Unequip(uuid, gearPiece)
+            oldEquipment[#oldEquipment+1] = gearPiece
+        end
+    end
+    return oldEquipment
+end
+
+-- Gets a table of equipped items
+---@param uuid              string  - The entity UUID to unequip
+---@return currentEquipment table   - Collection of every equipped items
+function Entity:GetEquipment(uuid)    
+    local currentEquipment = {}
+    for _, slotName in ipairs(EQ_SLOTS) do
+        local gearPiece = Osi.GetEquippedItem(uuid, slotName)
+        if gearPiece then
             currentEquipment[#currentEquipment+1] = gearPiece
         end
     end
@@ -501,6 +531,27 @@ function Entity:ClearActionQueue(character)
     Osi.CharacterMoveTo(character, character, "Walking", "")
 end
 
+-- Toggles companions moving back to their camp positions or staying put
+---@param entity any
+function Entity:ToggleCampFlag(entity)
+    if Osi.GetFlag("161b7223-039d-4ebe-986f-1dcd9a66733f", entity) == 1 then
+        Osi.ClearFlag("161b7223-039d-4ebe-986f-1dcd9a66733f", entity)
+    else
+        Osi.SetFlag("161b7223-039d-4ebe-986f-1dcd9a66733f", entity, 0,0)
+    end
+end
+function Entity:HasCampFlag(entity)
+    if Osi.GetFlag("161b7223-039d-4ebe-986f-1dcd9a66733f", entity) == 1 then
+        return true
+    end
+end
+
+
+function Entity:CopyDisplayName(entityToCopyFrom, targetEntity)
+    local name = Osi.GetDisplayName(entityToCopyFrom)
+    local trName = Ext.Loca.GetTranslatedString(name)
+    Osi.SetStoryDisplayName(targetEntity, trName)
+end
 
 
 -- Returns the allowed animations for a character (based on whether they are an Origin, bodytype [and maybe race - waiting for test results])

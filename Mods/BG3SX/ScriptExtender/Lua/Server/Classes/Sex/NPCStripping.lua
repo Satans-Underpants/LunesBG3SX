@@ -31,28 +31,6 @@ local function removeItemsBySlots(items, slotsToRemove)
 end
 
 
--- NPCs don't have CharacterCreationStats
-function IsNPC(uuid)
-    local E = Helper:GetPropertyOrDefault(Ext.Entity.Get(uuid),"CharacterCreationStats", nil)
-
-    if E then
-        return false
-    else
-        return true
-    end
-end
-
-
--- get index by item directly
-function getIndex(list, item)
-    for i, object in ipairs(list) do
-        if object == item then
-            return i
-        end
-    end
-end
-
-
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 							    		XML Handling
@@ -153,7 +131,7 @@ function redress(uuid)
             dressed = entry.slots
             local resource = getVisualResourceID(uuid)
             Ext.Resource.Get(resource,"CharacterVisual").VisualSet.Slots = dressed
-            table.remove(OriginalTemplates, getIndex(OriginalTemplates, entry))
+            table.remove(OriginalTemplates, Table:GetIndex(OriginalTemplates, entry))
 
             local payload = {dressed = dressed, resource = resource}
             Ext.Net.BroadcastMessage("BG3SX_NPCDress", Ext.Json.Stringify(payload)) -- SE EVENT
@@ -229,7 +207,7 @@ local sexPairs = {}
 -- Sex
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
 
-	if spell == "BG3SX_AskForSex" and IsNPC(target) then
+	if spell == "BG3SX_AskForSex" and Entity:IsNPC(target) then
 
 		local pair = {caster = caster; target = target}
 		table.insert(sexPairs, pair)
@@ -258,7 +236,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
         end
 
 
-        if target ~= "" and IsNPC(target) then
+        if target ~= "" and Entity:IsNPC(target) then
             removeGenitals(target)
             redress(target)
             -- Remove Hair if necessary? 

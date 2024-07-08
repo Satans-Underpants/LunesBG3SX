@@ -163,7 +163,9 @@ ANIMATIONS = {
         SoundBottom = MOANING_SOUNDS,
         FallbackTopAnimationID = "d0f6cf4a-a418-4640-bf36-87531d55154b",
         FallbackBottomAnimationID = "d0f6cf4a-a418-4640-bf36-87531d55154b",
-        AnimObject = "0f2ccca6-3ce8-4271-aec0-820f6581c551",
+        Props = {
+        "0f2ccca6-3ce8-4271-aec0-820f6581c551", -- Bottle
+        }    
     },
 
 }

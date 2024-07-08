@@ -135,6 +135,7 @@ data "CastTextEvent" "None"
 data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "PreviewCursor" "Melee"
 
 new entry "BG3SX_RotateScene"
 type "SpellData"
@@ -154,6 +155,7 @@ data "CastTextEvent" "None"
 data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "PreviewCursor" "Range"
 
 //-------------------------------------------------
 // Camera Spells
@@ -179,12 +181,13 @@ data "SpellAnimationIntentType" "None"
 // STRIPPING BLOCK BOOST
 //-------------------------------------------------
 
-new entry "BG3SX_ToggleStrippingBlock"
+new entry "BG3SX_StrippingBlock"
 type "StatusData"
 data "StatusType" "BOOST"
+data "StatusPropertyFlags" "DisableOverhead;DisableCombatlog;DisablePortraitIndicator"
 data "DisplayName" "h6183f539gad38g4948g89fdgf93b87c288ec;1"
 data "Description" "ha61df973g958dg4151ga13bg16c25f2969b9;1"
-data "Icon" "statIcons_Dazed"
+data "Icon" "BG3SX_BLOCK"
 data "StillAnimationType" "None"
 data "TickType" "EndTurn"
 data "StillAnimationPriority" "None"

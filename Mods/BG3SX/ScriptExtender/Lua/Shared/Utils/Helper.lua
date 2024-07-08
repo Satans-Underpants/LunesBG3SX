@@ -137,11 +137,10 @@ function Helper:DestroyMarker(marker)
     Osi.RequestDelete(marker)
 end
 
-
 -- Credit to FallenStar  https://github.com/FallenStar08/SharedCode
 -- Slightly modified version
---Returns all aummons, avatars and Origins
-function GetEveryoneThatIsRelevant()
+--Returns all summons, avatars and Origins
+function Helper:GetEveryoneThatIsRelevant()
     local goodies = {}
     local avatarsDB = Osi.DB_Avatars:Get(nil)
     local originsDB = Osi.DB_Origins:Get(nil)
@@ -160,6 +159,11 @@ function GetEveryoneThatIsRelevant()
     end
 
     return goodies
+end
+
+-- Returns a table of all summons/followers
+function Helper:GetPlayerSummons()
+    return Osi.DB_PlayerSummons:Get(nil)
 end
 
 
