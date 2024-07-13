@@ -3,4 +3,6 @@
 	<content contentuid="h796ee3bdgc50ag4e29g82d3g5baf5834bee4" version="1">BG3SX - Options</content>
     <content contentuid="hfead6a09g7781g46f5ga3efg515094ce93a6" version="1">Automatic Erections during Sex</content>
     <content contentuid="ha026391fg9de8g4991g8460gcaae6fc3cf21" version="1">Manually toggle Erections</content>
+    <content contentuid="h1cbdf6f6af2b42b086b8c3626eaa5bc09f37" version="1">Block Stripping</content>
+    <content contentuid="h2b093b5fbc9642129d9bd335e1701c9b284c" version="1">If this is active, the entity will not strip</content>
 </contentList>

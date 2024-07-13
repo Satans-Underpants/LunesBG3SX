@@ -1,4 +1,4 @@
------------------------------------------------------------------------------------------------------------------------------------------
+        -----------------------------------------------------------------------------------------------------------------------------------------
                                             ---- Sex Listener ----
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -8,8 +8,12 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
     -- Checks to see if the name of the spell used matches any of the setup spells in SexAnimations.lua
     for _, spellData in pairs(STARTSEXSPELLS) do
         if spell == spellData.AnimName then
-            Sex:StartSexSpellUsed(caster, {target}, spellData) -- Checks which spell it was and initiates a scene
 
+            -- wait for erections
+            Ext.Timer.WaitFor(200, function()  Sex:StartSexSpellUsed(caster, {target}, spellData) end)
+            -- Checks which spell it was and initiates a scene
+
+    
             -- Ext.Net.BroadcastMessage("BG3SX_SexStartSpellUsed", Ext.Json.Stringify({caster, target, spellData})) -- SE EVENT
             Event:new("BG3SX_SexStartSpellUsed", {caster, target, spellData}) -- MOD EVENT
             break

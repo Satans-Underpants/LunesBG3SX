@@ -12,7 +12,6 @@
                     <attribute id="ChangeIcon" type="bool" value="true"/>
                     <attribute id="ChangeRace" type="bool" value="true"/>
                     <attribute id="DisableEquipmentSlots" type="bool" value="true"/>
-                    <!-- <attribute id="UseTemplateEquipmentSet" type="bool" value="false"/> -->
                     <attribute id="IgnoreCustomLooks" type="bool" value="false"/>
                     <attribute id="RetainDisplayName" type="bool" value="true"/>
                     <children>
@@ -94,6 +93,8 @@
                     <attribute id="ChangeBodyType" type="bool" value="true"/>
                     <attribute id="ChangeIcon" type="bool" value="true"/>
                     <attribute id="ChangeRace" type="bool" value="true"/>
+                    <attribute id="DisableEquipmentSlots" type="bool" value="false"/>
+                    <attribute id="UseTemplateEquipmentSet" type="bool" value="false"/>
                     <attribute id="IgnoreCustomLooks" type="bool" value="false"/>
                     <attribute id="RetainDisplayName" type="bool" value="true"/>
                     <children>

@@ -15,6 +15,7 @@ function OnSessionLoaded()
     Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_, _)
         local party = Osi.DB_PartyMembers:Get(nil)
         for i = #party, 1, -1 do
+            Osi.AddPassive(party[i][1], "BG3SX_BLOCK_STRIPPING")
             Sex:AddMainSexSpells(party[i][1])
             Genital:AddGenitalIfHasNone(party[i][1])
         end
@@ -23,9 +24,9 @@ function OnSessionLoaded()
     -- TODO: Check if CharacterCreationDummy might cause issues with "Make NPC into Partymember" mods
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(actor)
         if string.find(actor, "CharacterCreationDummy") == nil then
+            Osi.AddPassive(actor,"BG3SX_BLOCK_STRIPPING")
             Sex:AddMainSexSpells(actor)
             Genital:AddGenitalIfHasNone(actor)
-    
         end
     end)
 end

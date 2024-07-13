@@ -110,11 +110,15 @@ end
 
 function Actor:TransformAppearance()
     local isStripper = Sex:IsStripper(self.parent)
+
     if isStripper then
+        print("is stripper ", self.parent)
         Osi.Transform(self.uuid, self.parent, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
     else
-        Osi.Transform(self.uuid, self.parent, "1d799df0-d586-40cd-b664-f4235f5e6352") -- Clothed
-        -- self:DressActor()
+        print("is not stripper ", self.parent)
+        Osi.Transform(self.uuid, self.parent, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
+        -- Osi.Transform(self.uuid, self.parent, "1d799df0-d586-40cd-b664-f4235f5e6352") -- Clothed
+        self:DressActor()
     end
 end
 
@@ -155,24 +159,54 @@ end
 
 --- Dresses an actor based on which equipment/armour (vanity slots) have been saved on it (BG3SX_StrippingBlock)
 function Actor:DressActor()
+    local parentArmour = Osi.GetArmourSet(self.parent)
+    local parentEquipment = Entity:GetEquipment(self.parent)
     -- Apparently there is a function to equip an ArmourSet directly but not Equipment
-    Osi.SetArmourSet(self.uuid, self.oldArmourSet) -- Equips a set of possibly copied armour
-    for _, itemData in pairs(self.oldEquipment) do -- Equips every item found in possibly copied equipment table
-        local item = Osi.GetItemByTemplateInInventory(itemData, self.parent)
-        if item then
-            -- Copy the dye applied to the source item
-            Entity:TryCopyEntityComponent(itemData.SourceItem, item, "ItemDye")
 
-            Osi.Equip(self.uuid, item)
-            table.insert(self.equipment, item)
-        else
-            if item == nil then
-                item = "nil"
-                _P("[SexActor.lua] Actor:DressActor - Couldn't find an item of template ","'nil'"," on the actor")
-            else
-                _P("[SexActor.lua] Actor:DressActor - Couldn't find an item of template " .. item .. " on the actor")
-            end
-        end
+    Osi.SetArmourSet(self.uuid, parentArmour) -- Equips a set of possibly copied armour
+    for _, item in pairs(parentEquipment) do -- Equips every item found in possibly copied equipment table
+        local itemTemplate = Osi.GetTemplate(item)
+
+        Osi.TemplateAddTo(itemTemplate, self.uuid, 1)
+
+        -- Adding item to inventory takes some time. Cannot be retrieved without delay
+        Ext.Timer.WaitFor(200, function() 
+        
+            local copiedItem = Osi.GetItemByTemplateInInventory(itemTemplate, self.uuid) 
+
+            _P("Item")
+            _D(item)
+            _P("CopiedItem")
+            _D(copiedItem)
+            Entity:TryCopyEntityComponent(item, copiedItem, "ItemDye")
+            Osi.Equip(self.uuid, copiedItem)
+    
+        
+        
+        
+        end)
+
+       
+        
+        
+        
+        
+        
+        --local item = Osi.GetItemByTemplateInInventory(Osi.GetTemplate(itemData), self.parent)
+        --if item then
+        --    -- Copy the dye applied to the source item
+        --    Entity:TryCopyEntityComponent(itemData.SourceItem, item, "ItemDye")
+        --    
+        --    Osi.Equip(self.uuid, item)
+        --    table.insert(self.equipment, item)
+        --else
+        --    if item == nil then
+        --        item = "nil"
+        --        _P("[SexActor.lua] Actor:DressActor - Couldn't find an item of template ","'nil'"," on the actor")
+        --    else
+        --        _P("[SexActor.lua] Actor:DressActor - Couldn't find an item of template " .. item .. " on the actor")
+        --    end
+        --end
     end
 
 
@@ -246,7 +280,7 @@ initialize = function(self)
 
     -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
     -- self:CopyEntityAppearanceOverrides()
-    Entity:CopyDisplayName(self.parent, self.uuid)
+    Entity:CopyDisplayName(self.parent, self.uuid) -- Keep since shapeshiftrule doesn't actually handle this correctly
 
     Event:new("BG3SX_ActorCreated", self)
 end

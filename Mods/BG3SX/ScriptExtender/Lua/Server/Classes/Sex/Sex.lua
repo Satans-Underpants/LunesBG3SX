@@ -158,17 +158,17 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
         end
 
         for _,involved in pairs(sexHavers) do
-            -- Effect:Fade(involved, 666)
+            Effect:Fade(involved, 666)
         end
 
         
         -- Delay the rest as well, since scene initilization is delayed for 1 second to avoid user seeing behind the scenes stuff
-        -- local function haveSex()
+        local function haveSex()
             scene = Scene:new(sexHavers)
             Sex:InitSexSpells(scene)
             Sex:PlayAnimation(caster, animationData)
-        -- end
-        -- Ext.Timer.WaitFor(333, function() haveSex() end)
+        end
+        Ext.Timer.WaitFor(333, function() haveSex() end)
     end
 end
 
@@ -255,17 +255,16 @@ end
 -- Checks an uuid against the nonStripper table in EntityListeners.lua
 ---@param uuid any
 function Sex:IsStripper(uuid)
-    local isStripper
-    local nonStrippers = Sex:GetNonStrippers()
-    if #nonStrippers > 0 then
-        for i, nonStripper in ipairs(nonStrippers) do
-            if nonStripper == uuid then
-                isStripper = false
-                return isStripper
-            end
-        end
-    end
+    
+    if Osi.HasActiveStatus(uuid, "BG3SX_BLOCK_STRIPPING_BOOST") == 1 then
+        print("Has status ", uuid)
+        return false
+    else
+        return true
+    end 
 end
+
+
 
 
 ----------------------------------------------------------------------------------------------------

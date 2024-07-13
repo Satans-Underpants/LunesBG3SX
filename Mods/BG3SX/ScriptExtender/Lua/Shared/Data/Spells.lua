@@ -3,7 +3,7 @@
 MAINSEXSPELLS = {
     "BG3SX_MainContainer",
     "BG3SX_ChangeGenitals",
-    "BG3SX_Options"
+    "BG3SX_Options",
 }
 
 -- Additional actions to be added during a scene

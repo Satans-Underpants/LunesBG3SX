@@ -154,13 +154,17 @@ end
 
 -- Summons/Follower Management
 -----------------------------------------------------
-function Scene:DetachSummons(entity)
+function Scene:DetachSummons()
     local summons = Helper:GetPlayerSummons()
     -- Maybe need to create an entity entry in self.summons here first
     for _,summon in pairs(summons) do
         -- table.insert(self.summons, summon) Save in new instance.table as new entries per summon per each entity
         Osi.AddBoosts(summon, "ActionResourceBlock(Movement)", "", "")
     end
+end
+
+
+function Scene:AttachAllSummons()
 end
 
 
