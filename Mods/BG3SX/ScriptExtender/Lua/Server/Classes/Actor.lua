@@ -72,31 +72,39 @@ end
 
 --- Gets parent entities looks including attachments like Wylls Horns
 ---@return lookTemplate string   - uuid - The looks of a parent entity
-function Actor:GetLooks(parent)
-    local visTemplate = Entity:TryGetEntityValue(parent, nil, {"GameObjectVisual", "RootTemplateId"})
-    local origTemplate = Entity:TryGetEntityValue(parent, nil, {"OriginalTemplate", "OriginalTemplate"})
-    local lookTemplate = parent
+function Actor:GetLooks()
+    local visTemplate = Entity:TryGetEntityValue(self.parent, nil, {"GameObjectVisual", "RootTemplateId"})
+    local origTemplate = Entity:TryGetEntityValue(self.parent, nil, {"OriginalTemplate", "OriginalTemplate"})
+    local looksTemplate = self.parent
 
     -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
     -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
     if visTemplate then
         if origTemplate then
             if origTemplate ~= visTemplate then
-                lookTemplate = visTemplate
+                _P("CHECK 1")
+                looksTemplate = visTemplate
+                --looksTemplate = origTemplate
             end
-        elseif origTemplate == nil then -- It's Tav?
+        else -- It's Tav?
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
-            if Osi.HasAppliedStatusOfType(parent, "POLYMORPHED") == 1 or parent.AppearanceOverride then
-                lookTemplate = visTemplate
+            if Osi.HasAppliedStatusOfType(self.parent, "POLYMORPHED") == 1 or self.parent.AppearanceOverride then
+                _P("CHECK 2")
+                looksTemplate = visTemplate
             end
         end
     end
-    return lookTemplate
+    _P("CHECK 3")
+    return looksTemplate
 end
 
+
 function Actor:CopyEntityAppearanceOverrides()
+    
+
     if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
         -- Type is special Appearance Edit Enhanced thing?
+        Entity:TryCopyEntityComponent(self.parent, self.uuid, "GameObjectVisual")
         if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 2 then
             self.uuid.GameObjectVisual.Type = 2
             self.uuid:Replicate("GameObjectVisual")
@@ -108,19 +116,36 @@ function Actor:CopyEntityAppearanceOverrides()
     end
 end
 
+
 function Actor:TransformAppearance()
     local isStripper = Sex:IsStripper(self.parent)
 
-    if isStripper then
-        print("is stripper ", self.parent)
-        Osi.Transform(self.uuid, self.parent, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
-    else
-        print("is not stripper ", self.parent)
-        Osi.Transform(self.uuid, self.parent, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
-        -- Osi.Transform(self.uuid, self.parent, "1d799df0-d586-40cd-b664-f4235f5e6352") -- Clothed
+    -- TODO - actor wears standard armor from template
+    -- TODO - we can modify actor directly by trating them like an NPC (add CharacterCreation component) - give actors directly erections etc.
+    -- TODO . shapeshiftrule copies "Visual" - ApplyVisual, dies not ignore custom looks
+
+    --local looksTemplate = self:GetLooks()
+
+    --Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
+    --self:CopyEntityAppearanceOverrides()
+
+    print("actor ", self.uuid)
+    -- give entity cca
+    Entity:TryCopyEntityComponent(self.parent, self.uuid, "CharacterCreationAppearance")
+    
+    local actor = Ext.Entity.Get(self.uuid)
+    local charVisID = actor.ServerCharacter.Template.CharacterVisualResourceID
+    local characterVisual = Ext.Resource.Get(charVisID, "CharacterVisual")
+
+    _P(characterVisual.VisualSet.ShowEquipmentVisuals)
+    characterVisual.VisualSet.ShowEquipmentVisuals = false
+    --actor:Replicate("CharacterVisual")
+
+    if not isStripper then
         self:DressActor()
     end
 end
+
 
 --- Copies the equipment from the parent entity to the actor
 function Actor:CopyEquipmentFromParent()
@@ -150,9 +175,9 @@ function Actor:CopyEquipmentFromParent()
 
     if #copiedEquipment > 0 then
         self.equipment = copiedEquipment
-        _D(self.equipment)
+        --_D(self.equipment)
         self.armour = currentArmorSet
-        _D(self.armour)
+        --_D(self.armour)
     end
 end
 
@@ -272,17 +297,12 @@ initialize = function(self)
     -- This fixes the white Shadowheart going back to her original black hair as a proxy.
     Entity:TryCopyEntityComponent(self.parent, self.uuid, "MaterialParameterOverride")
 
+    Entity:CopyDisplayName(self.parent, self.uuid) -- Keep since shapeshiftrule doesn't actually handle this correctly
+    
+    Event:new("BG3SX_ActorCreated", self)
+    
     -- Re-enable finalizeSetup(self) with a delay if it creates problems
     -------------------------------------
     -- Ext.Timer.WaitFor(200, finalizeSetup(self))
     -------------------------------------
-    -- Then disable/delete anything else under this row
-
-    -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
-    -- self:CopyEntityAppearanceOverrides()
-    Entity:CopyDisplayName(self.parent, self.uuid) -- Keep since shapeshiftrule doesn't actually handle this correctly
-
-    Event:new("BG3SX_ActorCreated", self)
 end
-
-

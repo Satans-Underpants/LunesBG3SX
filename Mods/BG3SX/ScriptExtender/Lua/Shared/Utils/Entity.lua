@@ -192,18 +192,16 @@ function Entity:TryCopyEntityComponent(uuid_1, uuid_2, componentName)
     if not srcEntity then
         return false
     end
-
     local srcComponent = srcEntity[componentName]
     if not srcComponent then
         return false
     end
 
-    -- Find dest component
+    -- Find dest component or create if not existing
     trgEntity = ResolveEntityArg(trgEntity)
     if not trgEntity then
         return false
     end
-
     local dstComponent = trgEntity[componentName]
     if not dstComponent then
         trgEntity:CreateComponent(componentName)
@@ -220,8 +218,10 @@ function Entity:TryCopyEntityComponent(uuid_1, uuid_2, componentName)
     else
         local serializeResult = Helper:TryToReserializeObject(srcComponent, dstComponent)
         if serializeResult then
-            -- _P("[BG3SX.lua] TryCopyEntityComponent, component '" .. componentName .. "': serialization fail:")
-            -- _P("[BG3SX.lua]     " .. serializeResult)
+            _P("[BG3SX][Entity.lua] - TryCopyEntityComponent, with component: " .. componentName)
+            _P("[BG3SX][Entity.lua] - Serialization fail")
+            _P("[BG3SX][Entity.lua] - Result: " .. serializeResult)
+            return false
         end
     end
 

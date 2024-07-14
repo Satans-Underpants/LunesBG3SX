@@ -516,6 +516,8 @@ end
 ---@param uuid			string	- UUID of entity that will receive the genital
 function Genital:OverrideGenital(newGenital, uuid)
 
+	print("Overriding genital")
+
 	if raceAllowedToHaveGenitals(uuid) then
 		-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital for uuid: ", uuid)
 		local currentGenital = Genital:GetCurrentGenital(uuid)
@@ -535,6 +537,7 @@ function Genital:OverrideGenital(newGenital, uuid)
 			else
 				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital does not exist")
 			end
+			print("Adding ", newGenital)
 			Ext.Timer.WaitFor(100, function()
 				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
 				Osi.AddCustomVisualOverride(uuid, newGenital)

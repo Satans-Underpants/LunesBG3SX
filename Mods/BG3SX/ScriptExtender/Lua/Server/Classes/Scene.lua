@@ -165,6 +165,10 @@ end
 
 
 function Scene:AttachAllSummons()
+    local summons = Helper:GetPlayerSummons()
+    for _,summon in pairs(summons) do
+        Osi.RemoveBoosts(summon, "ActionResourceBlock(Movement)", 0, "", "")
+    end
 end
 
 
@@ -212,6 +216,7 @@ function Scene:SetCamera(uuid)  -- TODO: PREVIOUSZOOM NOT DECLARED - should be s
     -- _P("[BG3SX][Scene.lua] - Scene:SetCamera - For ", entity)
 end
 
+-- Currently not in use
 -- After this is called, wait 400 ms
 function Scene:Setup()
     for _, entity in pairs(self.entities) do

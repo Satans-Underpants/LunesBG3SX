@@ -94,6 +94,8 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
 end)
 
 
+
+
 -- Auto-Erection handling for masturbating
 -- TODO - access Scene/PairsData instead
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
