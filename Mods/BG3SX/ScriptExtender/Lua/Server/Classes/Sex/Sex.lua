@@ -159,6 +159,9 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
 
         for _,involved in pairs(sexHavers) do
             Effect:Fade(involved, 666)
+            if Entity:HasPenis(involved) then
+                --Genital:GiveErection(involved)
+            end
         end
 
         

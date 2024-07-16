@@ -8,6 +8,7 @@
                     <attribute id="RuleName" type="LSString" value="BG3SX_ACTOR_STRIPPED"/>
                     <attribute id="UUID" type="guid" value="8ec4cf19-e98e-465e-8e46-eba3a6204a39"/>
                     <attribute id="ApplyVisual" type="bool" value="true"/>
+                    <attribute id="ApplyVisualInCC" type="bool" value="true"/>
                     <attribute id="ChangeBodyType" type="bool" value="true"/>
                     <attribute id="ChangeIcon" type="bool" value="true"/>
                     <attribute id="ChangeRace" type="bool" value="true"/>

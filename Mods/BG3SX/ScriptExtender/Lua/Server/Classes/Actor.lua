@@ -74,6 +74,8 @@ end
 ---@return lookTemplate string   - uuid - The looks of a parent entity
 function Actor:GetLooks()
     local visTemplate = Entity:TryGetEntityValue(self.parent, nil, {"GameObjectVisual", "RootTemplateId"})
+    --"RootTemplateId" : "7ea87604-e604-4a6d-a7ac-b7b2f293c000"
+    --"VisualTemplate" : "3773c64c-c5a9-9baf-1b85-6bee029ee044"
     local origTemplate = Entity:TryGetEntityValue(self.parent, nil, {"OriginalTemplate", "OriginalTemplate"})
     local looksTemplate = self.parent
 
@@ -83,8 +85,9 @@ function Actor:GetLooks()
         if origTemplate then
             if origTemplate ~= visTemplate then
                 _P("CHECK 1")
+                _P("VisualTemplate: ", visTemplate)
+                _P("OriginalTempalte: ", origTemplate)
                 looksTemplate = visTemplate
-                --looksTemplate = origTemplate
             end
         else -- It's Tav?
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
@@ -95,7 +98,9 @@ function Actor:GetLooks()
         end
     end
     _P("CHECK 3")
+    _P("Returning looksTemplate: ", looksTemplate)
     return looksTemplate
+    --return self.parent
 end
 
 
@@ -117,30 +122,33 @@ function Actor:CopyEntityAppearanceOverrides()
 end
 
 
+-- TODO - for some reason Sex mod breaks the disguise spell?????????
+-- TODO - maybe combine CopyEntityAppearanceOverride Check and NPC warning to the Erection function
+-- TODO - Make sections within into their own functions
+-- TODO - Change type from 2 back to original type since it screws with other game stuff 
+-- https://discord.com/channels/1211056047784198186/1211069623835828345/1262896149962952936
 function Actor:TransformAppearance()
-    local isStripper = Sex:IsStripper(self.parent)
-
-    -- TODO - actor wears standard armor from template
-    -- TODO - we can modify actor directly by trating them like an NPC (add CharacterCreation component) - give actors directly erections etc.
-    -- TODO . shapeshiftrule copies "Visual" - ApplyVisual, dies not ignore custom looks
-
-    --local looksTemplate = self:GetLooks()
-
-    --Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
-    --self:CopyEntityAppearanceOverrides()
-
-    print("actor ", self.uuid)
-    -- give entity cca
-    Entity:TryCopyEntityComponent(self.parent, self.uuid, "CharacterCreationAppearance")
     
-    local actor = Ext.Entity.Get(self.uuid)
-    local charVisID = actor.ServerCharacter.Template.CharacterVisualResourceID
-    local characterVisual = Ext.Resource.Get(charVisID, "CharacterVisual")
+    -- Get Looks
+    ----------------------------------------------------------------------------
+    self:CopyEntityAppearanceOverrides()
+    local looksTemplate = self:GetLooks()
+    Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
 
-    _P(characterVisual.VisualSet.ShowEquipmentVisuals)
-    characterVisual.VisualSet.ShowEquipmentVisuals = false
-    --actor:Replicate("CharacterVisual")
+    -- Genitals
+    ----------------------------------------------------------------------------
+    -- For any non-shapeshifted parent and NPC (NPC if slightly changed)
+    Genital:GiveErection(self)	-- TODO does not work for NPCs as they have to be handled differently
 
+    -- For any shapeshifted parent
+    -- TODO: Learn what Types there are
+    if (Ext.Entity.Get(self.parent).GameObjectVisual.Type == 4) then -- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
+        Genital:giveShapeshiftedErection(self)
+    end
+
+    -- Get Equipment
+    ----------------------------------------------------------------------------
+    local isStripper = Sex:IsStripper(self.parent)
     if not isStripper then
         self:DressActor()
     end

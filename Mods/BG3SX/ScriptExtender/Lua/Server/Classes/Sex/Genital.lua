@@ -569,3 +569,50 @@ function Genital:AddGenitalIfHasNone(uuid)
 		end
 	end
 end
+
+
+
+-- gives character a MrFunSize erection
+---@param uuid string - uuid of the character who will get the erection
+function Genital:GiveErection(actor)	
+	Osi.AddCustomVisualOverride(actor.uuid, Genital:GetNextGenital("BG3SX_SimpleErections", actor.parent))
+end
+
+
+
+-- TODO , if Component AppearanceOvveride does not exist do this
+-- else- when AAE is used, simply insert the erection in there
+-- TODO - check for NPCS, aaltough they can be handles via NPC class since you annot use AAE on them
+-- modify for all change genitals spells on shapeshifted entities
+-- currently wylls genital change doesnt reflect the change when using "Change Genitals" to vulva for example
+
+function Genital:giveShapeshiftedErection(actor)
+
+	parent = actor.parent
+
+	if Entity:HasPenis(parent) then
+
+		erection = Genital:GetNextGenital("BG3SX_SimpleErections", parent)
+		entity = Ext.Entity.Get(actor.uuid)		
+
+		-- Osi bullshit - Timer REQUIRED for this to function properly
+		Ext.Timer.WaitFor(500, function()
+
+			if (not Entity.AppearanceOverride) then
+				entity:CreateComponent("AppearanceOverride")
+			end
+				
+			visuals = {}
+			entity.GameObjectVisual.Type = 2
+			for _, entry in pairs(entity.AppearanceOverride.Visual.Visuals) do
+				table.insert(visuals,entry)
+			end
+			table.insert(visuals, erection)
+			entity.AppearanceOverride.Visual.Visuals = visuals
+			entity:Replicate("AppearanceOverride")
+			entity:Replicate("GameObjectVisual") 
+		
+		end)
+	end
+
+end
