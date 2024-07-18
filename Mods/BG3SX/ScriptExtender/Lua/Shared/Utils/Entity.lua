@@ -592,3 +592,34 @@ local function getAllowedAnimations(character)
     return allowedAnimations
 
 end
+
+
+
+
+-- gives shapeshifted entity a visual (like CCAV)
+-- character string - UUID
+-- visual string    - UUID
+function Entity:GiveShapeshiftedVisual(character, visual)
+
+    
+    entity = Ext.Entity.Get(character)        
+
+    -- usually this component never exists. AAE creates one too
+    if (not Entity.AppearanceOverride) then
+        entity:CreateComponent("AppearanceOverride")
+    end
+        
+    visuals = {}
+    -- Eralyne figured out that type has to be 2 for changes to be visible.
+    -- We do not know why
+    entity.GameObjectVisual.Type = 2
+    for _, entry in pairs(entity.AppearanceOverride.Visual.Visuals) do
+        table.insert(visuals,entry)
+    end
+
+    table.insert(visuals, visual)
+    entity.AppearanceOverride.Visual.Visuals = visuals
+    entity:Replicate("AppearanceOverride")
+    entity:Replicate("GameObjectVisual") 
+    
+end

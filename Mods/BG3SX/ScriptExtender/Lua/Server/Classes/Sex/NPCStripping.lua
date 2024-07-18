@@ -152,7 +152,7 @@ end
 
  -- give NPCs genitals
  -- @param           - uuid of the NPC
-function giveGenitals(uuid)
+local function giveGenitals(uuid)
     
 
     local spells = {"BG3SX_VanillaVulva", "BG3SX_VanillaFlaccid"}
@@ -178,7 +178,7 @@ end
 
  -- remove the genital
  -- @param           - uuid of the NPC
-function removeGenitals(uuid)
+local function removeGenitals(uuid)
     local genital = Genital:GetCurrentGenital(uuid)
     Osi.RemoveCustomVisualOvirride(uuid, genital) 
 end
@@ -189,7 +189,7 @@ end
  -- When removing helmer slots, NPCs don't have hair anymore
  -- @param           - uuid of the NPC
 -- TODO function giveHair for helmet havers
-function addHairIfNecessary(uuid)
+local function addHairIfNecessary(uuid)
     
 end
 

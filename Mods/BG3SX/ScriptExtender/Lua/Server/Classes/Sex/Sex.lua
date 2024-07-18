@@ -159,15 +159,18 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
 
         for _,involved in pairs(sexHavers) do
             Effect:Fade(involved, 666)
-            if Entity:HasPenis(involved) then
-                --Genital:GiveErection(involved)
-            end
         end
 
-        
         -- Delay the rest as well, since scene initilization is delayed for 1 second to avoid user seeing behind the scenes stuff
         local function haveSex()
             scene = Scene:new(sexHavers)
+            
+            -- TODO - works for masturbation but not for sex
+            for _, actor in pairs(scene.actors) do
+                print("giving erection to ", actor.parent , "`s clone ", actor.uuid)
+                Genital:GiveErection(actor)
+            end
+
             Sex:InitSexSpells(scene)
             Sex:PlayAnimation(caster, animationData)
         end
@@ -253,6 +256,7 @@ function Sex:PairedSexStrip(scene, entity)
         end
     end
 end
+
 
 
 -- Checks an uuid against the nonStripper table in EntityListeners.lua

@@ -135,16 +135,6 @@ function Actor:TransformAppearance()
     local looksTemplate = self:GetLooks()
     Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
 
-    -- Genitals
-    ----------------------------------------------------------------------------
-    -- For any non-shapeshifted parent and NPC (NPC if slightly changed)
-    Genital:GiveErection(self)	-- TODO does not work for NPCs as they have to be handled differently
-
-    -- For any shapeshifted parent
-    -- TODO: Learn what Types there are
-    if (Ext.Entity.Get(self.parent).GameObjectVisual.Type == 4) then -- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
-        Genital:giveShapeshiftedErection(self)
-    end
 
     -- Get Equipment
     ----------------------------------------------------------------------------
