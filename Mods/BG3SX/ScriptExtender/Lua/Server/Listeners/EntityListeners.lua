@@ -8,12 +8,12 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(_, target
             for i, nonStripper in ipairs(nonStrippers) do
                 if nonStripper == target then
                     table.remove(nonStrippers, i)
-                    _P("STRIPPER DETECTED")
+                    -- _P("STRIPPER DETECTED")
                 end
             end
         else
             table.insert(nonStrippers, target)
-            _P("Added to nonstrippers")
+            -- _P("Added to nonstrippers")
         end
     end
 end)

@@ -84,21 +84,21 @@ function Actor:GetLooks()
     if visTemplate then
         if origTemplate then
             if origTemplate ~= visTemplate then
-                _P("CHECK 1")
-                _P("VisualTemplate: ", visTemplate)
-                _P("OriginalTempalte: ", origTemplate)
+                -- _P("CHECK 1")
+                -- _P("VisualTemplate: ", visTemplate)
+                -- _P("OriginalTempalte: ", origTemplate)
                 looksTemplate = visTemplate
             end
         else -- It's Tav?
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
             if Osi.HasAppliedStatusOfType(self.parent, "POLYMORPHED") == 1 or self.parent.AppearanceOverride then
-                _P("CHECK 2")
+                -- _P("CHECK 2")
                 looksTemplate = visTemplate
             end
         end
     end
-    _P("CHECK 3")
-    _P("Returning looksTemplate: ", looksTemplate)
+    -- _P("CHECK 3")
+    -- _P("Returning looksTemplate: ", looksTemplate)
     return looksTemplate
     --return self.parent
 end

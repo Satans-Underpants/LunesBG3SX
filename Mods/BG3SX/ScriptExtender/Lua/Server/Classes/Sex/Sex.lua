@@ -65,21 +65,15 @@ local function playAnimationAndSound(actor, animationData, position)
     local animation
     local newAnimation
     local newSound
-    -- _D(animationData)
     if position == "Top" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animation)        
     elseif position == "Bottom" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
-        --_P("---------------------------------ANIMATIONDATA--------------------------------")
-        -- _D(animationData)
         if animationData.SoundBottom then
-            -- _P("animationData")
-            -- _D(animationData)
             newSound = Sound:new(actor, animationData.SoundBottom, animationData.AnimLength)
         else
-            _P("Test")
             newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
         end
     end
@@ -95,11 +89,6 @@ end
 function Sex:PlayAnimation(entity, animationData)
     local scene = Scene:FindSceneByEntity(entity)
     local sceneType = Sex:DetermineSceneType(scene)
-    -- _D(animationData)
-   
-    -- Saves the newly selected animationData table to the scene to recall after teleporting/rotating
-    scene.currentAnimation = animationData
-
     if sceneType == "MasturbateFemale" then
         playAnimationAndSound(scene.actors[1], animationData, "Bottom")
 
@@ -131,11 +120,11 @@ function Sex:PlayAnimation(entity, animationData)
 
     end
 
-    if animationData.Props then
-        for _,prop in pairs(animationData.Props) do
-            Osi.CreateAtObject(prop, scene.actor[1].uuid, 1, 0, "", 1)
-            table.insert(scene.props,prop)
-        end
+    if animationData ~= scene.currentAnimation then
+        -- Since animation is not the same as before save the new animationData table to the scene to use for prop management, teleporting or rotating
+        scene.currentAnimation = animationData
+        scene:DestroyProps() -- Props rely on scene.currentAnimation
+        scene:CreateProps()
     end
 end
 

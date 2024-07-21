@@ -25,6 +25,7 @@ local initialize
 ---@param props             table   - Table of all props currently in a scene
 ---@param switchPlaces      boolean - Boolean for PlayAnimation to check if actors have been switched - TODO: need a cleaner way to handle this
 ---@param campFlags         table   - Table of entities with campflags applied before scene to reapply on Destroy() - Ignore those who didn't - PleaseStay Mod compatibility
+---@paran summons           table   - Table of summons saved per involved entity
 function Scene:new(entities)
     local instance      = setmetatable({
         entities        = entities,
@@ -40,6 +41,7 @@ function Scene:new(entities)
         props           = {},
         switchPlaces    = "false",
         campFlags       = {},
+        summons         = {},
     }, Scene)
 
     -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
@@ -114,7 +116,7 @@ function Scene:FindSceneByEntity(entityToSearch)
             end
         end
     end
-    _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any existing scenes! Returning nil")
+    _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any existing scenes! This shouldn't happen anymore. Contact mod author about what you did.")
 end
 
 
@@ -128,7 +130,6 @@ local function saveCampFlags(self)
         end
     end
 end
-
 function Scene:ToggleCampFlags(entity)
     for _,flagEntity in pairs(self.campFlags) do
         if entity == flagEntity then
@@ -158,20 +159,109 @@ end
 
 -- Summons/Follower Management
 -----------------------------------------------------
-function Scene:DetachSummons()
-    local summons = Helper:GetPlayerSummons()
-    -- Maybe need to create an entity entry in self.summons here first
-    for _,summon in pairs(summons) do
-        -- table.insert(self.summons, summon) Save in new instance.table as new entries per summon per each entity
-        Osi.AddBoosts(summon, "ActionResourceBlock(Movement)", "", "")
+
+function Scene:ToggleSummonVisibility()
+    if #self.summons > 0 then
+        -- _P("Setting summon entries visible")
+        for _,entry in pairs(self.summons) do
+            local entity = entry.entity
+            local summon = entry.summon
+            local startLocation
+            for _,locationEntry in pairs(self.startLocations) do
+                -- _D(self.startLocations)
+                -- _P(locationEntry.entity)
+                -- _P(entity.Uuid.EntityUuid)
+                local locationEntity = Ext.Entity.Get(locationEntry.entity)
+
+                if locationEntity.Uuid.EntityUuid == entity.Uuid.EntityUuid then
+                    -- _P("iteration entity == entity")
+                    startLocation = locationEntry
+                    -- _D(startLocation)
+                end
+            end
+            Osi.SetDetached(summon.Uuid.EntityUuid, 0)
+            Osi.SetVisible(summon.Uuid.EntityUuid, 1)
+            Entity:ToggleWalkThrough(summon.Uuid.EntityUuid)
+            Osi.RemoveBoosts(summon.Uuid.EntityUuid, "ActionResourceBlock(Movement)", 0, "", "")
+            Osi.TeleportToPosition(summon.Uuid.EntityUuid, startLocation.position.x, startLocation.position.y, startLocation.position.z, "", 0, 0, 0, 0, 1)
+        end
+    else
+        -- _P("Setting summons invisible and adding them to scene.summons")
+        local partymembers = Ext.Entity.GetAllEntitiesWithComponent("PartyMember")
+        for _,entry in pairs(self.entities) do
+            local entity = Ext.Entity.Get(entry)
+            for _,potentialSummon in pairs(partymembers) do
+                if potentialSummon.IsSummon then
+                    local summon = potentialSummon
+                    local summoner = summon.IsSummon.field_20 -- or field_8 - of of them might be owner and the other one the summoner
+                    -- _P("Entity: ", entity, " with uuid: ", entity.Uuid.EntityUuid)
+                    -- _P("Summon: ", summon, " with uuid: ", summon.Uuid.EntityUuid)
+                    -- _P("Summoner: ", summoner, " with uuid: ", summoner.Uuid.EntityUuid)
+                    if summoner.Uuid.EntityUuid == entity.Uuid.EntityUuid then
+                        -- _P("Making ", summon.Uuid.EntityUuid, " invisible")
+                        Osi.SetDetached(summon.Uuid.EntityUuid, 1)
+                        Osi.SetVisible(summon.Uuid.EntityUuid, 0)
+                        Entity:ToggleWalkThrough(summon.Uuid.EntityUuid)
+                        Osi.AddBoosts(summon.Uuid.EntityUuid, "ActionResourceBlock(Movement)", "", "")
+                        table.insert(self.summons, {entity = entity, summon = summon})
+                    end
+                end
+            end
+        end
     end
 end
 
+-- Whenever we can replicate the owner fields we may be able to reuse this party and just replicate the IsSummon component after swapping out the owner
+-- local partymembers = Osi.DB_Players:Get(nil)
+-- local everyone = Ext.Entity.GetAllEntitiesWithComponent("PartyMember")
+-- _P("-----------------------------------------------------")
+-- _D(partymembers)
 
-function Scene:AttachAllSummons()
-    local summons = Helper:GetPlayerSummons()
-    for _,summon in pairs(summons) do
-        Osi.RemoveBoosts(summon, "ActionResourceBlock(Movement)", 0, "", "")
+-- _P("---------------------------")
+-- for _, entity in ipairs(everyone) do
+--     if entity.IsSummon then
+--         _P(entity.Uuid.EntityUuid)
+--         _D(entity.IsSummon)
+--         _P(entity.IsSummon.Owner_M)
+--         local owner = entity.IsSummon.Owner_M
+--         _P("owner_m: ", owner.Uuid.EntityUuid)
+--         local field20 = entity.IsSummon.field_20
+--         _P("field_20: ", field20.Uuid.EntityUuid)
+--         local field8 = entity.IsSummon.field_8
+--         _P("field_8: ", field8.Uuid.EntityUuid)
+
+--         local newOwner = Ext.Entity.Get(partymembers[1][1])
+--         _P("newOwner: ", newOwner.Uuid.EntityUuid)
+
+--         entity.IsSummon.field_20 = newOwner
+--         _P("field_20: ", field20.Uuid.EntityUuid)
+--         entity:Replicate("IsSummon")
+--         _P("field_20: ", field20.Uuid.EntityUuid)
+--         Osi.SetVisible(entity.Uuid.EntityUuid, 0)
+--     end
+-- end
+-- _P("-----------------------------------------------------")
+
+-- Prop Management
+-----------------------------------------------------
+function Scene:CreateProps()
+    if self.currentAnimation.Props then
+        for _,animDataProp in pairs(self.currentAnimation.Props) do
+            local sceneProp = Osi.CreateAt(animDataProp, self.rootPosition.x, self.rootPosition.y, self.rootPosition.z, 1, 0, "")
+            Osi.SetMovable(sceneProp,0)
+            table.insert(self.props, sceneProp)
+        end
+    end
+end
+function Scene:DestroyProps()
+    if #self.props > 0 then
+        -- _D(self.props)
+        for i,sceneProp in ipairs(self.props) do
+            -- _D(sceneProp)
+            Osi.RequestDelete(sceneProp)
+            table.remove(self.props, i)
+            -- _D(self.props)
+        end
     end
 end
 
@@ -316,8 +406,10 @@ initialize = function(self)
     table.insert(SAVEDSCENES, self)
     Event:new("BG3SX_SceneInit", self)
 
+
     setStartLocations(self) -- Save start location of each entity to later teleport them back
     saveCampFlags(self) -- Saves which entities had campflags applied before
+    self:ToggleSummonVisibility() -- Toggles summon visibility and collision - on Scene:Destroy() it also teleports them back to start location
 
     -- We do this before in a seperate loop to already apply this to all entities before actors are spawned one by one
     for _, entity in pairs(self.entities) do
@@ -362,7 +454,6 @@ end
 -- 										During Scene
 -- 
 ----------------------------------------------------------------------------------------------------
-
 
 -- Teleports any entity/actor/props to a new location
 ---@param entity        uuid    - The caster of the spell and entity to check which scene belongs to them
@@ -458,6 +549,8 @@ end
 function Scene:Destroy()
 
     self:CancelAllSoundTimers()
+    self:DestroyProps()
+    self:ToggleSummonVisibility()
     for _, entity in pairs(self.entities) do -- Go over this seperately so it already is applied to every entity before the other stuff happens
         -- Effect:Fade(entity, 2000) -- 2sec Fadeout on scene termination
     end

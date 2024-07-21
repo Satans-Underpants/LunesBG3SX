@@ -52,14 +52,14 @@ playSound = function(self)
                 local handle = scene.timerHandles[i]
                 table.remove(scene.timerHandles, i)
             end
-            _D(scene.timerHandles)
+            -- _D(scene.timerHandles)
             playSound(self)
         end)
         scene:RegisterNewSoundTimer(newSoundTimer)
 
         -- scene:RegisterNewSoundTimer(sound)
 
-        _P("[BG3SX][Sound.lua] - Sound:new() - Begin to play ", sound, " on Actor ", self.actor.uuid)
+        -- _P("[BG3SX][Sound.lua] - Sound:new() - Begin to play ", sound, " on Actor ", self.actor.uuid)
     else
         -- _P("[BG3SX][Sound.lua] - Sound:new() - Scene does not exist anymore")
     end
