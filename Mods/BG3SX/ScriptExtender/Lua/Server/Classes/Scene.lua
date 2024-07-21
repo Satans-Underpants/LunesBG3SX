@@ -145,9 +145,13 @@ function Scene:RegisterNewSoundTimer(newSoundTimer)
     table.insert(self.timerHandles, newSoundTimer)
 end
 function Scene:CancelAllSoundTimers()
-    for _,handle in pairs(self.timerHandles) do
-        table.remove(self.timerHandles, handle)
+    for i = #self.timerHandles, 1, -1 do
+        local handle = self.timerHandles[i]
+        table.remove(self.timerHandles, i)
         Ext.Timer.Cancel(handle)
+    end
+    if #self.timerHandles > 0 then
+        _P("[BG3SX][Scene.lua] - Scene:CancelAllSoundTimers() - Contact mod author about timerHandles being buggy again")
     end
 end
 
@@ -390,6 +394,7 @@ function Scene:MoveSceneToLocation(entity, newLocation)
         end
     end
 
+    scene:CancelAllSoundTimers() -- Cancel all currently saved soundTimers to not get overlapping sounds
     Sex:PlayAnimation(entity, scene.currentAnimation) -- Play prior animation again
 
     Event:new("BG3SX_SceneMove", {scene, oldLocation, newLocation}) -- MOD EVENT
@@ -407,6 +412,8 @@ function Scene:RotateScene(caster, location)
         Osi.SteerTo(actor.uuid, helper, 1) -- 1 = instant
     end
     Osi.RequestDeleteTemporary(helper) -- Deletes the rotationHelper after rotating
+
+    scene:CancelAllSoundTimers() -- Cancel all currently saved soundTimers to not get overlapping sounds
     Sex:PlayAnimation(caster, scene.currentAnimation) -- Play prior animation again
 end
 

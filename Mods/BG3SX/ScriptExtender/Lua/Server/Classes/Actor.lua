@@ -195,7 +195,6 @@ function Actor:DressActor()
     local parentArmour = Osi.GetArmourSet(self.parent)
     local parentEquipment = Entity:GetEquipment(self.parent)
     -- Apparently there is a function to equip an ArmourSet directly but not Equipment
-
     Osi.SetArmourSet(self.uuid, parentArmour) -- Equips a set of possibly copied armour
     for _, item in pairs(parentEquipment) do -- Equips every item found in possibly copied equipment table
         local itemTemplate = Osi.GetTemplate(item)
@@ -204,26 +203,11 @@ function Actor:DressActor()
 
         -- Adding item to inventory takes some time. Cannot be retrieved without delay
         Ext.Timer.WaitFor(200, function() 
-        
             local copiedItem = Osi.GetItemByTemplateInInventory(itemTemplate, self.uuid) 
 
-            _P("Item")
-            _D(item)
-            _P("CopiedItem")
-            _D(copiedItem)
             Entity:TryCopyEntityComponent(item, copiedItem, "ItemDye")
-            Osi.Equip(self.uuid, copiedItem)
-    
-        
-        
-        
+            Osi.Equip(self.uuid, copiedItem)        
         end)
-
-       
-        
-        
-        
-        
         
         --local item = Osi.GetItemByTemplateInInventory(Osi.GetTemplate(itemData), self.parent)
         --if item then

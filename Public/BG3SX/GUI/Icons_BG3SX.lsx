@@ -22,58 +22,58 @@
 	<region id="IconUVList"> 
         <node id="root">
             <children>
-// ROW 1
+// ROW 1 - new row always at U1 value 0.0
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value="BG3SX_MAIN"/> 
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_MAIN"/> 
                     <attribute id="U1" type="float" value="0.0"/> 
                     <attribute id="U2" type="float" value="0.03125"/> 
                     <attribute id="V1" type="float" value="0.0"/> 
                     <attribute id="V2" type="float" value="0.03125"/> 
                 </node>
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value="BG3SX_Hand"/> 
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_AskForSex"/> 
                     <attribute id="U1" type="float" value="0.03125"/> 
                     <attribute id="U2" type="float" value="0.0625"/> 
                     <attribute id="V1" type="float" value="0.0"/> 
                     <attribute id="V2" type="float" value="0.03125"/> 
                 </node>
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value="BG3SX_Erection"/> 
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_Masturbate"/> 
                     <attribute id="U1" type="float" value="0.0625"/> 
                     <attribute id="U2" type="float" value="0.09375"/> 
                     <attribute id="V1" type="float" value="0.0"/> 
                     <attribute id="V2" type="float" value="0.03125"/> 
                 </node>
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value="BG3SX_CONT_Options"/> 
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_Scene_End"/> 
                     <attribute id="U1" type="float" value="0.09375"/> 
                     <attribute id="U2" type="float" value="0.125"/> 
                     <attribute id="V1" type="float" value="0.0"/> 
                     <attribute id="V2" type="float" value="0.03125"/> 
                 </node>
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value="BG3SX_CONT_Genitals"/> 
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_Scene_Move"/> 
                     <attribute id="U1" type="float" value="0.125"/> 
                     <attribute id="U2" type="float" value="0.15625"/> 
                     <attribute id="V1" type="float" value="0.0"/> 
                     <attribute id="V2" type="float" value="0.03125"/> 
                 </node>
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value="BG3SX_BLOCK"/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_Scene_Rotate"/>
                     <attribute id="U1" type="float" value="0.15625"/>
                     <attribute id="U2" type="float" value="0.1875"/>
                     <attribute id="V1" type="float" value="0.0"/>
                     <attribute id="V2" type="float" value="0.03125"/>
                 </node>
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/> 
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_Scene_SwitchPlaces"/> 
                     <attribute id="U1" type="float" value="0.1875"/> 
                     <attribute id="U2" type="float" value="0.21875"/> 
                     <attribute id="V1" type="float" value="0.0"/> 
                     <attribute id="V2" type="float" value="0.03125"/> 
                 </node>
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/> 
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_Scene_CameraHeight"/> 
                     <attribute id="U1" type="float" value="0.21875"/> 
                     <attribute id="U2" type="float" value="0.25"/> 
                     <attribute id="V1" type="float" value="0.0"/> 
@@ -249,14 +249,14 @@
                 </node>
 // ROW 2
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_CONT_Options"/>
                     <attribute id="U1" type="float" value="0.0"/>
                     <attribute id="U2" type="float" value="0.03125"/>
                     <attribute id="V1" type="float" value="0.03125"/>
                     <attribute id="V2" type="float" value="0.0625"/>
                 </node>		
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_TOGGLE_Erection"/>
                     <attribute id="U1" type="float" value="0.03125"/>
                     <attribute id="U2" type="float" value="0.0625"/>
                     <attribute id="V1" type="float" value="0.03125"/>
@@ -472,36 +472,37 @@
                     <attribute id="V1" type="float" value="0.03125"/>
                     <attribute id="V2" type="float" value="0.0625"/>	
                 </node>
+// ROW 3
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_CONT_Genitals"/>
                     <attribute id="U1" type="float" value="0.0"/>
                     <attribute id="U2" type="float" value="0.03125"/>
                     <attribute id="V1" type="float" value="0.0625"/>
                     <attribute id="V2" type="float" value="0.09375"/>
                 </node>		
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_OtherGenitals"/>
                     <attribute id="U1" type="float" value="0.03125"/>
                     <attribute id="U2" type="float" value="0.0625"/>
                     <attribute id="V1" type="float" value="0.0625"/>
                     <attribute id="V2" type="float" value="0.09375"/>
                 </node>		
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_Funsize"/>
                     <attribute id="U1" type="float" value="0.0625"/>
                     <attribute id="U2" type="float" value="0.09375"/>
                     <attribute id="V1" type="float" value="0.0625"/>
                     <attribute id="V2" type="float" value="0.09375"/>
                 </node>		
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_VanillaPenis"/>
                     <attribute id="U1" type="float" value="0.09375"/>
                     <attribute id="U2" type="float" value="0.125"/>
                     <attribute id="V1" type="float" value="0.0625"/>
                     <attribute id="V2" type="float" value="0.09375"/>
                 </node>		
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_VanillaVulva"/>
                     <attribute id="U1" type="float" value="0.125"/>
                     <attribute id="U2" type="float" value="0.15625"/>
                     <attribute id="V1" type="float" value="0.0625"/>
@@ -696,15 +697,16 @@
                     <attribute id="V1" type="float" value="0.0625"/>
                     <attribute id="V2" type="float" value="0.09375"/>
                 </node>
+// ROW 4
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_TOGGLE_Stripping"/>
                     <attribute id="U1" type="float" value="0.0"/>
                     <attribute id="U2" type="float" value="0.03125"/>
                     <attribute id="V1" type="float" value="0.09375"/>
                     <attribute id="V2" type="float" value="0.125"/>
                 </node>		
                 <node id="IconUV">
-                    <attribute id="MapKey" type="FixedString" value=""/>
+                    <attribute id="MapKey" type="FixedString" value="BG3SX_ICON_TOGGLE_ErectionPassive"/>
                     <attribute id="U1" type="float" value="0.03125"/>
                     <attribute id="U2" type="float" value="0.0625"/>
                     <attribute id="V1" type="float" value="0.09375"/>

@@ -65,6 +65,7 @@ local function playAnimationAndSound(actor, animationData, position)
     local animation
     local newAnimation
     local newSound
+    -- _D(animationData)
     if position == "Top" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animation)        
@@ -72,11 +73,14 @@ local function playAnimationAndSound(actor, animationData, position)
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
         --_P("---------------------------------ANIMATIONDATA--------------------------------")
-        --_D(animationData)
+        -- _D(animationData)
         if animationData.SoundBottom then
-           -- newSound = Sound:new(actor, animationData.SoundBottom, animationData.AnimLength)
+            -- _P("animationData")
+            -- _D(animationData)
+            newSound = Sound:new(actor, animationData.SoundBottom, animationData.AnimLength)
         else
-            --newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
+            _P("Test")
+            newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
         end
     end
 
@@ -91,6 +95,7 @@ end
 function Sex:PlayAnimation(entity, animationData)
     local scene = Scene:FindSceneByEntity(entity)
     local sceneType = Sex:DetermineSceneType(scene)
+    -- _D(animationData)
    
     -- Saves the newly selected animationData table to the scene to recall after teleporting/rotating
     scene.currentAnimation = animationData

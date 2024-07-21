@@ -29,7 +29,10 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
     -- For changing positions
     for _, animationData in pairs(ANIMATIONS) do
         if spell == animationData.AnimName then
+            local scene = Scene:FindSceneByEntity(caster)
             -- _P("[BG3SX SexListeners] Corresponding Animname ", animationData.AnimName)
+
+            scene:CancelAllSoundTimers() -- Cancel all currently saved soundTimers to not get overlapping sounds
             Sex:PlayAnimation(caster, animationData)
             
             -- Ext.Net.BroadcastMessage("BG3SX_SexAnimationChange", Ext.Json.Stringify({caster, animationData})) -- SE EVENT
