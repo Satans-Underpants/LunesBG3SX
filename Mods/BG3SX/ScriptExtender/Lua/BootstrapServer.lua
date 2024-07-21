@@ -33,6 +33,7 @@ Ext.Require("Shared/Utils/Helper.lua")
 Ext.Require("Server/Classes/Sex/Genital.lua")
 Ext.Require("Server/Classes/Sex/NPCStripping.lua")
 Ext.Require("Server/Classes/Sex/Sex.lua")
+Ext.Require("Server/Classes/Sex/SexUserVars.lua")
 
 -- Initialize General Classes
 Ext.Require("Server/Classes/Effect.lua")
@@ -80,3 +81,7 @@ Ext.Require("Server/Listeners/SexListeners.lua")
 -- [NYI] "BG3SX_EntityStripped"({entity, strippedEquipment, remainingEquipment})    -                                           - Actor.lua
 -- "BG3SX_ActorDressed"({actor, equipmentTable})                              -                                           - Actor.lua
 -- "BG3SX_GenitalChange"({entity, newGenital})                                -                                           - Genitals.lua
+
+
+
+

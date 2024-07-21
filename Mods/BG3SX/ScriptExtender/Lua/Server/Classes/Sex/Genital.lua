@@ -545,6 +545,7 @@ function Genital:OverrideGenital(newGenital, uuid)
 		end
 
 		-- Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- SE EVENT
+		-- TODO - All events have to be converted to the new SE v19 events
 		Event:new("BG3SX_GenitalChange", {uuid, newGenital}) -- MOD EVENT - Events.lua
 	end
 
@@ -572,47 +573,53 @@ end
 
 
 
--- gives character a MrFunSize erection
----@param uuid string - uuid of the character who will get the erection
-function Genital:GiveErection(actor)	
-	Osi.AddCustomVisualOverride(actor.uuid, Genital:GetNextGenital("BG3SX_SimpleErections", actor.parent))
-end
+-- TODO - we have to remove the old genital before adding the erection
+-- Check by using horsecocks 
 
+-- in that ase we can check whether a visual is a genital by repurpisung a DOLL function
 
+-- Give an actor in the scene an erection (if they have a penis)
+function Genital:GiveErection(actor)
 
--- TODO , if Component AppearanceOvveride does not exist do this
--- else- when AAE is used, simply insert the erection in there
--- TODO - check for NPCS, aaltough they can be handles via NPC class since you annot use AAE on them
--- modify for all change genitals spells on shapeshifted entities
--- currently wylls genital change doesnt reflect the change when using "Change Genitals" to vulva for example
+	local parent = actor.parent
+	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", parent)
+	local parentEntity = Ext.Entity.Get(actor.parent)
 
-function Genital:giveShapeshiftedErection(actor)
+	local autoerection = Entity:TryGetEntityValue(parent, nil, {"Vars", "BG3SX_AutoErection"})
+	
+	if Entity:HasPenis(parent) and ((autoerection == nil) or (Entity.Vars.BG3SX_AutoErection)) then
 
-	parent = actor.parent
+		print("Autoerection allowed for ", parent)
 
-	if Entity:HasPenis(parent) then
+		-- TODO: Learn what Types there are
+		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
+		-- For any shapeshifted parent
+		if (parentEntity.GameObjectVisual.Type == 4) then 
 
-		erection = Genital:GetNextGenital("BG3SX_SimpleErections", parent)
-		entity = Ext.Entity.Get(actor.uuid)		
+			Ext.Timer.WaitFor(500, function()
 
-		-- Osi bullshit - Timer REQUIRED for this to function properly
-		Ext.Timer.WaitFor(500, function()
-
-			if (not Entity.AppearanceOverride) then
-				entity:CreateComponent("AppearanceOverride")
-			end
-				
-			visuals = {}
-			entity.GameObjectVisual.Type = 2
-			for _, entry in pairs(entity.AppearanceOverride.Visual.Visuals) do
-				table.insert(visuals,entry)
-			end
-			table.insert(visuals, erection)
-			entity.AppearanceOverride.Visual.Visuals = visuals
-			entity:Replicate("AppearanceOverride")
-			entity:Replicate("GameObjectVisual") 
+				Entity:GiveShapeshiftedVisual(actor.uuid, visual)
 		
-		end)
-	end
+			end)
+		
+		-- non -shapeshifted? 	
+		else
+			-- For any non-shapeshifted parent and NPC (NPC if slightly changed)
+			-- might work for NPCs, I give them a genital slot after all - maybe their copy does not have one though
+			-- but it should be copied?
 
+
+			-- THis fails during sex but works for masturbation
+			Genital:OverrideGenital(visual, actor.uuid)
+
+			print("Adding erection to ", parent)
+		end
+
+		-- TODO : NPC Handler
+
+	end
 end
+
+
+
+

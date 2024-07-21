@@ -2,6 +2,9 @@
                                             ---- Genital Functions ----
 -----------------------------------------------------------------------------------------------------------------------------------------
 
+
+-- TODO - make all of the genital spells targeted for absolute control- even over NPCs
+
 -- Manual Genital changing
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
 
@@ -9,6 +12,10 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
     -- test 
     --Genital:giveShapeshiftedErection(caster)
 
+
+    -- TODO - change to giveShapeshiftedVisual
+    -- this also has to be used for change genitals (othe rchange genitals spell)
+    -- currently they do not reflect teh change on a shapeshifted entity
 
     -- If UI is used then use UI listener instead
     -- Check wether spell is in container Change Genitals
@@ -40,6 +47,9 @@ end)
 --
 ----------------------------------------------------------------------------------------------------
 
+
+-- TODO - yet those as we are handling the auto erections on the entity now.
+-- Add auto erections as entity var
 
 -- TODO - rewrite for variable amount of Sex Havers
 
