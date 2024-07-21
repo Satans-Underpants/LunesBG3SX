@@ -67,7 +67,8 @@ local function playAnimationAndSound(actor, animationData, position)
     local newSound
     if position == "Top" then
         animation = animationData.FallbackTopAnimationID
-        newAnimation = Animation:new(actor, animationData, animation)        
+        newAnimation = Animation:new(actor, animationData, animation) 
+        newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)       
     elseif position == "Bottom" then
         animation = animationData.FallbackTopAnimationID
         newAnimation = Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
