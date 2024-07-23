@@ -170,7 +170,11 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
             for _, actor in pairs(scene.actors) do
                 _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
                 Genital:GiveErection(actor)
+                --print("visuals ")
+                --_D(Ext.Entity.Get(actor.uuid).AppearanceOverride.Visual.Visuals)
             end
+
+            
 
             Sex:InitSexSpells(scene)
             Sex:PlayAnimation(caster, animationData)

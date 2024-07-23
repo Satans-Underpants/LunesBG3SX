@@ -593,20 +593,44 @@ function Entity:GiveShapeshiftedVisual(character, visual)
 
     -- usually this component never exists. AAE creates one too
     if (not Entity.AppearanceOverride) then
-        entity:CreateComponent("AppearanceOverride")
+        entity:CreateComponent("AppearanceOverride") -- instead iof timers subscribe to entity component
     end
         
     visuals = {}
     -- Eralyne figured out that type has to be 2 for changes to be visible.
     -- We do not know why
     entity.GameObjectVisual.Type = 2
+
+    _P("Overriding visuals of ", character)
+
     for _, entry in pairs(entity.AppearanceOverride.Visual.Visuals) do
+        _P("inserting ", visual)
         table.insert(visuals,entry)
     end
 
+
+
+    visuals = {visual}
+
+
+    _P("visuals to be added ")
+    _D(visuals)
+
+
+
+    _P("Visuals before adding")
+    _D(entity.AppearanceOverride.Visual.Visuals)
+
+   
     table.insert(visuals, visual)
     entity.AppearanceOverride.Visual.Visuals = visuals
     entity:Replicate("AppearanceOverride")
     entity:Replicate("GameObjectVisual") 
+
+    _P("Visuals after adding")
+    _D(entity.AppearanceOverride.Visual.Visuals)
+
+
     
 end
+

@@ -18,9 +18,21 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
     -- Check wether spell is in container Change Genitals
     local containerID = Ext.Stats.Get(spell).SpellContainerID
     if containerID == "BG3SX_ChangeGenitals" then
-    -- Transform genitals
-        local newGenital = Genital:GetNextGenital(spell, caster)
+    -- Transform 
+
+    local newGenital = Genital:GetNextGenital(spell, caster)
+
+
+    --if (Ext.Entity.Get(caster).GameObjectVisual.Type == 4) then  -- check if shapeshifted
+      --  Ext.Timer.WaitFor(200, function()
+     --       Entity:GiveShapeshiftedVisual(caster, newGenital)
+     --   end)
+
+    --else 
         Genital:OverrideGenital(newGenital, caster)
+   -- end
+
+
     end
 end)
 
@@ -65,11 +77,11 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         table.insert(sexPairs, pair)
 
         if Entity:HasPenis(caster) then
-           -- Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
+           Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
         end
 
         if Entity:HasPenis(target) then
-           -- Osi.UseSpell(target, "BG3SX_SimpleErections", target)
+           Osi.UseSpell(target, "BG3SX_SimpleErections", target)
         end
     end
 end)

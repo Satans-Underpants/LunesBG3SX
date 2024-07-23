@@ -535,6 +535,7 @@ end
 function Genital:GiveErection(actor)
 	local parent = actor.parent
 	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", parent)
+	_P("penis ", visual)
 	local parentEntity = Ext.Entity.Get(actor.parent)
 	local autoerection = Entity:TryGetEntityValue(parent, nil, {"Vars", "BG3SX_AutoErection"})
 	
@@ -545,18 +546,18 @@ function Genital:GiveErection(actor)
 		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
 		-- For any shapeshifted parent
 		if (parentEntity.GameObjectVisual.Type == 4) then 
-			Ext.Timer.WaitFor(500, function()
+			Ext.Timer.WaitFor(200, function()
 				Entity:GiveShapeshiftedVisual(actor.uuid, visual)
 			end)
 		-- non -shapeshifted? 	
-		else
-			-- For any non-shapeshifted parent and NPC (NPC if slightly changed)
-			-- might work for NPCs, I give them a genital slot after all - maybe their copy does not have one though
-			-- but it should be copied?
+		--else
+			--  For any non-shapeshifted parent and NPC (NPC if slightly changed)
+		    --	might work for NPCs, I give them a genital slot after all - maybe their copy does not have one though
+		    --	but it should be copied?
 
-			-- THis fails during sex but works for masturbation
-			Genital:OverrideGenital(visual, actor.uuid)
-			_P("Adding erection to ", parent)
+			--THis fails during sex but works for masturbation
+			--Genital:OverrideGenital(visual, actor.uuid)
+			--_P("Adding erection to ", actor.uuid)
 		end
 
 		-- TODO : NPC Handler
