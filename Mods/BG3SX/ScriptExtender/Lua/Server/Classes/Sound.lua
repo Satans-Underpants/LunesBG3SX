@@ -29,9 +29,9 @@ function Sound:new(actor, soundTable, duration)
     return instance
 end
 
--- Sound
---------------------------------------------------------------
 
+-- Initialization
+--------------------------------------------------------------
 
 playSound = function(self)
     local scene = Scene:FindSceneByEntity(self.actor.parent)
@@ -57,10 +57,9 @@ playSound = function(self)
         end)
         scene:RegisterNewSoundTimer(newSoundTimer)
 
-        -- scene:RegisterNewSoundTimer(sound)
-
         -- _P("[BG3SX][Sound.lua] - Sound:new() - Begin to play ", sound, " on Actor ", self.actor.uuid)
     else
         -- _P("[BG3SX][Sound.lua] - Sound:new() - Scene does not exist anymore")
+        -- This else situation can still happen when sound timers are running out after a scene got destroyed, tho we destroy everything and nothing should happen
     end
 end

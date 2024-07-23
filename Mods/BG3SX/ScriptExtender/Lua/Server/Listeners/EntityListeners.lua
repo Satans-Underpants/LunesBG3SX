@@ -1,6 +1,8 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
                                             ---- Entity Functions ----
 ------------------------------------------------------------------------------------------------------------------------------------------
+
+-- TODO: Might be able to be removed since we now use a passive toggle
 local nonStrippers = {}
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(_, target, spell, _, _, _)
     if spell == "BG3SX_ToggleStripping" then

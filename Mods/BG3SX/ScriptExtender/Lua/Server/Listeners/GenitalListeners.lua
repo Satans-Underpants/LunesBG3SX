@@ -2,16 +2,13 @@
                                             ---- Genital Functions ----
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-
 -- TODO - make all of the genital spells targeted for absolute control- even over NPCs
 
 -- Manual Genital changing
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
-
-
+    
     -- test 
     --Genital:giveShapeshiftedErection(caster)
-
 
     -- TODO - change to giveShapeshiftedVisual
     -- this also has to be used for change genitals (othe rchange genitals spell)
@@ -38,15 +35,12 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
 end)
 
 
-
-
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 									Automatic Erections Assigning
 -- 								  Only MrFunSize supported for now
 --
 ----------------------------------------------------------------------------------------------------
-
 
 -- TODO - yet those as we are handling the auto erections on the entity now.
 -- Add auto erections as entity var
@@ -56,7 +50,6 @@ end)
 -- Auto-Erections handling on Sex start
 -- TODO - access Scene/PairsData instead
 local sexPairs = {}
-
 
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
     local autoErections = UserSettings:GetAutoErection()
@@ -84,7 +77,6 @@ end)
 -- Auto-Erections handling on Sex ending
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
     local autoErections = UserSettings:GetAutoErection()
-
     if (autoErections == 1) and (spell == "BG3SX_StopAction") then
 
         local prevGenCaster = ""
@@ -111,15 +103,10 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
     end
 end)
 
-
-
-
 -- Auto-Erection handling for masturbating
 -- TODO - access Scene/PairsData instead
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
     local autoErections = UserSettings:GetAutoErection()
-    
-
     if (autoErections == 1) and (spell == "BG3SX_StartMasturbating") then
         -- Save previous genitals
         local casterGenital = Genital:GetCurrentGenital(caster)
@@ -130,10 +117,8 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
             Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
         end
     end
-
     if (autoErections == 1) and spell =="BG3SX_StopMasturbating" then
         local previousGenital = ""
-
         for _, masturbator in ipairs(sexPairs) do
             if masturbator.caster == caster then
                 previousGenital= sexPairs.casterGenital

@@ -66,6 +66,7 @@ ACTORHEIGHTS = {
     GnomeMale = "Short",
 }
 
+-- These two tables could be moved to AnimHeightMatching or removed entirely, need to think of a good way to handle this
 HEIGHTCLASSMATCHUPS = {
     Same = 0,
     TallAndMed = 1,
@@ -75,7 +76,6 @@ HEIGHTCLASSMATCHUPS = {
     MedAndTiny = 5,
     ShortAndTiny = 6
 }
-
 HEIGHTCLASSMATCHUPSACCURATE = {
     ["Tall"] = {
         ["Tall"] = 0,
@@ -102,4 +102,3 @@ HEIGHTCLASSMATCHUPSACCURATE = {
         ["Tiny"] = 0
     }
 }
-

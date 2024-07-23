@@ -24,6 +24,7 @@ function Sex:TerminateAllScenes()
     SAVEDSCENES = {}
 end
 
+
 -- Determines the scene type based on how many entities and penises are involved
 ---@param  scene Scene       - The scene to check
 ---@return sceneType string
@@ -57,6 +58,7 @@ end
 --------------------------------
 
 -- TODO: Add Height Check
+-- TODO: Change animation and sound handling
 -- Plays the appropriate animation and sound for a given actor based on their position in a scene.
 -- @param actor         Actor   - The actor to play an animation and sound on
 -- @param animationData table   - The chosen animations data table
@@ -79,11 +81,14 @@ local function playAnimationAndSound(actor, animationData, position)
         end
     end
 
-    Event:new("BG3SX_AnimationChange", newAnimation)
-    Event:new("BG3SX_SoundChange", newSound)
+    Ext.ModEvents.BG3SX.AnimationChange:Throw(newAnimation)
+    Ext.ModEvents.BG3SX.SoundChange:Throw(newSound)
+    --Event:new("BG3SX_AnimationChange", newAnimation)
+    --Event:new("BG3SX_SoundChange", newSound)
 end
 
 
+-- TODO: This might need to become its own class
 -- Determines which type of scene the entity is part of and assigns the appropriate animations and sounds to the actors involved
 ---@param entity         Entity  - The entity which used a new animation spell
 ---@param animationData  table   - The chosen animations data table
@@ -121,6 +126,7 @@ function Sex:PlayAnimation(entity, animationData)
 
     end
 
+    -- Prop handling
     if animationData ~= scene.currentAnimation then
         -- Since animation is not the same as before save the new animationData table to the scene to use for prop management, teleporting or rotating
         scene.currentAnimation = animationData
@@ -162,7 +168,7 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
             
             -- TODO - works for masturbation but not for sex
             for _, actor in pairs(scene.actors) do
-                print("giving erection to ", actor.parent , "`s clone ", actor.uuid)
+                _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
                 Genital:GiveErection(actor)
             end
 
@@ -180,7 +186,9 @@ function Sex:AddMainSexSpells(entity)
     if (Entity:IsPlayable(entity)
         or Osi.IsTagged(entity, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
         or Osi.IsTagged(entity, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
-        and Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
+        and (Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
+        or Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
+        or Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0)
     then
         for _, spell in pairs(MAINSEXSPELLS) do -- Configurable in Shared/Data/Spells.lua
             Osi.AddSpell(entity, spell)
@@ -239,34 +247,16 @@ function Sex:InitSexSpells(scene)
 end
 
 
--- UNUSED
---- Strips an actor of an entity
----@param scene Scene
----@param entity uuid
-function Sex:PairedSexStrip(scene, entity)
-    for _, actor in scene.actors do
-        if actor.parent == entity then
-            Osi.ApplyStatus(actor, "PASSIVE_WILDMAGIC_MAGICRETRIBUTION_DEFENDER", 1)
-            Entity:UnequipAll(actor)
-        end
-    end
-end
-
-
-
 -- Checks an uuid against the nonStripper table in EntityListeners.lua
 ---@param uuid any
 function Sex:IsStripper(uuid)
-    
     if Osi.HasActiveStatus(uuid, "BG3SX_BLOCK_STRIPPING_BOOST") == 1 then
-        print("Has status ", uuid)
+        _P("Has status ", uuid)
         return false
     else
         return true
     end 
 end
-
-
 
 
 ----------------------------------------------------------------------------------------------------
@@ -282,7 +272,7 @@ function Sex:ChangeCameraHeight(uuid)
     local entity = Ext.Entity.Get(uuid)
     local currentEntityScale = Entity:TryGetEntityValue(uuid, nil, {"GameObjectVisual", "Scale"})
 
-    -- floating point shenanigangs
+    -- Don't use integers - floating point shenanigangs
     if entity.GameObjectVisual then -- Safeguard against someone trying to create a scene with Scenery NPCs
         if currentEntityScale > 0.99 and currentEntityScale < 1.01 then
             entity.GameObjectVisual.Scale = 0.5
@@ -293,6 +283,6 @@ function Sex:ChangeCameraHeight(uuid)
         end
         entity:Replicate("GameObjectVisual")
     end
-
-    Event:new("BG3SX_CameraHeightChange", entity) -- MOD EVENT   
+    Ext.ModEvents.BG3SX.CameraHeightChange:Throw(entity)
+    --Event:new("BG3SX_CameraHeightChange", entity)  
 end

@@ -1,5 +1,6 @@
 ------------------ Preparation for HeightMatching ------------------
 -- Will probably need to be recreated for every single AnimationData entry
+-- Maybe we don't need this if we switch to IMGUI - Give 2 base animations and make people choose variants based on height manually
 ANIMHEIGHTMATCHING = {
     FALLBACK = {
         Top = "49d78660-5175-4ed2-9853-840bb58cf34a",

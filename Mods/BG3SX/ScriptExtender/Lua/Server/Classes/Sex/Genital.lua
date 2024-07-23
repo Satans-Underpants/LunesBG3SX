@@ -63,7 +63,6 @@ local function getAdditionalGenitals()
 end
 
 
-
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 									XML Handling
@@ -86,16 +85,15 @@ local function collectAllGenitals()
 	return allGenitals
 end
 
+
 local function getVanillaGenitals(TYPE, default)
     local tableToSearch = (TYPE == "PENIS" and PENIS) or (TYPE == "VULVA" and VULVA)
-
     if not tableToSearch then
 		_P("[BG3SX][Genital.lua] - getVanillaGenitals(TYPE, default) - Invalid type specified. Please use 'PENIS', 'VULVA'.")
         return {}
     end
 
     local result = {}
-
     -- Collect all genitalIDs from the selected table
     for _, entry in ipairs(tableToSearch) do
         if default and entry.name == "Default" then
@@ -104,15 +102,12 @@ local function getVanillaGenitals(TYPE, default)
             table.insert(result, entry.genitalID)
         end
     end
-
     return result
 end
 
 
 local function collectFunErections()
-
     local result = {}
-
     -- Collect all genitalIDs from the selected table
     for _, entry in ipairs(FUNERECTION) do
         table.insert(result, entry.genitalID)
@@ -124,8 +119,8 @@ end
 
 -- Get Mod Specific Genitals
 -- Mostly unfinished for now - if Norbyte implements a way to get Mod ID from genitals it can be simplified a lot
---@param            - ModName (FolderName)
----return           - list of CharacterCreationAppearaceVisual IDs genitals
+---@param modName string	- ModName (FolderName)
+---@return modGenitals		- Table of CharacterCreationAppearaceVisual IDs genitals
 local function getModGenitals(modName)
     local allGenitals = getAllGenitals()
 	local modGenitals = {}
@@ -141,7 +136,6 @@ local function getModGenitals(modName)
     end
 
     -- Failsafe for CC
-
 	local additionalGenitals = getAdditionalGenitals(allGenitals)
 	for _, genital in ipairs(additionalGenitals) do
 		table.insert(modGenitals, genital)
@@ -151,7 +145,7 @@ local function getModGenitals(modName)
 end
 
 -- All genital that are not part of "Vanilla" BG3SX
----return 			- list of CharacterCreationAppearaceVisual IDs genitals htat are not part of Vanilla or MrFunSizeErections
+---@return additionalGenitals	- Table of CharacterCreationAppearaceVisual IDs genitals htat are not part of Vanilla or MrFunSizeErections
 function getAdditionalGenitals(allGenitals)
     -- Default genitals that come with BG3SX
     local setVanilla = {
@@ -161,8 +155,8 @@ function getAdditionalGenitals(allGenitals)
         Table:ListToSet(getVanillaGenitals("PENIS", true)),
         Table:ListToSet(getFunErections())
     }
-
     local additionalGenitals = {}
+
     -- Filter allGenitals to find additional genitals
     for _, genital in ipairs(allGenitals) do
         local isUnique = true
@@ -180,6 +174,7 @@ function getAdditionalGenitals(allGenitals)
 end
 
 
+-- TODO: Check if this can be removed
 -- Get Mod that genital belongs to
 --@param  			- genital ID
 ---return 			- Name of Mod (Folder Name)
@@ -201,8 +196,8 @@ end
 -- 	if modName then
 --         for _, race in pairs(RACES) do
 -- 			if Helper:StringContains(modName, race) then
---                 print("Error: Mod name matches a race name, which suggests improper directory structure.")
--- 				print("Error: Spell will be added to \"Other Genitals\"")
+--                 _P("Error: Mod name matches a race name, which suggests improper directory structure.")
+-- 				_P("Error: Spell will be added to \"Other Genitals\"")
 --                 return "BG3SX_OtherGenitals"
 --             end
 --         end
@@ -218,13 +213,9 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
-
-
 -- Delete all spells from container "Change Genitals"
 function purgeObjectSpells()
-
     for _, spell in pairs(Ext.Stats.GetStats("SpellData")) do
-
         -- If ContainerSpells exists, the spell is a container
         if Ext.Stats.Get(spell).ContainerSpells and spell == "BG3SX_ChangeGenitals" then
             local container = Ext.Stats.Get(spell)
@@ -234,13 +225,12 @@ function purgeObjectSpells()
     end
 end
 
+
 -- TODO - this would make FunErections a requirement - can we add it directly to the mod? 
 -- Then refractor the code, instead of SimpleErections we might scan for BG3SX instead
 -- Adds base spells to Change Genitals - Vanilla Vula, Vanilla Flaccid, Erections
 function Genital:InitializeChangeGenitals()
-
 	local baseSpells = {"BG3SX_VanillaVulva", "BG3SX_VanillaFlaccid", "BG3SX_SimpleErections", "BG3SX_OtherGenitals"}
-
 	local container = Ext.Stats.Get("BG3SX_ChangeGenitals")
 
 	for _,spell in pairs(baseSpells) do 
@@ -248,7 +238,6 @@ function Genital:InitializeChangeGenitals()
 		container.ContainerSpells = spellsInContainer..";" .. spell
 		container:Sync()
 	end
-	
 end
 
 
@@ -257,23 +246,16 @@ end
 
 -- Add Genital containers - Vanilla & MrFunSize are always added
 function Genital:Initialize()
-
-
-    -- Purge all Containers (this solves a lot of issues)
-    purgeObjectSpells()
-
-	-- Initialize Genitals that are always added
-	Genital:InitializeChangeGenitals()
+    purgeObjectSpells() -- Purge all Containers (this solves a lot of issues)
+	Genital:InitializeChangeGenitals() -- Initialize Genitals that are always added
 
 	-- Default gentials that come with BG3SX
-
 	setAllGenitals(collectAllGenitals())
 	setVanillaVulvas(getVanillaGenitals("VULVA"))
 	setVanillaPenises(getVanillaGenitals("PENIS"))
 	setFunErections(collectFunErections())
 
 	local modGenitals = {}
-
 	-- Filter allGenitals to find additional genitals
 	for _, genital in ipairs(allGenitals) do
 		if not setVanillaVulvas[genital] and not setVanillaPenises[genital] and not setFunErections[genital] then
@@ -297,13 +279,10 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
-
-
 -- Return whether an race is allowed to have genitals - added by modders requests
--- @param uuis 	    - uuid of entity that will receive the genital
----return 			- True/False
+---@param uuid string	- uuid of entity that will receive the genital
+---@return bool			- True/False
 local function raceAllowedToHaveGenitals(uuid)
-
 	local race = Entity:TryGetEntityValue(uuid, nil, {"CharacterCreationStats", "Race"})
 	local name = ""	
 
@@ -318,37 +297,32 @@ local function raceAllowedToHaveGenitals(uuid)
 		if not ((name == "CatBug") or (name == "Imp") or (name == "Mephit")) then
 			return true
 		end
-		
 	else
 		-- NPC etc.
 		return true
 	end
 end
 
+
+-- TODO: Check parameters (why is spell listed for the example?)
 -- Get all allowed genitals for entity (Ex: all vulva for human)
--- @param spell		- Name of the spell by which the genitals are filtered (vulva, penis, erection)
--- @param uuis 	    - uuid of entity that will receive the genital
----return 			- List of IDs of CharacterCreationAppearaceVisuals
+---@param spell					- Name of the spell by which the genitals are filtered (vulva, penis, erection)
+---@param uuid string 	    	- uuid of entity that will receive the genital
+---@return permittedGenitals	- Table of IDs of CharacterCreationAppearaceVisuals
 local function getPermittedGenitals(uuid)
-
 	local permittedGenitals = {}
-
-	-- Get entities body
 	local allGenitals = getAllGenitals()
 
 	-- Get the properties for the character
 	local E = Helper:GetPropertyOrDefault(Ext.Entity.Get(uuid),"CharacterCreationStats", nil)
 	local bt =  Ext.Entity.Get(uuid).BodyType.BodyType
 	local bs = 0
-
 	if E then
 		bs = E.BodyShape
 	end
 
-
 	-- NPCs only have race tags
 	local raceTags = Ext.Entity.Get(uuid):GetAllComponents().ServerRaceTag.Tags
-
 	local race
 	for _, tag in pairs(raceTags) do
 		if RACETAGS[tag] then
@@ -357,21 +331,18 @@ local function getPermittedGenitals(uuid)
 		end
 	end
 
-	-- failsafe for modded races - assign human race
+	-- Failsafe for modded races - assign human race
 	-- TODO - add support for modded genitals for modded races
-
 	if not RACES[race] then
 		_P("[BG3SX][Genital.lua] You're not using a default race currently, some genitals may be misaligned.")
-		-- print(race, " is not Vanilla and does not have a Vanilla parent, " ..  
+		-- _P(race, " is not Vanilla and does not have a Vanilla parent, " ..  
 		-- " these custom races are currently not supported")
-		-- print("using default human genitals")
+		-- _P("using default human genitals")
 		race = "0eb594cb-8820-4be6-a58d-8be7a1a98fba"
 	end
 
-
 	-- Special Cases
-
-	-- specific Githzerai feature (T3 and T4 are not strong, but normal)
+	-- Specific Githzerai feature (T3 and T4 are not strong, but normal)
 	local bodyShapeOverride = false
 
 	if Table:Contains(raceTags, "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67") then
@@ -385,9 +356,7 @@ local function getPermittedGenitals(uuid)
 
 	-- get genitals with same stats
 	for _, genital in pairs(allGenitals) do
-
 		local G = Ext.StaticData.Get(genital, "CharacterCreationAppearanceVisual")
-
 		-- bodyshape overrides for modded races - TODO: find a better way to do this
 		if bodyShapeOverride then
 			bs = 0
@@ -402,15 +371,13 @@ local function getPermittedGenitals(uuid)
 end
 
 
-
-
+-- TODO: Check parameters (why does spell have 2 lines?)
 -- Get genitals filteres by used spell (ex: only vulvas, only erections)
 -- @param spell					- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 -- 								- spell Name has to be the same as Mod folder name
--- @param listOfGenitals 	    - List of genital Ids prefiltered by race/body
----return 						- List of IDs of CharacterCreationAppearaceVisuals
+---@param listOfGenitals 	    - List of genital Ids prefiltered by race/body
+---@return 						- List of IDs of CharacterCreationAppearaceVisuals
 local function getFilteredGenitals(spell, listOfGenitals)
-
 	local filteredGenitals = {}
 	local spellGenitals = {}
 
@@ -426,45 +393,37 @@ local function getFilteredGenitals(spell, listOfGenitals)
 	else
 		spellGenitals = getModGenitals(spell)
 	end
-
 	if not spellGenitals then
 		_P("[BG3SX][Genital.lua] Error, spell not configured correctly, cannot get genitals")
 		return
 	end
 
-	-- only keep genitals that are in both filtered (race/body) and Mod
+	-- Only keep genitals that are in both filtered (race/body) and Mod
     for _, genital in ipairs(listOfGenitals) do
         if Table:Contains(spellGenitals, genital) then
             table.insert(filteredGenitals, genital)
         end
     end
-
 	return filteredGenitals
 end
 
 
-
-
--- TODO - currently resets on Saveload. Make into uservariable
--- allows to cycle through a list of genitals instead of choosing a random one
+-- TODO - Currently resets on Saveload. Make into uservariable
+-- Allows to cycle through a list of genitals instead of choosing a random one
 local genitalChoice = {}
 
 -- Choose random genital from selection (Ex: random vulva from vulva a - c)
--- @param spell		- Name of the spell by which the genitals are filtered (vulva, penis, erection)
--- @param uuid 	    - uuid of entity that will receive the genital
----return 			- ID of CharacterCreationAppearaceVisual
+---@param spell				- Name of the spell by which the genitals are filtered (vulva, penis, erection)
+---@param uuid 	   			- uuid of entity that will receive the genital
+---@return selectedGenital	- ID of CharacterCreationAppearaceVisual
 function Genital:GetNextGenital(spell, uuid)
-
     local permittedGenitals = getPermittedGenitals(uuid)
     local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
 
-
 	if  not filteredGenitals then
-        -- print("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
+        -- _P("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
         return nil
-
     else
-
 		if genitalChoice.uuid == uuid and genitalChoice.spell == spell then
 			-- Increment the index, wrap around if necessary
 			genitalChoice.index = (genitalChoice.index % #filteredGenitals) + 1
@@ -475,7 +434,6 @@ function Genital:GetNextGenital(spell, uuid)
         local selectedGenital = filteredGenitals[genitalChoice.index]
         return selectedGenital
     end
-
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -485,8 +443,8 @@ end
 ----------------------------------------------------------------------------------------------------
 
 -- Get the current genital of the entity
--- @param uuid 	    - uuid of entity that has a genital
----return 			- ID of CharacterCreationAppearaceVisual
+---@param uuid 	    - uuid of entity that has a genital
+---@return 			- ID of CharacterCreationAppearaceVisual
 function Genital:GetCurrentGenital(uuid)
 	local entity = Ext.Entity.Get(uuid)
 	local allGenitals = getAllGenitals()
@@ -515,9 +473,7 @@ end
 ---@param newGenital	string	- UUID of CharacterCreationAppearaceVisual of type PrivateParts
 ---@param uuid			string	- UUID of entity that will receive the genital
 function Genital:OverrideGenital(newGenital, uuid)
-
-	print("Overriding genital")
-
+	_P("Overriding genital")
 	if raceAllowedToHaveGenitals(uuid) then
 		-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital for uuid: ", uuid)
 		local currentGenital = Genital:GetCurrentGenital(uuid)
@@ -537,27 +493,24 @@ function Genital:OverrideGenital(newGenital, uuid)
 			else
 				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital does not exist")
 			end
-			print("Adding ", newGenital)
+			_P("Adding ", newGenital)
 			Ext.Timer.WaitFor(100, function()
 				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
 				Osi.AddCustomVisualOverride(uuid, newGenital)
 			end)
 		end
-
-		-- Ext.Net.BroadcastMessage("BG3SX_GenitalChange", Ext.Json.Stringify({uuid, newGenital})) -- SE EVENT
-		-- TODO - All events have to be converted to the new SE v19 events
-		Event:new("BG3SX_GenitalChange", {uuid, newGenital}) -- MOD EVENT - Events.lua
+		Ext.ModEvents.BG3SX.GenitalChange:Throw({uuid, newGenital})
+		--Event:new("BG3SX_GenitalChange", {uuid, newGenital})
 	end
 
 end
 
 -- Add a genital to a non NPC if they do not have one (only penises)
--- @param uuid              - uuid of entity that will receive the genital
+---@param uuid string	- uuid of entity that will receive the genital
 function Genital:AddGenitalIfHasNone(uuid)
 	-- _P("[BG3SX][Genital.lua] - AddGenitalIfHasNone")
 
 	if raceAllowedToHaveGenitals(uuid) then
-
 		if (Osi.IsTagged(uuid, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
 		or Osi.IsTagged(uuid, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
 		and Osi.IsTagged(uuid, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0 then
@@ -572,54 +525,40 @@ function Genital:AddGenitalIfHasNone(uuid)
 end
 
 
-
 -- TODO - we have to remove the old genital before adding the erection
 -- Check by using horsecocks 
 
 -- in that ase we can check whether a visual is a genital by repurpisung a DOLL function
 
 -- Give an actor in the scene an erection (if they have a penis)
+---@param actor	Actor	-The actor to give an erection to
 function Genital:GiveErection(actor)
-
 	local parent = actor.parent
 	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", parent)
 	local parentEntity = Ext.Entity.Get(actor.parent)
-
 	local autoerection = Entity:TryGetEntityValue(parent, nil, {"Vars", "BG3SX_AutoErection"})
 	
 	if Entity:HasPenis(parent) and ((autoerection == nil) or (Entity.Vars.BG3SX_AutoErection)) then
-
-		print("Autoerection allowed for ", parent)
+		_P("Autoerection allowed for ", parent)
 
 		-- TODO: Learn what Types there are
 		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
 		-- For any shapeshifted parent
 		if (parentEntity.GameObjectVisual.Type == 4) then 
-
 			Ext.Timer.WaitFor(500, function()
-
 				Entity:GiveShapeshiftedVisual(actor.uuid, visual)
-		
 			end)
-		
 		-- non -shapeshifted? 	
 		else
 			-- For any non-shapeshifted parent and NPC (NPC if slightly changed)
 			-- might work for NPCs, I give them a genital slot after all - maybe their copy does not have one though
 			-- but it should be copied?
 
-
 			-- THis fails during sex but works for masturbation
 			Genital:OverrideGenital(visual, actor.uuid)
-
-			print("Adding erection to ", parent)
+			_P("Adding erection to ", parent)
 		end
 
 		-- TODO : NPC Handler
-
 	end
 end
-
-
-
-

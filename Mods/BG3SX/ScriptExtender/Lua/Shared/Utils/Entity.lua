@@ -143,8 +143,7 @@ function Entity:GetHeightClass(uuid)
             return heightclass
         end
     end
-    -- return default value if unknown (modded) bodyshape
-    -- _P("[ActorScale.lua] Failed Height check on actor: ", entityBodyShape)
+    -- Return default value if unknown (modded) bodyshape
     return "Med"
 end
 
@@ -152,7 +151,6 @@ end
 -- NPCs don't have CharacterCreationStats
 function Entity:IsNPC(uuid)
     local E = Helper:GetPropertyOrDefault(Ext.Entity.Get(uuid),"CharacterCreationStats", nil)
-
     if E then
         return false
     else
@@ -164,13 +162,13 @@ end
 -- Functions
 -------------------------------
 
---- func desc
+-- TODO: Description
 ---@param entityArg any
-local function ResolveEntityArg(entityArg)
+local function resolveEntityArg(entityArg)
     if entityArg and type(entityArg) == "string" then
         local e = Ext.Entity.Get(entityArg)
         if not e then
-            -- _P("[BG3SX.lua] ResolveEntityArg: failed resolve entity from string '" .. entityArg .. "'")
+            -- _P("[BG3SX][Entity.lua] resolveEntityArg: failed resolve entity from string '" .. entityArg .. "'")
         end
         return e
     end
@@ -188,7 +186,7 @@ function Entity:TryCopyEntityComponent(uuid_1, uuid_2, componentName)
     local trgEntity = Ext.Entity.Get(uuid_2)
 
     -- Find source component
-    srcEntity = ResolveEntityArg(srcEntity)
+    srcEntity = resolveEntityArg(srcEntity)
     if not srcEntity then
         return false
     end
@@ -198,7 +196,7 @@ function Entity:TryCopyEntityComponent(uuid_1, uuid_2, componentName)
     end
 
     -- Find dest component or create if not existing
-    trgEntity = ResolveEntityArg(trgEntity)
+    trgEntity = resolveEntityArg(trgEntity)
     if not trgEntity then
         return false
     end
@@ -233,6 +231,7 @@ function Entity:TryCopyEntityComponent(uuid_1, uuid_2, componentName)
 end
 
 
+-- TODO: Remove this old function
 -- Tries to get the value of an entities component
 ---@param uuid      string      - The entity UUID to check
 ---@param component Component   - The Component to get the value from
@@ -242,14 +241,13 @@ end
 ---@return          Value       - Returns the value of a field within a component
 ---@example
 -- local helmetIsInvisible = Entity:TryGetEntityValue(entity, "ServerCharacter", "PlayerData", "HelmetOption")
--- print(helmetIsInvisible) -- Should return either 0 or 1
+-- _P(helmetIsInvisible) -- Should return either 0 or 1
 -- Its essentially like using Ext.Entity.Get(entity).ServerCharacter.PlayerData.HelmetOption
 -- function Entity:TryGetEntityValue(uuid, component, field1, field2, field3)
 --     local entity = Ext.Entity.Get(uuid)
 --     local v, doStop
     
-
---     v = ResolveEntityArg(entity)
+--     v = resolveEntityArg(entity)
 --     if not v then
 --         return nil
 --     end
@@ -282,50 +280,39 @@ end
 -- end
 
 
-
 -- Tries to get the value of an entities component
 ---@param uuid                  string      - The entity UUID to check
 ---@param previousComponent     value       - component of previous iteration
 ---@param components            table       - Sorted list of component path
 ---@return                      Value       - Returns the value of a field within a component
 ---@example
+-- Entity:TryGetEntityValue("UUID", nil, {"ServerCharacter, "PlayerData", "HelmetOption"})
+-- nil as previousComponent on first call because it iterates over this parameter during recursion
 function Entity:TryGetEntityValue(uuid, previousComponent, components)
-
-    -- _P("prevComp ", previousComponent)
-
     local entity = Ext.Entity.Get(uuid)
-
-    -- end of recursion
-    if #components == 1 then
+    if #components == 1 then -- End of recursion
         if not previousComponent then
-            -- _P("Previous component does not exist")
             local value = Helper:GetPropertyOrDefault(entity, components[1], nil)
             return value
         else
-            -- _P("Previous component exists. Returning ", Helper:GetPropertyOrDefault(previousComponent, components[1], nil))
-            -- _P("Components was ", components[1])
-
             local value = Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
             return value
         end
     end
 
-    -- recursion
     local currentComponent
-    if not previousComponent then
+    if not previousComponent then -- Recursion
         currentComponent = Helper:GetPropertyOrDefault(entity, components[1], nil)
         -- obscure cases
         if not currentComponent then
             return nil
         end
-        -- _P("Getting value for ", uuid, " ", components[1])
-        -- _P("IF NIL THEN currentComponent ", currentComponent)
     else
         currentComponent = Helper:GetPropertyOrDefault(previousComponent, components[1], nil)
-        -- _P("ELSE (PREVIOUS EXISTS) currentComponent ", currentComponent)
     end
 
     table.remove(components, 1)
+
     -- Return the result of the recursive call
     return Entity:TryGetEntityValue(uuid, currentComponent, components)
 end

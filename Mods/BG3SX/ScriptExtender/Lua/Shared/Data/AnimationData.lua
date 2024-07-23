@@ -1,3 +1,5 @@
+-- TODO: Clean these up, maybe rename some entries to make more sense, remove unused ones
+
 -- Additional data thats included when using a spell equal to AnimName
 -- Seperated from the other table because these 2 are the start spells which are handled differently and will create a scene
 STARTSEXSPELLS = {

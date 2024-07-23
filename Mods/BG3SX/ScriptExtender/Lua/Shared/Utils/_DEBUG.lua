@@ -1,25 +1,27 @@
--- DEBUG.lua
+-- UNUSED ChatGPT stuff
+-- TODO: Create proper debug class
+
 local DEBUG = {}
 
 -- Function to print debug messages
 ---@param source    string  - The file it comes from
 ---@param message   string  - The message to print
-function DEBUG:print(source, message)
-    print("[" .. source .. "] [DEBUG] " .. tostring(message))
+function DEBUG:_P(source, message)
+    _P("[" .. source .. "] [DEBUG] " .. tostring(message))
 end
 
 -- Function to print warnings
 ---@param source    string  - The file it comes from
 ---@param message   string  - The message to print
 function DEBUG:warn(source, message)
-    print("[" .. source .. "] [WARNING] " .. tostring(message))
+    _P("[" .. source .. "] [WARNING] " .. tostring(message))
 end
 
 -- Function to print errors
 ---@param source    string  - The file it comes from
 ---@param message   string  - The message to print
 function DEBUG:error(source, message)
-    print("[" .. source .. "] [ERROR] " .. tostring(message))
+    _P("[" .. source .. "] [ERROR] " .. tostring(message))
 end
 
 -- Function to dump tables (data structures)

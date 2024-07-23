@@ -23,6 +23,7 @@ STRINGIFY_OPTIONS = {
 -- METHODS
 --------------------------------------------------------------
 
+-- TODO: Check if that even works
 -- Generates a new UUID
 function Helper:GenerateUUID()
     local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
@@ -38,9 +39,9 @@ end
 ---@example
 -- for i = 1, 10 do
 --    if isEven(i) then
---        print(i .. " is even")
+--        _P(i .. " is even")
 --    else
---        print(i .. " is odd")
+--        _P(i .. " is odd")
 --    end
 -- end
 function Helper:isEven(n)
@@ -55,8 +56,8 @@ function Helper:isOdd(n)
 end
 
 
--- Credit: Yoinked from Morbyte (Norbyte?)
---- func desc
+--Credit: Yoinked from Morbyte (Norbyte?)
+-- TODO: Description
 ---@param srcObject any
 ---@param dstObject any
 function Helper:TryToReserializeObject(srcObject, dstObject)
@@ -75,6 +76,7 @@ end
 
 
 -- Function to clean the prefix and return only the ID
+---@return string   - UUID
 function Helper:CleanPrefix(fullString)
     -- Use pattern matching to extract the ID part
     local id = fullString:match(".*_(.*)")
@@ -94,7 +96,7 @@ end
 
 
 -- Checks if the substring 'sub' is present within the string 'str'.
----@param str string 	-  The string to search within.
+---@param str string 	- The string to search within.
 ---@param sub string 	- The substring to look for.
 ---@return bool			- Returns true if 'sub' is found within 'str', otherwise returns false.
 function Helper:StringContains(str, sub)
@@ -106,10 +108,10 @@ end
 
 
 -- Retrieves the value of a specified property from an object or returns a default value if the property doesn't exist.
----@param obj           The object from which to retrieve the property value.
----@param propertyName  The name of the property to retrieve.
----@param defaultValue  The default value to return if the property is not found.
----@return              The value of the property if found; otherwise, the default value.
+---@param obj           - The object from which to retrieve the property value.
+---@param propertyName  - The name of the property to retrieve.
+---@param defaultValue  - The default value to return if the property is not found.
+---@return value        - The value of the property if found; otherwise, the default value.
 function Helper:GetPropertyOrDefault(obj, propertyName, defaultValue)
     local success, value = pcall(function() return obj[propertyName] end)
     if success then
@@ -131,15 +133,17 @@ function Helper:CreateLocationMarker(uuid)
     return Marker
 end
 
+
 -- Destroys a marker
 ---@param marker    string  - The Marker UUID to destroy 
 function Helper:DestroyMarker(marker)
     Osi.RequestDelete(marker)
 end
 
+
 -- Credit to FallenStar  https://github.com/FallenStar08/SharedCode
 -- Slightly modified version
---Returns all summons, avatars and Origins
+---@return goodies  - Table of all summons, avatars and Origins
 function Helper:GetEveryoneThatIsRelevant()
     local goodies = {}
     local avatarsDB = Osi.DB_Avatars:Get(nil)
@@ -161,14 +165,9 @@ function Helper:GetEveryoneThatIsRelevant()
     return goodies
 end
 
+
 -- Returns a table of all summons/followers
+---@return PlayerSummons    - Table of player summons
 function Helper:GetPlayerSummons()
     return Osi.DB_PlayerSummons:Get(nil)
 end
-
-
-
-
-
-
-

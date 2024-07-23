@@ -11,6 +11,7 @@ local initialize
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
+-- TODO: Check if some of these parameters can be removed/might be unused
 ---@param parent            string  - uuid of Entity that the proxy is based on
 ---@param genital           string  - Visual (UUID) of the actors genital
 ---@param autoErection      bool    - Whether auto erections are currently enabled or not
@@ -56,9 +57,9 @@ function Actor:Destroy()
     -- Osi.StopAnimation(self.uuid, 1)
     -- Osi.TeleportToPosition(self.uuid, 0,0,0) -- hide from viewer
     -- Osi.SetOnStage(self.uuid, 0) -- to disable AI
-    Osi.RequestDeleteTemporary(self.uuid)
+    Osi.RequestDeleteTemporary(self.uuid) -- Why waste time say lot word when few word to trick
 
-    -- I disabled stripping the entity/parent and only unequip the actor now
+    -- This may be needed again whenever we strip the entity again because we might have moved away from actors
     -- if Entity:HasEquipment(self.parent) then -- Requip everything which may have been removed during scene initialization
     --     Entity:Redress(self.parent, self.oldArmourSet, self.oldEquipment)
     -- end
@@ -73,9 +74,9 @@ end
 --- Gets parent entities looks including attachments like Wylls Horns
 ---@return lookTemplate string   - uuid - The looks of a parent entity
 function Actor:GetLooks()
-    local visTemplate = Entity:TryGetEntityValue(self.parent, nil, {"GameObjectVisual", "RootTemplateId"})
-    --"RootTemplateId" : "7ea87604-e604-4a6d-a7ac-b7b2f293c000"
+    --"RootTemplateId" : "7ea87604-e604-4a6d-a7ac-b7b2f293c000" -- Keep these for quick debug if Wyll ever breaks again ;_;
     --"VisualTemplate" : "3773c64c-c5a9-9baf-1b85-6bee029ee044"
+    local visTemplate = Entity:TryGetEntityValue(self.parent, nil, {"GameObjectVisual", "RootTemplateId"})
     local origTemplate = Entity:TryGetEntityValue(self.parent, nil, {"OriginalTemplate", "OriginalTemplate"})
     local looksTemplate = self.parent
 
@@ -84,29 +85,20 @@ function Actor:GetLooks()
     if visTemplate then
         if origTemplate then
             if origTemplate ~= visTemplate then
-                -- _P("CHECK 1")
-                -- _P("VisualTemplate: ", visTemplate)
-                -- _P("OriginalTempalte: ", origTemplate)
                 looksTemplate = visTemplate
             end
-        else -- It's Tav?
+        else -- Else it might be Tav
             -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
             if Osi.HasAppliedStatusOfType(self.parent, "POLYMORPHED") == 1 or self.parent.AppearanceOverride then
-                -- _P("CHECK 2")
                 looksTemplate = visTemplate
             end
         end
     end
-    -- _P("CHECK 3")
-    -- _P("Returning looksTemplate: ", looksTemplate)
     return looksTemplate
-    --return self.parent
 end
 
 
 function Actor:CopyEntityAppearanceOverrides()
-    
-
     if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
         -- Type is special Appearance Edit Enhanced thing?
         Entity:TryCopyEntityComponent(self.parent, self.uuid, "GameObjectVisual")
@@ -134,7 +126,6 @@ function Actor:TransformAppearance()
     self:CopyEntityAppearanceOverrides()
     local looksTemplate = self:GetLooks()
     Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
-
 
     -- Get Equipment
     ----------------------------------------------------------------------------
@@ -199,6 +190,7 @@ function Actor:DressActor()
             Osi.Equip(self.uuid, copiedItem)        
         end)
         
+        -- TODO: Check if this might still be needed at some point
         --local item = Osi.GetItemByTemplateInInventory(Osi.GetTemplate(itemData), self.parent)
         --if item then
         --    -- Copy the dye applied to the source item
@@ -216,51 +208,23 @@ function Actor:DressActor()
         --end
     end
 
-
-    Event:new("BG3SX_ActorDressed", {self.uuid, self.equipment})
+    Ext.ModEvents.BG3SX.ActorDressed:Throw({self.uuid, self.equipment})
+    -- Event:new("BG3SX_ActorDressed", {self.uuid, self.equipment})
 
     -- self.armour = nil
     -- self.equipment = nil
 end
 
-
--- MAIN METHODS
---------------------------------------------------------------
-
-
--- Finalizing setup function after a delay in Actor:Setup()
-local function finalizeSetup(self)
-
-    -- Support for the looks brought by Resculpt spell from "Appearance Edit Enhanced" mod.
-    if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
-        -- Type is special Appearance Edit Enhanced thing?
-        if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 2 then
-            self.uuid.GameObjectVisual.Type = 2
-            self.uuid:Replicate("GameObjectVisual")
-        end
-    end
-
-    -- Copy actor's display name to proxy (mostly for Tavs)
-    Entity:TryCopyEntityComponent(self.parent, self.uuid, "DisplayName")
-
-    -- TODO: Maybe re-enable - Disabled while testing new Osi.Transform rule to see if we can trim this
-    ---------------------------------------------------
-    -- TODO: Currently parent entitiy never gets stripped if they don't have the block enabled
-    -- Copy and dress actor like the parent entity
-    -- self:CopyEquipmentFromParent()
-    -- if Osi.HasActiveStatus(self.parent, "BG3SX_StrippingBlock") == 0 then
-    --     Effect:Trigger(self.parent, "DARK_JUSTICIAR_VFX")
-    -- end
-    -- if self.equipment then
-    --     self:DressActor()
-    -- end
-
-    Event:new("BG3SX_ActorCreated", self)
-end
+----------------------------------------------------------------------------------------------------
+-- 
+-- 									 Actor initilization
+-- 
+----------------------------------------------------------------------------------------------------
 
 -- Set ups the actor like  detaching them from the group etc.
 initialize = function(self)
-    Event:new("BG3SX_ActorInit", self) -- MOD EVENT - Events.
+    Ext.ModEvents.BG3SX.ActorInit:Throw(self)
+    --Event:new("BG3SX_ActorInit", self)
     
     Osi.SetDetached(self.uuid, 1)
     Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1) -- Gives them facial animations
@@ -281,10 +245,6 @@ initialize = function(self)
 
     Entity:CopyDisplayName(self.parent, self.uuid) -- Keep since shapeshiftrule doesn't actually handle this correctly
     
-    Event:new("BG3SX_ActorCreated", self)
-    
-    -- Re-enable finalizeSetup(self) with a delay if it creates problems
-    -------------------------------------
-    -- Ext.Timer.WaitFor(200, finalizeSetup(self))
-    -------------------------------------
+    Ext.ModEvents.BG3SX.ActorCreated:Throw(self)
+    --Event:new("BG3SX_ActorCreated", self)
 end

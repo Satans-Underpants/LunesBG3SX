@@ -24,7 +24,6 @@ function Animation:new(actor, animationData, animation)
     return instance
 end
 
-
 ----------------------------------------------------------------------------------------------------
 -- 
 --                                             Start 
@@ -45,10 +44,3 @@ playAnimation = function(self)
 
     -- _P("[BG3SX][Animation.lua] - Animation:new() - playAnimation - Begin to play ", self.animation, " on ", self.actor.uuid)
 end
-
-
-----------------------------------------------------------------------------------------------------
--- 
---                                              End
--- 
-----------------------------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ ADDITIONALSEXACTIONS = {
     "BG3SX_SwitchPlaces",
     "BG3SX_ChangeSceneLocation",
     "BG3SX_ChangeCameraHeight",
-    "BG3SX_RotateScene", -- Reentable whenever this POS actually works
+    "BG3SX_RotateScene",
 }  
 
 -- Every possible spell you could have during a scene which needs to be removed on Scene:Destroy()

@@ -18,7 +18,6 @@ local allVariables = {
     ["autoErection"] = 1
 }
 
-
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 			                        	Getters/Setters
@@ -48,7 +47,7 @@ end
 
 ----------------------------------------------------------------------------------------------------
 -- 
--- 			                        JSON TEMPLATE
+-- 			                           JSON TEMPLATE
 -- 
 ----------------------------------------------------------------------------------------------------
 
@@ -100,7 +99,6 @@ end
 
 -- TODO - move to UI 
 
-
 -- Save user settings when they are changed
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(_, spell, spellType, _, _) 
     -- TODO - call save - check if it's a setting (container)
@@ -112,19 +110,14 @@ Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_,_)
     -- loadSettings()
 end)
 
-
-
-
--- Stollen from Fallen Mark books as read
+------------------------------------------------------
+-- Yoinked from Fallens "Mark books as read"
 -- TODO - look trough when not hungry anymore
-
 
 local CONFIG = {
     data = {},
     path = filename
 }
-
-
 
 -- -- Load configuration from the file or initialize with default values
 -- function CONFIG:load()
@@ -153,7 +146,7 @@ local CONFIG = {
 --     if self.__configChanged then
 --         JSON.LuaTableToFile(self.data, self.path)
 --         self.__configChanged = false  -- Reset change flag after saving
---         BasicPrint("Config saved to " .. self.path)  -- Log message confirming save
+--         Basic_P("Config saved to " .. self.path)  -- Log message confirming save
 --     end
 -- end
 
@@ -165,25 +158,5 @@ local CONFIG = {
 
 -- -- Initialize the configuration on script execution
 -- CONFIG:init()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 -- TODO - Subscribe to Event Handlers

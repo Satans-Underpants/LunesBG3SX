@@ -1,3 +1,4 @@
+-- Possible slots to iterate over during dressing/undressing
 EQ_SLOTS = {
     --Equipment
     "Boots",
