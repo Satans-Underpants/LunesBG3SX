@@ -282,7 +282,7 @@ end
 -- Return whether an race is allowed to have genitals - added by modders requests
 ---@param uuid string	- uuid of entity that will receive the genital
 ---@return bool			- True/False
-local function raceAllowedToHaveGenitals(uuid)
+function Genital:RaceAllowedToHaveGenitals(uuid)
 	local race = Entity:TryGetEntityValue(uuid, nil, {"CharacterCreationStats", "Race"})
 	local name = ""	
 
@@ -375,8 +375,8 @@ end
 -- Get genitals filteres by used spell (ex: only vulvas, only erections)
 -- @param spell					- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 -- 								- spell Name has to be the same as Mod folder name
----@param listOfGenitals 	    - List of genital Ids prefiltered by race/body
----@return 						- List of IDs of CharacterCreationAppearaceVisuals
+---@param listOfGenitals 	    - List of genital UUIDs prefiltered by race/body
+---@return filteredGenitals		- List of UUIDs of CharacterCreationAppearaceVisuals
 local function getFilteredGenitals(spell, listOfGenitals)
 	local filteredGenitals = {}
 	local spellGenitals = {}
@@ -414,8 +414,8 @@ local genitalChoice = {}
 
 -- Choose random genital from selection (Ex: random vulva from vulva a - c)
 ---@param spell				- Name of the spell by which the genitals are filtered (vulva, penis, erection)
----@param uuid 	   			- uuid of entity that will receive the genital
----@return selectedGenital	- ID of CharacterCreationAppearaceVisual
+---@param uuid 	   			- UUID of entity that will receive the genital
+---@return selectedGenital	- UUID of CharacterCreationAppearaceVisual
 function Genital:GetNextGenital(spell, uuid)
     local permittedGenitals = getPermittedGenitals(uuid)
     local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
@@ -443,8 +443,8 @@ end
 ----------------------------------------------------------------------------------------------------
 
 -- Get the current genital of the entity
----@param uuid 	    - uuid of entity that has a genital
----@return 			- ID of CharacterCreationAppearaceVisual
+---@param uuid	string 	    - UUID of entity that has a genital
+---@return visual 			- UUID of CharacterCreationAppearaceVisual
 function Genital:GetCurrentGenital(uuid)
 	local entity = Ext.Entity.Get(uuid)
 	local allGenitals = getAllGenitals()
@@ -474,17 +474,21 @@ end
 ---@param uuid			string	- UUID of entity that will receive the genital
 function Genital:OverrideGenital(newGenital, uuid)
 	_P("Overriding genital")
-	if raceAllowedToHaveGenitals(uuid) then
+	if Genital:RaceAllowedToHaveGenitals(uuid) then
+		local entity = Ext.Entity.Get(uuid)
+		if (not entity.AppearanceOverride) then -- Usually this component doesn't exist on companions. AAE creates one too
+			_P("AppearanceOverride created")
+			entity:CreateComponent("AppearanceOverride") -- Maybe subscribe to entity components changing instead of using timers
+			_P("AppearanceOverride Dump Test 1:")
+			_D(entity.AppearanceOverride)
+		end
+		_P("Adding Genital to Entity: ", entity)
 		-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital for uuid: ", uuid)
 		local currentGenital = Genital:GetCurrentGenital(uuid)
+		_P("----currentGenital----")
+		_P(currentGenital)
+		_P("----------------------")
 		-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital = ", currentGenital)
-
-		-- Origins don't have genitals - We have to add one before we can remove it
-		-- if currentGenital and not (currentGenital == newGenital) then
-		-- 	-- Note: This is not a typo, It's actually called Ovirride
-		-- 	Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
-		-- end
-
 		if newGenital then
 			-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - newGenital exists = ", newGenital)
 			if currentGenital then
@@ -493,12 +497,22 @@ function Genital:OverrideGenital(newGenital, uuid)
 			else
 				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - currentGenital does not exist")
 			end
-			_P("Adding ", newGenital)
+			_P("Adding newGenital", newGenital)
 			Ext.Timer.WaitFor(100, function()
 				-- _P("[BG3SX][Genital.lua] - Genital:OverrideGenital - Timer triggered for AddCustomVisualOverrider")
 				Osi.AddCustomVisualOverride(uuid, newGenital)
 			end)
 		end
+		_P("AppearanceOverride Dump Test 2:")
+		_D(entity.AppearanceOverride)
+		local entityPreviousType = entity.GameObjectVisual.Type
+		entity:Replicate("AppearanceOverride")
+		Entity:SetGameObjectVisualType(entity, 2)
+
+		-- Ext.Timer.WaitFor(500, function() entity:Replicate("GameObjectVisual") end)
+
+		-- Entity:SetGameObjectVisualType(entity, entityPreviousType)
+
 		Ext.ModEvents.BG3SX.GenitalChange:Throw({uuid, newGenital})
 		--Event:new("BG3SX_GenitalChange", {uuid, newGenital})
 	end
@@ -506,11 +520,11 @@ function Genital:OverrideGenital(newGenital, uuid)
 end
 
 -- Add a genital to a non NPC if they do not have one (only penises)
----@param uuid string	- uuid of entity that will receive the genital
+---@param uuid	string	- uuid of entity that will receive the genital
 function Genital:AddGenitalIfHasNone(uuid)
 	-- _P("[BG3SX][Genital.lua] - AddGenitalIfHasNone")
 
-	if raceAllowedToHaveGenitals(uuid) then
+	if Genital:RaceAllowedToHaveGenitals(uuid) then
 		if (Osi.IsTagged(uuid, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
 		or Osi.IsTagged(uuid, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
 		and Osi.IsTagged(uuid, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0 then
@@ -530,36 +544,111 @@ end
 
 -- in that ase we can check whether a visual is a genital by repurpisung a DOLL function
 
--- Give an actor in the scene an erection (if they have a penis)
----@param actor	Actor	-The actor to give an erection to
-function Genital:GiveErection(actor)
-	local parent = actor.parent
-	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", parent)
-	_P("penis ", visual)
-	local parentEntity = Ext.Entity.Get(actor.parent)
-	local autoerection = Entity:TryGetEntityValue(parent, nil, {"Vars", "BG3SX_AutoErection"})
+-- -- Give an actor in the scene an erection (if they have a penis)
+-- ---@param actor	Actor	-The actor to give an erection to.
+-- function Genital:GiveErection(actor)
+-- 	local parent = actor.parent
+-- 	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", parent)
+-- 	_P("penis ", visual)
+-- 	local parentEntity = Ext.Entity.Get(actor.parent)
+-- 	local autoerection = Entity:TryGetEntityValue(parent, nil, {"Vars", "BG3SX_AutoErection"})
 	
-	if Entity:HasPenis(parent) and ((autoerection == nil) or (Entity.Vars.BG3SX_AutoErection)) then
-		_P("Autoerection allowed for ", parent)
+-- 	if Entity:HasPenis(parent) and ((autoerection == nil) or (parentEntity.Vars.BG3SX_AutoErection)) then
+-- 		_P("Autoerection allowed for ", parent)
 
-		-- TODO: Learn what Types there are
-		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
-		-- For any shapeshifted parent
-		if (parentEntity.GameObjectVisual.Type == 4) then 
-			Ext.Timer.WaitFor(200, function()
-				Entity:GiveShapeshiftedVisual(actor.uuid, visual)
-			end)
-		-- non -shapeshifted? 	
-		--else
-			--  For any non-shapeshifted parent and NPC (NPC if slightly changed)
-		    --	might work for NPCs, I give them a genital slot after all - maybe their copy does not have one though
-		    --	but it should be copied?
+-- 		-- TODO: Learn what Types there are
+-- 		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
+-- 		-- For any shapeshifted parent
+-- 		if (parentEntity.GameObjectVisual.Type == 4) then 
+-- 			Ext.Timer.WaitFor(200, function()
+-- 				_P("-------------------------------TEST 3----------------------")
+-- 				Entity:SwitchShapeshiftedVisual(actor.uuid, visual, "Private Parts")
+-- 			end)
+-- 		-- non -shapeshifted? 	
+-- 		else
+-- 			--  For any non-shapeshifted parent and NPC (NPC if slightly changed)
+-- 		    --	might work for NPCs, I give them a genital slot after all - maybe their copy does not have one though
+-- 		    --	but it should be copied?
 
-			--THis fails during sex but works for masturbation
-			--Genital:OverrideGenital(visual, actor.uuid)
-			--_P("Adding erection to ", actor.uuid)
-		end
 
+-- 			--THis fails during sex but works for masturbation
+-- 			_P("-------------------------------TEST 4----------------------")
+-- 			Genital:OverrideGenital(visual, actor.uuid)
+-- 		end
+
+-- 		-- TODO : NPC Handler
+-- 	end
+-- end
+-- -- Give a character  an erection (if they have a penis)
+-- ---@param character	string	-The actor to give an erection to.
+-- function Genital:GiveErectionToCharacter(character)
+
+-- 	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", character)
+-- 	local entity = Ext.Entity.Get(character)
+-- 	_P("penis ", visual)
+-- 	local autoerection = Entity:TryGetEntityValue(character, nil, {"Vars", "BG3SX_AutoErection"})
+	
+-- 	if Entity:HasPenis(character) and ((autoerection == nil) or (entity.Vars.BG3SX_AutoErection)) then
+-- 		_P("Autoerection allowed for ", character)
+
+-- 		-- TODO: Learn what Types there are
+-- 		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
+-- 		-- For any shapeshifted parent
+-- 		if (entity.GameObjectVisual.Type == 4) then 
+-- 			Ext.Timer.WaitFor(200, function()
+-- 				_P("-------------------------------TEST----------------------")
+-- 				Entity:SwitchShapeshiftedVisual(character, visual, "Private Parts")
+-- 			end)
+-- 		-- non -shapeshifted? 	
+-- 		else
+-- 			--  For any non-shapeshifted parent and NPC (NPC if slightly changed)
+-- 		    --	might work for NPCs, I give them a genital slot after all - maybe their copy does not have one though
+-- 		    --	but it should be copied?
+
+-- 			--THis fails during sex but works for masturbation
+-- 			_P("-------------------------------TEST 2----------------------")
+-- 			Genital:OverrideGenital(visual, character)
+-- 			--_P("Adding erection to ", actor.uuid)
+-- 		end
+
+-- 		-- TODO : NPC Handler
+-- 	end
+-- end
+
+
+-- Gives a chosen object/character/Actor an erection
+---@param obj	any	- Generic character or Actor class
+function Genital:GiveErections(obj)
+	_P("-------------------------------------------------GiveErection-------------------------------------------------")
+	local erectionReciever
+	local newVisualGetter
+	local newVisual
+	local entity
+	local penisChecker
+	local autoerectionStatus
+	if obj.uuid then -- Check if Actor by asking for actor.uuid
+		erectionReciever = obj.uuid
+		newVisualGetter = obj.parent
+		newVisual = Genital:GetNextGenital("BG3SX_SimpleErections", newVisualGetter)
+		entity = Ext.Entity.Get(obj.parent)
+		penisChecker = obj.parent
+		autoerectionStatus = Entity:TryGetEntityValue(obj.parent, nil, {"Vars", "BG3SX_AutoErection"})
+	else
+		erectionReciever = obj
+		newVisualGetter = obj
+		newVisual = Genital:GetNextGenital("BG3SX_SimpleErections", newVisualGetter)
+		entity = Ext.Entity.Get(obj)
+		penisChecker = obj
+		autoerectionStatus = Entity:TryGetEntityValue(obj, nil, {"Vars", "BG3SX_AutoErection"})
+	end
+
+	-- local previousEntityType = entity.GameObjectVisual.Type
+	if Entity:HasPenis(penisChecker) and ((autoerectionStatus == nil) or (entity.Vars.BG3SX_AutoErection)) then
+		_P("Autoerection allowed for ", penisChecker)
+		Entity:SwitchVisual(erectionReciever, newVisual, "Private Parts")
 		-- TODO : NPC Handler
 	end
+	-- local recieverEntity = Ext.Entity.Get(erectionReciever)
+	-- _P("GIVING BACK TYPE: ", previousEntityType, " TO: ", recieverEntity)
+	-- Entity:SetGameObjectVisualType(recieverEntity, previousEntityType)
 end

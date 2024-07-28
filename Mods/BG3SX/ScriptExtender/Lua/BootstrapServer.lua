@@ -24,8 +24,10 @@ Ext.Require("Shared/Data/SceneTypes.lua")
 -- Initialize Utilities
 Ext.Require("Shared/Utils/Math.lua")
 Ext.Require("Shared/Utils/Table.lua")
+Ext.Require("Shared/Utils/Visual.lua")
 Ext.Require("Shared/Utils/Entity.lua")
 Ext.Require("Shared/Utils/Helper.lua")
+
 -- Ext.Require("Utils/UIHelper.lua") - [NYI]
 
 -- Sex

@@ -147,7 +147,6 @@ end
 ---@param targets           table   - The targets UUIDs
 ---@param animationData     table   - The animation data to use
 function Sex:StartSexSpellUsed(caster, targets, animationData)
-    local scene
     if animationData then
         -- _P("----------------------------- [BG3SX][Sex.lua] - Creating new scene -----------------------------")
         local sexHavers = {caster}
@@ -160,21 +159,24 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
 
         for _,involved in pairs(sexHavers) do
             Effect:Fade(involved, 666)
+            -- Genital:GiveErectionToCharacter(involved)
+            -- Entity:Check(involved, "All")
+            -- Genital:GiveErections(involved)
+            -- Entity:Check(involved, "All")
         end
 
         -- Delay the rest as well, since scene initilization is delayed for 1 second to avoid user seeing behind the scenes stuff
         local function haveSex()
-            scene = Scene:new(sexHavers)
+            local scene = Scene:new(sexHavers)
             
             -- TODO - works for masturbation but not for sex
             for _, actor in pairs(scene.actors) do
                 _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
-                Genital:GiveErection(actor)
+                -- Genital:GiveErection(actor)
+                Genital:GiveErections(actor)
                 --print("visuals ")
                 --_D(Ext.Entity.Get(actor.uuid).AppearanceOverride.Visual.Visuals)
             end
-
-            
 
             Sex:InitSexSpells(scene)
             Sex:PlayAnimation(caster, animationData)

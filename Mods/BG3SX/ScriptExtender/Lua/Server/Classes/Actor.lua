@@ -102,15 +102,17 @@ function Actor:CopyEntityAppearanceOverrides()
     if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
         -- Type is special Appearance Edit Enhanced thing?
         Entity:TryCopyEntityComponent(self.parent, self.uuid, "GameObjectVisual")
-        if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 2 then
-            self.uuid.GameObjectVisual.Type = 2
-            self.uuid:Replicate("GameObjectVisual")
-        elseif not self.uuid.GameObjectVisual then
+        local actorEntity = Ext.Entity.Get(self.uuid)
+        if actorEntity.GameObjectVisual and actorEntity.GameObjectVisual.Type ~= 2 then
+            _P("For ActorEntity")
+            Entity:SetGameObjectVisualType(actorEntity, 2)
+        elseif not actorEntity.GameObjectVisual then
             _P("[BG3SX][Actor.lua] Trying to create Actor for entity without GameObjectVisual Component.")
             _P("[BG3SX][Actor.lua] This can happen with some scenery NPC's.")
             _P("[BG3SX][Actor.lua] Safeguards have been put in place, nothing will break. Please end the Scene and choose another target.")
         end
     end
+    -- Entity:TryCopyEntityComponent(self.parent, self.uuid, "CharacterCreationTemplateOverride") -- Doesn't do anything for us
 end
 
 
@@ -227,7 +229,7 @@ initialize = function(self)
     --Event:new("BG3SX_ActorInit", self)
     
     Osi.SetDetached(self.uuid, 1)
-    Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1) -- Gives them facial animations
+    Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1) -- Gives them facial animations -- TODO: Rename
     Entity:ToggleWalkThrough(self.uuid)
     -- Entity:ToggleMovement(self.uuid) -- TODO: fix this
     Osi.AddBoosts(self.uuid, "ActionResourceBlock(Movement)", "", "")

@@ -231,7 +231,7 @@ function Entity:TryCopyEntityComponent(uuid_1, uuid_2, componentName)
 end
 
 
--- TODO: Remove this old function
+-- TODO: Remove this old function if we don't need this anymore -- Is it in Table.lua now?
 -- Tries to get the value of an entities component
 ---@param uuid      string      - The entity UUID to check
 ---@param component Component   - The Component to get the value from
@@ -581,56 +581,248 @@ local function getAllowedAnimations(character)
 end
 
 
+--- Checks if specific components on an entity exist or "All" of a specific list and dumps them
+---@param uuid string   - The entity to check
+---@param comp string   - The component name to check if it exists and dump
+function Entity:Check(uuid, comp)
+    local entity = Ext.Entity.Get(uuid)
+    _P("------------------------Details Check------------------------")
+    _P("------- Of ", uuid, " -------")
 
-
--- gives shapeshifted entity a visual (like CCAV)
--- character string - UUID
--- visual string    - UUID
-function Entity:GiveShapeshiftedVisual(character, visual)
-
-    
-    entity = Ext.Entity.Get(character)        
-
-    -- usually this component never exists. AAE creates one too
-    if (not Entity.AppearanceOverride) then
-        entity:CreateComponent("AppearanceOverride") -- instead iof timers subscribe to entity component
-    end
-        
-    visuals = {}
-    -- Eralyne figured out that type has to be 2 for changes to be visible.
-    -- We do not know why
-    entity.GameObjectVisual.Type = 2
-
-    _P("Overriding visuals of ", character)
-
-    for _, entry in pairs(entity.AppearanceOverride.Visual.Visuals) do
-        _P("inserting ", visual)
-        table.insert(visuals,entry)
+    if comp == "CharacterCreationAppearance" or comp == "All" then
+        _P("CharacterCreationAppearance")
+        if entity.CharacterCreationAppearance then
+            _D(entity.CharacterCreationAppearance.Visuals)
+        end
     end
 
+    if comp == "GameObjectVisual" or comp == "All" then
+        _P("GameObjectVisual")
+        if entity.GameObjectVisual then
+            _D(entity.GameObjectVisual)
+        end
+    end
 
+    if comp == "AppearanceOverride" or comp == "All" then
+        _P("AppearanceOverride")
+        if entity.AppearanceOverride then
+            _D(entity.AppearanceOverride.Visual)
+        end
+    end
 
-    visuals = {visual}
-
-
-    _P("visuals to be added ")
-    _D(visuals)
-
-
-
-    _P("Visuals before adding")
-    _D(entity.AppearanceOverride.Visual.Visuals)
-
-   
-    table.insert(visuals, visual)
-    entity.AppearanceOverride.Visual.Visuals = visuals
-    entity:Replicate("AppearanceOverride")
-    entity:Replicate("GameObjectVisual") 
-
-    _P("Visuals after adding")
-    _D(entity.AppearanceOverride.Visual.Visuals)
-
-
-    
+    if comp == "CharacterCreationTemplateOverride" or comp == "All" then
+        _P("CharacterCreationTemplateOverride")
+        if entity.CharacterCreationTemplateOverride then
+            _D(entity.CharacterCreationTemplateOverride)
+        end
+    end
+    _P("------------------------Details End------------------------")
 end
 
+
+--- Dumps Visual-Relevant Components of an entity
+---@param entity Entity
+function Entity:DumpVisuals(entity)
+    if entity.CharacterCreationAppearance then
+        _P("[Entity.lua] DumpVisuals - CharacterCreationAppearance Dump:")
+        _D(entity.CharacterCreationAppearance.Visuals)
+    elseif entity.AppearanceOverride then
+        _P("[Entity.lua] DumpVisuals - AppearanceOverride Dump:")
+        _D(entity.AppearanceOverride.Visual.Visuals)
+    elseif entity.CharacterCreationAppearance and entity.AppearanceOverride then
+        _P("[Entity.lua] DumpVisuals - Entity has BOTH CharacterCreationAppearance AND AppearanceOverride")
+    elseif not entity.CharacterCreationAppearance and not entity.AppearanceOverride then
+        _P("[Entity.lua] DumpVisuals - Entity has NEITHER CharacterCreationAppearance OR AppearanceOverride")
+    else
+        _P("[Entity.lua] DumpVisuals - Edgecase")
+    end
+end
+
+
+-- Gives an entity a visual (like CCAV)
+---@param character string  - UUID
+---@param visual    string  - UUID
+function Entity:GiveShapeshiftedVisual(character, visual)
+    local entity = Ext.Entity.Get(character)        
+    
+    if (not entity.AppearanceOverride) then -- Usually this component doesn't exist on companions. AAE creates one too
+        entity:CreateComponent("AppearanceOverride") -- Maybe subscribe to entity components changing instead of using timers
+    end
+        
+    local visuals = {}
+    for _, entry in pairs(entity.AppearanceOverride.Visual.Visuals) do
+        table.insert(visuals,entry) -- If AppearanceOverride existed before it may already have some entries
+    end  
+    table.insert(visuals, visual) -- Add the one we want
+    entity.AppearanceOverride.Visual.Visuals = visuals
+
+    -- Eralyne figured out that type has to be 2 for changes to be visible.
+    -- We do not know why
+    -- local entityPreviousType = entity.GameObjectVisual.Type
+    Entity:SetGameObjectVisualType(entity, 2)
+    entity:Replicate("AppearanceOverride")
+    
+    -- Ext.Timer.WaitFor(3000, function() entity:Replicate("GameObjectVisual") end)
+    -- Entity:SetGameObjectVisualType(entity, entityPreviousType)
+    
+    -- set type to 4 again since else it could screw with all kinds of stuff
+    --entity.GameObjectVisual.Type = 4
+end
+
+
+-- Deletes a visual based on a type we are looking for
+---@param character string  - UUID
+---@param visual    string  - UUID
+---@param type      string  - name (ex: Private Parts)
+function Entity:DeleteCurrentVisualOfType(character, visual, type)
+    local visualType = Visual:getType(visual) -- visualType = CCAV or CCSV
+    print("Debug: visualType = " .. tostring(visualType))
+    local entity = Ext.Entity.Get(character)
+
+    -- all visuals except for the one to be removed
+    local allowedVisuals= {}
+    if entity.AppearanceOverride then
+    -- if appearanceOverride then
+        for _, currentVisual in pairs(entity.AppearanceOverride.Visual.Visuals) do
+            print("Debug: currentVisual = " .. tostring(currentVisual))
+
+            local contents = Ext.StaticData.Get(currentVisual, visualType)
+            print("Debug: contents = " .. tostring(contents))
+
+            local slotName = contents.SlotName
+            print("Debug: slotName = " .. tostring(slotName))
+
+            if slotName and slotName ~= type then -- Only add 
+                table.insert(allowedVisuals, visual)
+                print("Debug: added visual to allowedVisuals = " .. tostring(visual))
+            end
+        end
+        print("Debug: allowedVisuals = " .. tostring(allowedVisuals))
+        entity.AppearanceOverride.Visual.Visuals = allowedVisuals
+        print("Debug: updated entity.AppearanceOverride.Visual.Visuals = " .. tostring(entity.AppearanceOverride.Visual.Visuals))
+    end
+    
+    local previousEntityType = entity.GameObjectVisual.Type
+    Entity:SetGameObjectVisualType(entity, 2)
+    entity:Replicate("AppearanceOverride")
+    -- Ext.Timer.WaitFor(500, function() entity:Replicate("GameObjectVisual") end)
+    -- Entity:SetGameObjectVisualType(entity, previousEntityType)
+end
+
+
+-- Gives shapeshifted entity a visual (like CCAV) and 
+-- Deletes any other visuals of the same type (ex: type = private parts)
+-- Replicates edited components -- TODO: Remove replication from the other functions or this one
+---@param character string  - UUID
+---@param visual    string  - UUID
+---@param type      string  - name (ex: Private Parts)
+function Entity:SwitchShapeshiftedVisual(character, visual, type)
+    local entity = Ext.Entity.Get(character)
+    Entity:DeleteCurrentVisualOfType(character, visual, type)
+    Entity:GiveShapeshiftedVisual(character, visual)
+    entity:Replicate("AppearanceOverride")
+    entity:Replicate("GameObjectVisual")
+    print("Debug: called Entity:GiveShapeshiftedVisual with character = " .. tostring(character) .. " and visual = " .. tostring(visual))
+end
+
+
+-- Remove/Add Allowed visual and override - all in one function to only need to call entity:Replicate for each component once
+---@param character string  - UUID
+---@param visual    string  - UUID
+---@param type      string  - name (ex: Private Parts)
+function Entity:OverrideVisualOfType(uuid, newVisual, type)
+    local entity = Ext.Entity.Get(uuid)     
+    local visualType = Visual:getType(newVisual) -- visualType = CCAV or CCSV
+    print("Debug: visualType = " .. tostring(visualType))   
+    Entity:SetGameObjectVisualType(entity, 2) -- Set to 2 in case its not of Actor class
+    if (not entity.AppearanceOverride) then -- Usually this component doesn't exist on companions. AAE creates one too
+        entity:CreateComponent("AppearanceOverride") -- Maybe subscribe to entity components changing instead of using timers
+    end 
+
+    -- Keep all visuals except for one of the same type we want to add
+    local allowedVisuals= {}
+    for _, currentVisual in pairs(entity.AppearanceOverride.Visual.Visuals) do
+        print("Debug: currentVisual = " .. tostring(currentVisual))
+
+        local contents = Ext.StaticData.Get(currentVisual, visualType)
+        print("Debug: contents = " .. tostring(contents))
+
+        local slotName = contents.SlotName
+        print("Debug: slotName = " .. tostring(slotName))
+
+        if slotName and slotName ~= type then -- Only add 
+            table.insert(allowedVisuals, newVisual)
+            print("Debug: added visual to allowedVisuals = " .. tostring(newVisual))
+        end
+    end
+    print("Debug: allowedVisuals = " .. tostring(allowedVisuals))
+    entity.AppearanceOverride.Visual.Visuals = allowedVisuals
+    _D(entity.AppearanceOverride.Visual.Visuals)
+    print("Debug: updated entity.AppearanceOverride.Visual.Visuals = " .. tostring(entity.AppearanceOverride.Visual.Visuals))
+    
+    if type == "Private Parts" then
+
+        _P("Overriding genital for entity: ", entity)
+        if Genital:RaceAllowedToHaveGenitals(uuid) then
+            local currentGenital = Genital:GetCurrentGenital(uuid)
+            if newVisual then
+                if currentGenital then
+                    Osi.RemoveCustomVisualOvirride(uuid, currentGenital) 
+                else
+                    _P("[BG3SX][Entity.lua] - Entity:OverrideVisualOfType - currentGenital does not exist")
+                end
+                _P("Adding newGenital", newVisual)
+                -- Ext.Timer.WaitFor(100, function()
+                    Osi.AddCustomVisualOverride(uuid, newVisual)
+                -- end)
+                end            
+            Ext.ModEvents.BG3SX.GenitalChange:Throw({uuid, newVisual})
+        end
+    end
+    entity:Replicate("AppearanceOverride")
+    entity:Replicate("GameObjectVisual")
+end
+
+
+-- Decides which function to call based on a characters uuid -> entity.GameObjectVisual.Type
+---@param character string  - UUID
+---@param visual    string  - UUID
+---@param type      string  - name (ex: Private Parts)
+function Entity:SwitchVisual(character, visual, type)
+    -- I HATE SHAPESHIFTED VISUALS -- I HATE SHAPESHIFTED VISUALS -- I HATE SHAPESHIFTED VISUALS -- I HATE SHAPESHIFTED VISUALS -- I HATE SHAPESHIFTED VISUALS -- I HATE SHAPESHIFTED VISUALS -- I HATE SHAPESHIFTED VISUALS -- 
+    local entity = Ext.Entity.Get(character)
+
+    -- TODO: Learn what Types there are
+    -- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
+
+    if (entity.GameObjectVisual.Type == 4) then -- Wyll is type 4 and we don't know who else
+        _P("-------------------------------TYPE 4-------------------------------")
+        -- Entity:OverrideVisualOfType(character, visual, type) -- Skizfunction - Please test me
+        Entity:SwitchShapeshiftedVisual(character, visual, type)
+    else -- non -shapeshifted? 
+        --  For any non-shapeshifted parent and NPC (NPC if slightly changed)
+        --	Might work for NPCs - Check them later
+
+        _P("-------------------------------NOT TYPE 4-------------------------------")
+        if type == "Private Parts" then
+            _P("Visual = Private Parts")
+            -- Entity:OverrideVisualOfType(character, visual, type) -- Skizfunction - Please test me
+            Genital:OverrideGenital(visual, character)
+        else
+            _P("Visual = Something Else")
+            -- Entity:OverrideVisualOfType(character, visual, type) -- Skizfunction - Please test me
+            Entity:SwitchShapeshiftedVisual(character, visual, type)
+        end
+    end
+end
+
+
+-- Switches an entities GameobjectVisual.Type and replicates the component
+---@param entity    any - The entity to switch type for
+---@param type      int - Known types we know exist are: 0-4
+function Entity:SetGameObjectVisualType(entity, type)
+    _P("Set GameobjectVisual.Type from: ", entity.GameObjectVisual.Type)
+    entity.GameObjectVisual.Type = type
+    _P("To: ", entity.GameObjectVisual.Type)
+    entity:Replicate("GameObjectVisual")
+end
