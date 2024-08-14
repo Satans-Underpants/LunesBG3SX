@@ -589,14 +589,14 @@ end
 function Entity:GiveShapeshiftedVisual(character, visual)
 
     
-    entity = Ext.Entity.Get(character)        
+    local entity = Ext.Entity.Get(character)        
 
     -- usually this component never exists. AAE creates one too
     if (not Entity.AppearanceOverride) then
         entity:CreateComponent("AppearanceOverride") -- instead iof timers subscribe to entity component
     end
         
-    visuals = {}
+    local visuals = {}
     -- Eralyne figured out that type has to be 2 for changes to be visible.
     -- We do not know why
     entity.GameObjectVisual.Type = 2
@@ -630,7 +630,11 @@ function Entity:GiveShapeshiftedVisual(character, visual)
     _P("Visuals after adding")
     _D(entity.AppearanceOverride.Visual.Visuals)
 
-
+    -- revert to originial type to prevent weird things from happening
+    -- Timer necessary because else the visual change doesn't show if we revert to 4 too fast. 
+    Ext.Timer.WaitFor(100, function()
+        entity.GameObjectVisual.Type = 4
+    end)
     
 end
 

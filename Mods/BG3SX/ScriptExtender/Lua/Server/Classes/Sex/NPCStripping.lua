@@ -200,6 +200,8 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
+-- TODO - NPcs have a flaccid and erect on sex start
+
 
 -- TODO - instead access pairData
 local sexPairs = {}
@@ -216,6 +218,13 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         stripNPC(target)
         giveGenitals(target)
         addHairIfNecessary(target)
+        Ext.Timer.WaitFor(100, function() 
+            -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
+            if Entity:HasPenis(target) then
+                removeGenitals(target)
+            end
+
+        end)
 
 	end
 end)

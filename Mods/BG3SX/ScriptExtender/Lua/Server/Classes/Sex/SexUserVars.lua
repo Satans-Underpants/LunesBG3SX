@@ -47,7 +47,7 @@ function SexUserVars:GetGenital(type, character)
 end
 
 
----@param BG3SX_AutoErection bool
+---@param BG3SX_AutoErection int -- bools are not possible for UserVars, maybe in a future SE update
 ---@param character string - uuid
 function SexUserVars:SetAutoErection(autoErection, character)
 

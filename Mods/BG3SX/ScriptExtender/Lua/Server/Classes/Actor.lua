@@ -27,7 +27,7 @@ function Actor:new(parent)
     local instance       = setmetatable({
         parent           = parent,
         genital          = Genital:GetCurrentGenital(parent),
-        autoErection     = UserSettings:GetAutoErection(parent),
+        autoErection     = Ext.Entity.Get(parent).Vars.BG3SX_AutoErection == 1,
         oldArmourSet     = Osi.GetArmourSet(parent),
         oldEquipment     = Entity:GetEquipment(parent),
         isStripped       = Entity:HasEquipment(parent),

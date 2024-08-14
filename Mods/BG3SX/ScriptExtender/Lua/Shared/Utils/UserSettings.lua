@@ -4,6 +4,7 @@
 -- 
 ----------------------------------------------------------------------------------------------------
 
+
 UserSettings = {}
 UserSettings.__index = UserSettings
 
@@ -14,9 +15,6 @@ UserSettings.__index = UserSettings
 -- 
 ----------------------------------------------------------------------------------------------------
 
-local allVariables = {
-    ["autoErection"] = 1
-}
 
 ----------------------------------------------------------------------------------------------------
 -- 
@@ -30,19 +28,6 @@ local function getVariables()
     return allVariables
 end
 
-
--- Toggle Auto Erection during Sex
--- @param bool   - On or Off
-function UserSettings:SetAutoErection(bool)
-    allVariables["autoErection"] = bool
-end
-
-
--- Get Auto Erection choice
--- @retun        - bool user choice
-function UserSettings:GetAutoErection()
-    return allVariables["autoErection"]
-end
 
 
 ----------------------------------------------------------------------------------------------------

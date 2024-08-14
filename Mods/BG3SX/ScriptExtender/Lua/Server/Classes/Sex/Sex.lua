@@ -169,7 +169,7 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
             -- TODO - works for masturbation but not for sex
             for _, actor in pairs(scene.actors) do
                 _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
-                Genital:GiveErection(actor)
+                Genital:GiveErectionToActor(actor)
                 --print("visuals ")
                 --_D(Ext.Entity.Get(actor.uuid).AppearanceOverride.Visual.Visuals)
             end
