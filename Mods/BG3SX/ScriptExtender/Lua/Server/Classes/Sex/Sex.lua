@@ -170,6 +170,10 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
             for _, actor in pairs(scene.actors) do
                 _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
                 Genital:GiveErectionToActor(actor)
+
+                -- If a Shpeshifted individual has a vulva, that also has to be transferred
+                Genital:GiveVulvaToActor(actor)
+
                 --print("visuals ")
                 --_D(Ext.Entity.Get(actor.uuid).AppearanceOverride.Visual.Visuals)
             end

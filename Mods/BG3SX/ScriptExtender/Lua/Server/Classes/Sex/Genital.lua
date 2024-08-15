@@ -503,6 +503,22 @@ function Genital:OverrideGenital(newGenital, uuid)
 		--Event:new("BG3SX_GenitalChange", {uuid, newGenital})
 	end
 
+
+	-- Shapeshifted entities have to be handled separately
+
+	-- TODO - this will probably stack genitals on continued spell usage, also implement "removeshapeshiftedvisual"
+	-- and "switch shapeshiftedvisual" from deleted commit (Skiz local copy)
+
+	-- TODO - this works once, then switches back to his canon penis - appearanceoverride seems to get yeeted 
+
+	-- TODO - for shapeshifted their "original" genitals return on sex ( vulva Wyll gets a floppy penis )
+
+	if (Ext.Entity.Get(uuid).GameObjectVisual.Type == 4) then 
+		print("Is Shapeshifted")
+		Entity:SwitchShapeshiftedVisual(uuid, newGenital, "Private Parts")
+	end
+
+
 end
 
 -- Add a genital to a non NPC if they do not have one (only penises)
@@ -626,5 +642,33 @@ function Genital:GiveErectionToActor(actor)
 		print("Autoerection not allowed")
 
 		-- TODO : NPC Handler
+	end
+end
+
+
+---@param actor	Actor	-The actor to give an erection to
+function Genital:GiveVulvaToActor(actor)
+
+	print("Give vulva to actor")
+
+	local parent = actor.parent
+	local visual = Genital:GetCurrentGenital(parent)
+	_P("vulva ", visual)
+	local parentEntity = Ext.Entity.Get(actor.parent)
+
+	print("has penis ? ", Entity:HasPenis(parent))
+
+	if (not Entity:HasPenis(parent)) then
+		_P("Has vulva ", parent)
+
+		-- TODO: Learn what Types there are
+		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
+		-- For any shapeshifted parent
+		if (parentEntity.GameObjectVisual.Type == 4) then 
+			print("Is SHapeshifted")
+			Ext.Timer.WaitFor(200, function()
+				Entity:GiveShapeshiftedVisual(actor.uuid, visual)
+			end)
+		end
 	end
 end

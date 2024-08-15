@@ -24,6 +24,7 @@ Ext.Require("Shared/Data/SceneTypes.lua")
 -- Initialize Utilities
 Ext.Require("Shared/Utils/Math.lua")
 Ext.Require("Shared/Utils/Table.lua")
+Ext.Require("Shared/Utils/Visual.lua")
 Ext.Require("Shared/Utils/Entity.lua")
 Ext.Require("Shared/Utils/Helper.lua")
 -- Ext.Require("Utils/UIHelper.lua") - [NYI]
@@ -52,3 +53,5 @@ Ext.Require("Server/Listeners/GenitalListeners.lua")
 Ext.Require("Server/Listeners/EntityListeners.lua")
 Ext.Require("Server/Listeners/SceneListeners.lua")
 Ext.Require("Server/Listeners/SexListeners.lua")
+
+
