@@ -623,7 +623,8 @@ function Genital:GiveErectionToActor(actor)
 		if (parentEntity.GameObjectVisual.Type == 4) then 
 			print("Is SHapeshifted")
 			Ext.Timer.WaitFor(200, function()
-				Entity:GiveShapeshiftedVisual(actor.uuid, visual)
+				Entity:SwitchShapeshiftedVisual(actor.uuid, visual, "Private Parts")
+			--Entity:GiveShapeshiftedVisual(actor.uuid, visual)
 			end)
 		-- non -shapeshifted? 	
 		else
@@ -647,28 +648,19 @@ end
 
 
 ---@param actor	Actor	-The actor to give an erection to
-function Genital:GiveVulvaToActor(actor)
+function Genital:GiveGenitalsToActor(actor)
 
 	print("Give vulva to actor")
 
 	local parent = actor.parent
 	local visual = Genital:GetCurrentGenital(parent)
-	_P("vulva ", visual)
+	_P("genital ", visual)
 	local parentEntity = Ext.Entity.Get(actor.parent)
 
-	print("has penis ? ", Entity:HasPenis(parent))
-
-	if (not Entity:HasPenis(parent)) then
-		_P("Has vulva ", parent)
-
-		-- TODO: Learn what Types there are
-		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
-		-- For any shapeshifted parent
-		if (parentEntity.GameObjectVisual.Type == 4) then 
-			print("Is SHapeshifted")
-			Ext.Timer.WaitFor(200, function()
-				Entity:GiveShapeshiftedVisual(actor.uuid, visual)
-			end)
-		end
+	if (parentEntity.GameObjectVisual.Type == 4) then 
+		print("Is SHapeshifted")
+		Ext.Timer.WaitFor(200, function()
+			Entity:GiveShapeshiftedVisual(actor.uuid, visual)
+		end)
 	end
 end

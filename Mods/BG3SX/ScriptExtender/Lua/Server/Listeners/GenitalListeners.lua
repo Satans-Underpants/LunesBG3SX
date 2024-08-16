@@ -39,7 +39,7 @@ end)
 -- Genital Settings
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
     -- If UI is used then use UI listener instead
-    if spell == "BG3SX_AutoErections" then
+    if spell == "BG3SX_AutoErection" then
         SexUserVars:SetAutoErection(1, caster)
         print("Set autoerections to ", SexUserVars:GetAutoErection(caster))
     elseif spell == "BG3SX_ManualErections" then

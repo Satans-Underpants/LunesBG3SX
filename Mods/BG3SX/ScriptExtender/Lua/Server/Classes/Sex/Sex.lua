@@ -169,10 +169,13 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
             -- TODO - works for masturbation but not for sex
             for _, actor in pairs(scene.actors) do
                 _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
+                
+                -- If Shpeshifted ,  the genitals have to eb transferred 
+                Genital:GiveGenitalsToActor(actor)
+                
                 Genital:GiveErectionToActor(actor)
 
-                -- If a Shpeshifted individual has a vulva, that also has to be transferred
-                Genital:GiveVulvaToActor(actor)
+                
 
                 --print("visuals ")
                 --_D(Ext.Entity.Get(actor.uuid).AppearanceOverride.Visual.Visuals)
