@@ -41,6 +41,5 @@ playAnimation = function(self)
     else
         Osi.PlayAnimation(self.actor.uuid, self.animation)
     end
-
     -- _P("[BG3SX][Animation.lua] - Animation:new() - playAnimation - Begin to play ", self.animation, " on ", self.actor.uuid)
 end

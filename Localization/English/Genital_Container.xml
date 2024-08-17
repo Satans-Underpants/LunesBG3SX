@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <contentList>
+<!-- Genital Options -->
 	<content contentuid="h21ce3424g5b22g4f55gb74agaff6e54d99c8" version="1">BG3SX - Change Genitals</content>
     <content contentuid="had40702dg5f74g4d8bgb2b8g73515ee3c7bb" version="1">Vanilla Vulva</content>
     <content contentuid="h700ba475g79e8g4492ga857g3c2c70daf3aa" version="1">Vanilla Soft Penis</content>
@@ -8,5 +9,3 @@
     <content contentuid="h1cbdf6f6af2b42b086b8c3626eaa5bc09f37" version="1">Block Stripping</content>
     <content contentuid="h2b093b5fbc9642129d9bd335e1701c9b284c" version="1">If this is active, the entity will not strip</content>
 </contentList>
-
-

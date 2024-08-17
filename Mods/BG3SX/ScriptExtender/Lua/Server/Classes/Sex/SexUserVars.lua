@@ -29,7 +29,7 @@ function SexUserVars:AssignGenital(type, genital, character)
       elseif type == "BG3SX_Erect" then
             e.Vars.BG3SX_Erect = genital
       else
-            _P("invalid type ", type , " please choose ’BG3SX_Flaccid’ or ’BG3SX_Erect’ ")
+            _P("Invalid type ", type , " please choose ’BG3SX_Flaccid’ or ’BG3SX_Erect’ ")
       end
 end
 
@@ -42,7 +42,7 @@ function SexUserVars:GetGenital(type, character)
       elseif type == "BG3SX_Erect" then
             e.Vars.BG3SX_Erect = genital
       else
-            _P("invalid type ", type , " please choose ’BG3SX_Flaccid’ or ’BG3SX_Erect’ ")
+            _P("Invalid type ", type , " please choose ’BG3SX_Flaccid’ or ’BG3SX_Erect’ ")
       end
 end
 
@@ -50,17 +50,14 @@ end
 ---@param BG3SX_AutoErection int -- bools are not possible for UserVars, maybe in a future SE update
 ---@param character string - uuid
 function SexUserVars:SetAutoErection(autoErection, character)
-
     local e = Ext.Entity.Get(character)
     e.Vars.BG3SX_AutoErection = autoErection
-
 end
 
 
 ---@param BG3SX_AutoErection bool
 ---@param character string - uuid
 function SexUserVars:GetAutoErection(character)
-
     local e = Ext.Entity.Get(character)
     return e.Vars.BG3SX_AutoErection
 end

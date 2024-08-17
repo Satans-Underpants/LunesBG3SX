@@ -83,8 +83,6 @@ local function playAnimationAndSound(actor, animationData, position)
 
     Ext.ModEvents.BG3SX.AnimationChange:Throw(newAnimation)
     Ext.ModEvents.BG3SX.SoundChange:Throw(newSound)
-    --Event:new("BG3SX_AnimationChange", newAnimation)
-    --Event:new("BG3SX_SoundChange", newSound)
 end
 
 
@@ -117,13 +115,9 @@ function Sex:PlayAnimation(entity, animationData)
         playAnimationAndSound(actor2, animationData, "Bottom")
         
     elseif sceneType == "FFF" then
-
     elseif sceneType == "FFM" then
-
     elseif sceneType == "MMF" then
-
     elseif sceneType == "MMM" then
-
     end
 
     -- Prop handling
@@ -151,38 +145,27 @@ function Sex:StartSexSpellUsed(caster, targets, animationData)
     if animationData then
         -- _P("----------------------------- [BG3SX][Sex.lua] - Creating new scene -----------------------------")
         local sexHavers = {caster}
-
         for _,target in pairs(targets) do
             if target ~= caster then -- To not add caster twice if it might also be the target
                 table.insert(sexHavers, target)
             end
         end
-
         for _,involved in pairs(sexHavers) do
             Effect:Fade(involved, 666)
         end
-
         -- Delay the rest as well, since scene initilization is delayed for 1 second to avoid user seeing behind the scenes stuff
         local function haveSex()
             scene = Scene:new(sexHavers)
-            
+
             -- TODO - works for masturbation but not for sex
             for _, actor in pairs(scene.actors) do
-                _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
-                
+                -- _P("giving erection to ", actor.parent , "`s clone ", actor.uuid)
                 -- If Shpeshifted ,  the genitals have to eb transferred 
                 Genital:GiveGenitalsToActor(actor)
-                
                 Genital:GiveErectionToActor(actor)
-
-                
-
                 --print("visuals ")
                 --_D(Ext.Entity.Get(actor.uuid).AppearanceOverride.Visual.Visuals)
-            end
-
-            
-
+            end 
             Sex:InitSexSpells(scene)
             Sex:PlayAnimation(caster, animationData)
         end
@@ -245,13 +228,11 @@ function Sex:InitSexSpells(scene)
     local sceneType = Sex:DetermineSceneType(scene)
     for _, entity in pairs(scene.entities) do -- For each entity involved
         if Entity:IsPlayable(entity) then -- Check if they are playable to not do this with NPCs
-
             for _, entry in pairs(SCENETYPES) do
                 if sceneType == entry.sceneType then
                     Osi.AddSpell(entity, entry.container) -- Add correct spellcontainer based on sceneType
                 end
             end
-
             addAdditionalSexActions(entity)
         end
     end
@@ -262,7 +243,7 @@ end
 ---@param uuid any
 function Sex:IsStripper(uuid)
     if Osi.HasActiveStatus(uuid, "BG3SX_BLOCK_STRIPPING_BOOST") == 1 then
-        _P("Has status ", uuid)
+        -- _P("Has status ", uuid)
         return false
     else
         return true
@@ -294,6 +275,5 @@ function Sex:ChangeCameraHeight(uuid)
         end
         entity:Replicate("GameObjectVisual")
     end
-    Ext.ModEvents.BG3SX.CameraHeightChange:Throw(entity)
-    --Event:new("BG3SX_CameraHeightChange", entity)  
+    Ext.ModEvents.BG3SX.CameraHeightChange:Throw(entity) 
 end

@@ -50,3 +50,11 @@ Ext.ModEvents.BG3SX.GenitalChange:Subscribe(function (payload)
     _P("GenitalChange received with PayLoad: ")
     _D(payload)
 end)
+
+-- TODO: Test if this works as well to just listen to ANY event of a mod
+-- for _,e in pairs(Ext.ModEvents.BG3SX) do
+--     e:Subscribe(function (payload)
+--         _P("Recieved " .. e.Channel .. " event!")
+--         _D(payload)
+--     end)
+-- end

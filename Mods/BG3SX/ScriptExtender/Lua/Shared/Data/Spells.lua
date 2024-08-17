@@ -28,9 +28,8 @@ SEXSCENESPELLS = {
     
     -- Copy spells from ADDITIONALSEXACTIONS here
     "BG3SX_StopAction",
-    "BG3SX_StopMasturbating",
-    "BG3SX_ChangeCameraHeight",
-    "BG3SX_ChangeSceneLocation",
     "BG3SX_SwitchPlaces",
+    "BG3SX_ChangeSceneLocation",
+    "BG3SX_ChangeCameraHeight",
     "BG3SX_RotateScene",
 }

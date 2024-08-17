@@ -76,6 +76,7 @@ HEIGHTCLASSMATCHUPS = {
     MedAndTiny = 5,
     ShortAndTiny = 6
 }
+
 HEIGHTCLASSMATCHUPSACCURATE = {
     ["Tall"] = {
         ["Tall"] = 0,

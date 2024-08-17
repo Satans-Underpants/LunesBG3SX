@@ -39,7 +39,6 @@ playSound = function(self)
     if scene then
         local minRepeatTime = self.duration - 200
         local maxRepeatTime = self.duration + 200
-        
         Osi.PlaySound(self.actor.uuid, "") -- First, stop current sound
 
         local sound = self.soundTable[math.random(1, #self.soundTable)]
@@ -47,7 +46,6 @@ playSound = function(self)
         
         -- Will be an infinite loop until registered timer gets canceled on Scene:Destroy()
         local newSoundTimer = Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), function()
-            
             for i = #scene.timerHandles, 1, -1 do
                 local handle = scene.timerHandles[i]
                 table.remove(scene.timerHandles, i)
@@ -56,7 +54,6 @@ playSound = function(self)
             playSound(self)
         end)
         scene:RegisterNewSoundTimer(newSoundTimer)
-
         -- _P("[BG3SX][Sound.lua] - Sound:new() - Begin to play ", sound, " on Actor ", self.actor.uuid)
     else
         -- _P("[BG3SX][Sound.lua] - Sound:new() - Scene does not exist anymore")

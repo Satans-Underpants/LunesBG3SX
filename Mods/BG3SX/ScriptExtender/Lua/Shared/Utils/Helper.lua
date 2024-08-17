@@ -65,12 +65,10 @@ function Helper:TryToReserializeObject(srcObject, dstObject)
         local serialized = Ext.Types.Serialize(srcObject)
         Ext.Types.Unserialize(dstObject, serialized)
     end
-
     local ok, err = xpcall(serializer, debug.traceback)
     if not ok then
         return err
     end
-
     return nil
 end
 

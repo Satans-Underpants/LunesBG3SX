@@ -119,9 +119,6 @@ ANIMATIONS = {
         FallbackBottomAnimationID = "1b220386-55fa-4d2b-8da4-0e7bf453d928"
     },
     {
-        AnimName = "StopMasturbating",
-    },
-    {
         AnimName = "BG3SX_MasturbateStanding",
         AnimLength = 3600,
         Loop = true,

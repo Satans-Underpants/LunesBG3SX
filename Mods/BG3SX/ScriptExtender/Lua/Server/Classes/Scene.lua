@@ -45,7 +45,7 @@ function Scene:new(entities)
         summons         = {},
     }, Scene)
 
-    -- Somehow can't set rootPosition/rotation within the instance, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
+    -- Somehow can't set rootPosition/rotation within the metatable construction, it poops itself trying to do this - rootPosition.x, rootPosition.y, rootPosition.z = Osi.GetPosition(entities[1])
     instance.rootPosition.x, instance.rootPosition.y, instance.rootPosition.z = Osi.GetPosition(entities[1])
     instance.rotation.x, instance.rotation.y, instance.rotation.z = Osi.GetRotation(entities[1])
 
@@ -73,7 +73,8 @@ local function setStartLocations(scene)
     end
 end
 
--- TODO: Actually use it
+
+-- TODO: Actually use it - we currently just call the table manually every time
 -- Gets an entities start location for a location reset of an entity on Scene:Destroy()
 ---@param entity    string  - UUID of the entity 
 ---@return          table   - The entities position
@@ -146,6 +147,8 @@ end
 -- Summons/Follower Management
 -----------------------------------------------------
 
+-- TODO: See if we can squish it a bit
+-- Toggles visibility of all summons of entities involved in a scene
 function Scene:ToggleSummonVisibility()
     if #self.summons > 0 then
         -- _P("Setting summon entries visible")
@@ -198,6 +201,8 @@ function Scene:ToggleSummonVisibility()
     end
 end
 
+-- vvvvvv Keep this for whenever IsSummon is replicatable vvvvvv
+
 -- Whenever we can replicate the owner fields we may be able to reuse this party and just replicate the IsSummon component after swapping out the owner
 -- local partymembers = Osi.DB_Players:Get(nil)
 -- local everyone = Ext.Entity.GetAllEntitiesWithComponent("PartyMember")
@@ -231,6 +236,7 @@ end
 
 -- ^^^^^^ Keep this for whenever IsSummon is replicatable ^^^^^^
 
+
 -- Prop Management
 -----------------------------------------------------
 function Scene:CreateProps()
@@ -253,7 +259,6 @@ function Scene:DestroyProps()
         end
     end
 end
-
 -- Scale Management
 -----------------------------------------------------
 
@@ -276,7 +281,6 @@ end
 initialize = function(self)
     table.insert(SAVEDSCENES, self)
     Ext.ModEvents.BG3SX.SceneInit:Throw(self)
-    --Event:new("BG3SX_SceneInit", self)
 
     setStartLocations(self) -- Save start location of each entity to later teleport them back
     saveCampFlags(self) -- Saves which entities had campflags applied before
@@ -309,7 +313,6 @@ initialize = function(self)
     end
 
     Ext.ModEvents.BG3SX.SceneCreated:Throw(self)
-    --Event:new("BG3SX_SceneCreated", self)
 end
 
 
@@ -354,7 +357,6 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     Sex:PlayAnimation(entity, scene.currentAnimation) -- Play prior animation again
 
     Ext.ModEvents.BG3SX.SceneMove:Throw({scene, oldLocation, newLocation})
-    --Event:new("BG3SX_SceneMove", {scene, oldLocation, newLocation})
 end
 
 
@@ -437,7 +439,6 @@ function Scene:Destroy()
     end
     
     Ext.ModEvents.BG3SX.SceneDestroyed:Throw(self)
-    --Event:new("BG3SX_SceneDestroyed", self)
 
     for i,scene in ipairs(SAVEDSCENES) do
         if scene == self then

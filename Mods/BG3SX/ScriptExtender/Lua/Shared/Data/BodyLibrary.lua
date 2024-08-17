@@ -91,8 +91,6 @@ MODDED_RACES = {
         default = "",
         bs3 = 0 , bs4 = 0
     },
-
-
 }
 
 -- index, name, race, body are human readable contents

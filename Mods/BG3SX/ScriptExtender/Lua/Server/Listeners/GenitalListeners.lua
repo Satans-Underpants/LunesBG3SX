@@ -6,7 +6,6 @@
 
 -- Manual Genital changing
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
-    
     -- test 
     --Genital:giveShapeshiftedErection(caster)
 
@@ -22,17 +21,13 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
 
     local newGenital = Genital:GetNextGenital(spell, caster)
 
-
     --if (Ext.Entity.Get(caster).GameObjectVisual.Type == 4) then  -- check if shapeshifted
       --  Ext.Timer.WaitFor(200, function()
      --       Entity:GiveShapeshiftedVisual(caster, newGenital)
      --   end)
-
     --else 
         Genital:OverrideGenital(newGenital, caster)
    -- end
-
-
     end
 end)
 
@@ -41,10 +36,10 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_
     -- If UI is used then use UI listener instead
     if spell == "BG3SX_AutoErection" then
         SexUserVars:SetAutoErection(1, caster)
-        print("Set autoerections to ", SexUserVars:GetAutoErection(caster))
+        -- print("Set autoerections to ", SexUserVars:GetAutoErection(caster))
     elseif spell == "BG3SX_ManualErections" then
         SexUserVars:SetAutoErection(0, caster)
-        print("Set autoerections to ", SexUserVars:GetAutoErection(caster))
+        -- print("Set autoerections to ", SexUserVars:GetAutoErection(caster))
     end
 end)
 
@@ -64,19 +59,13 @@ end)
 -- Auto-Erections handling on Sex start
 -- TODO - access Scene/PairsData instead
 local sexPairs = {}
-
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
- 
     if spell == "BG3SX_AskForSex" then
-
-
         local casterGenital = Genital:GetCurrentGenital(caster)
         local targetGenital
-
             if not Entity:IsNPC(target) then
                 targetGenital = Genital:GetCurrentGenital(target)
             end
-
         local pair = {caster = caster; casterGenital = casterGenital; target = target, targetGenital = targetGenital}
         table.insert(sexPairs, pair)
 
@@ -93,22 +82,15 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
     --        Osi.UseSpell(target, "BG3SX_SimpleErections", target)
     --     end
     -- end
-
     end
-
 end)
 
 -- Auto-Erections handling on Sex ending
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
-
     if spell == "BG3SX_StopAction" then
-
-
         local prevGenCaster = ""
         local prevGenTarget = ""
         local target = ""
-
-
         for i, pair in ipairs(sexPairs) do
             if pair.caster == caster then
                 target = pair.target
@@ -118,33 +100,24 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
                 break
             end
         end
-
         if caster and prevGenCaster then
             Genital:OverrideGenital(prevGenCaster, caster)
         end
-
         if target and prevGenTarget then
             Genital:OverrideGenital(prevGenTarget, target)
         end
     end
-
 end)
 
 -- Auto-Erection handling for masturbating
 -- TODO - access Scene/PairsData instead
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
-
-
     if spell == "BG3SX_StartMasturbating" then
-
         local casterGenital = Genital:GetCurrentGenital(caster)
-     
         local pair = {caster = caster; casterGenital = casterGenital}
         table.insert(sexPairs, pair)
-
         Genital:GiveErection(caster)
     end
-
 
     -- local entity = Ext.Entity.Get(caster)
 

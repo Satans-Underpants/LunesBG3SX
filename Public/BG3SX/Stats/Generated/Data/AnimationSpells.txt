@@ -33,6 +33,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_BottleSit"
 type "SpellData"
@@ -52,6 +53,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // Male Masturbation
@@ -88,6 +90,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // LESBIAN
@@ -124,6 +127,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_EatPussy"
 type "SpellData"
@@ -143,6 +147,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_FingerFuck"
 type "SpellData"
@@ -162,6 +167,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // GAY
@@ -179,10 +185,11 @@ data "CastSound" "Instrument_Bard_Silence"
 data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "Temporary;IsLinkedSpellContainer"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // STRAIGHT
-//-------------------------------------------------BG3SX_EatPussy
+//-------------------------------------------------
 
 new entry "BG3SX_StraightAnimationsContainer"
 type "SpellData"
@@ -197,9 +204,6 @@ data "TargetSound" "Instrument_Bard_Silence"
 data "AIFlags" "CanNotUse"
 data "SpellFlags" "Temporary;IsLinkedSpellContainer"
 
-
-
-// spell type changed from shout for testing
 new entry "BG3SX_Doggy"
 type "SpellData"
 data "SpellType" "Zone" 
@@ -218,6 +222,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_Missionary"
 type "SpellData"
@@ -237,6 +242,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_Blowjob"
 type "SpellData"
@@ -256,6 +262,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_Cowgirl"
 type "SpellData"
@@ -275,6 +282,7 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_Milking"
 type "SpellData"
@@ -294,3 +302,4 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+data "StatusPropertyFlags" "DisableCombatlog"

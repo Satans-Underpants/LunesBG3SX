@@ -25,6 +25,7 @@ Ext.RegisterModEvent("BG3SX", "GenitalChange")              --({entity, newGenit
 
 -- To subscribe to events:
 -- ----------------------------------------------------------------------------------------------------------------------------------------------
+
 -- Ext.ModEvents.BG3SX.Channel:Subscribe(function (payload) ... end)
 
 -- Example:

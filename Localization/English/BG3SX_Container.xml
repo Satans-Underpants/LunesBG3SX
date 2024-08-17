@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<contentList>
+
+<!-- MAIN -->
+	<content contentuid="hc53c7f99ge6bcg40ffg9c3fg9ebd31a82940" version="1">Sex</content>
+	<content contentuid="hf8d87b70ge53ag4a26gb758g3b9cccddbba0" version="1">Ask For Sex</content>
+	<content contentuid="h8f892314gf60ag45d3g86fegadd638f56439" version="1">Masturbate</content>
+
+<!-- During Scene -->
+	<content contentuid="h94dec276g082cg4180g8cd3g8f2d37d9021f" version="1">Stop Sex</content>
+	<content contentuid="haa8b4615g725ag4013g9d09g0ab48e3f422f" version="1">End the current scene.</content>
+
+	<content contentuid="h818a9789g4007g46c6gacd4g27e42b08b4ee" version="1">Change Position</content>
+	<content contentuid="hdf32ca9bg81bag4282gbd97g92124556b2e4" version="1">Change the current sex position.</content>
+
+	<content contentuid="h8649d899g2704g4ca5gae5bgcb08b6857d42" version="1">Switch Places</content>
+	<content contentuid="hb918558bg3115g4475g968agc318a2bd6852" version="1">Switch the places of the top/bottom actors of the scene.</content>
+	
+	<content contentuid="h8cc6d8e0ga472g4b25gb556g7ab2e08e6149" version="2">Move Scene</content>
+	<content contentuid="h3ae22e3ag2aeag4d6ag8fbcgd9c4215cc7ec" version="2">Teleports the scene to a chosen location.</content>
+
+	<content contentuid="h25c91f38g98cdg455ag91eag0ae9949d9275" version="1">Rotate Scene</content>
+	<content contentuid="h5665918bg6d42g42f2g8916gcb333ccb6f27" version="1">Rotates the scene towards a chosen direction.</content>
+
+	<content contentuid="h4ff48f80gde7ag4ceegab9fg65a3bd76eb41" version="1">Camera Height</content>
+	<content contentuid="he66202a5g851dg4da2ga426g92e8927d09f2" version="1">Change camera height. Only works if your character is selected.</content>
+</contentList>

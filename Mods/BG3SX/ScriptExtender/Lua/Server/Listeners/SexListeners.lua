@@ -1,4 +1,4 @@
-        -----------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
                                             ---- Sex Listener ----
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -11,7 +11,6 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
             end)
             
             Ext.ModEvents.BG3SX.SexStartSpellUsed:Throw({caster, target, spellData})
-            --Event:new("BG3SX_SexStartSpellUsed", {caster, target, spellData})
             break
         end
     end
@@ -23,12 +22,10 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
         if spell == animationData.AnimName then
             local scene = Scene:FindSceneByEntity(caster)
             -- _P("[BG3SX SexListeners] Corresponding Animname ", animationData.AnimName)
-
             scene:CancelAllSoundTimers() -- Cancel all currently saved soundTimers to not get overlapping sounds
             Sex:PlayAnimation(caster, animationData)
             
             Ext.ModEvents.BG3SX.SexAnimationChange:Throw({caster, animationData})
-            --Event:new("BG3SX_SexAnimationChange", {caster, animationData})
             break
         end
     end

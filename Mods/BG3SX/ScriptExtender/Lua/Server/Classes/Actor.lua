@@ -48,6 +48,7 @@ function Actor:new(parent)
     return instance
 end
 
+
 -- Destroy()
 --------------------------------------------------------------
 
@@ -120,7 +121,6 @@ end
 -- TODO - Change type from 2 back to original type since it screws with other game stuff 
 -- https://discord.com/channels/1211056047784198186/1211069623835828345/1262896149962952936
 function Actor:TransformAppearance()
-    
     -- Get Looks
     ----------------------------------------------------------------------------
     self:CopyEntityAppearanceOverrides()
@@ -139,7 +139,6 @@ end
 --- Copies the equipment from the parent entity to the actor
 function Actor:CopyEquipmentFromParent()
     local currentArmorSet = Osi.GetArmourSet(self.parent)
-
     local copySlots = {}
     if currentArmorSet == 0 then -- "Normal" armour set
         copySlots = { "Boots", "Breast", "Cloak", "Gloves", "Amulet", "MeleeMainHand", "MeleeOffHand", "RangedMainHand", "RangedOffHand", "MusicalInstrument" }
@@ -179,13 +178,11 @@ function Actor:DressActor()
     Osi.SetArmourSet(self.uuid, parentArmour) -- Equips a set of possibly copied armour
     for _, item in pairs(parentEquipment) do -- Equips every item found in possibly copied equipment table
         local itemTemplate = Osi.GetTemplate(item)
-
         Osi.TemplateAddTo(itemTemplate, self.uuid, 1)
 
         -- Adding item to inventory takes some time. Cannot be retrieved without delay
         Ext.Timer.WaitFor(200, function() 
             local copiedItem = Osi.GetItemByTemplateInInventory(itemTemplate, self.uuid) 
-
             Entity:TryCopyEntityComponent(item, copiedItem, "ItemDye")
             Osi.Equip(self.uuid, copiedItem)        
         end)
@@ -209,7 +206,6 @@ function Actor:DressActor()
     end
 
     Ext.ModEvents.BG3SX.ActorDressed:Throw({self.uuid, self.equipment})
-    -- Event:new("BG3SX_ActorDressed", {self.uuid, self.equipment})
 
     -- self.armour = nil
     -- self.equipment = nil
@@ -224,7 +220,6 @@ end
 -- Set ups the actor like  detaching them from the group etc.
 initialize = function(self)
     Ext.ModEvents.BG3SX.ActorInit:Throw(self)
-    --Event:new("BG3SX_ActorInit", self)
     
     Osi.SetDetached(self.uuid, 1)
     Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1) -- Gives them facial animations
@@ -246,5 +241,4 @@ initialize = function(self)
     Entity:CopyDisplayName(self.parent, self.uuid) -- Keep since shapeshiftrule doesn't actually handle this correctly
     
     Ext.ModEvents.BG3SX.ActorCreated:Throw(self)
-    --Event:new("BG3SX_ActorCreated", self)
 end
