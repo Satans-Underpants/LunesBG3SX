@@ -1,5 +1,7 @@
+Data.Statuses = {}
+
 -- TODO: Actually remove these before a scene and change them back later
-BODY_SCALE_STATUSES = {
+Data.Statuses.BodyScaleStatuses = {
     -- The list of statuses below was copied from OnApplyFunctors data of ALCH_ELIXIR_ENLARGE entry in
     -- <unpacked game data>/Gustav/Public/Honour/Stats/Generated/Data/Status_BOOST.txt
     "ENLARGE",

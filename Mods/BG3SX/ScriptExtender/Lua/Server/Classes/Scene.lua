@@ -4,9 +4,8 @@
 --
 ----------------------------------------------------------------------------------------
 
-SAVEDSCENES = {}
-Scene = {}
-Scene.__index = Scene
+Data.SavedScenes = {}
+
 local initialize
 
 -- CONSTRUCTOR
@@ -96,7 +95,7 @@ end
 -- Goes through every currently running scene until it finds the entityToSearch
 ---@param entityToSearch uuid
 function Scene:FindSceneByEntity(entityToSearch)
-    for i, scene in ipairs(SAVEDSCENES) do
+    for i, scene in ipairs(Data.SavedScenes) do
         for _, entity in pairs(scene.entities) do
             if entityToSearch == entity then
                 return scene
@@ -253,7 +252,7 @@ function Scene:DestroyProps()
         -- _D(self.props)
         for i,sceneProp in ipairs(self.props) do
             -- _D(sceneProp)
-            Osi.RequestDelete(sceneProp)
+            Osi.RequestDelete(sceneProp) -- Check if we need Osi.RequestDeleteTemporary
             table.remove(self.props, i)
             -- _D(self.props)
         end
@@ -279,7 +278,7 @@ end
 -- Initializes the actor
 ---@param self instance - The scene instance
 initialize = function(self)
-    table.insert(SAVEDSCENES, self)
+    table.insert(Data.SavedScenes, self)
     Ext.ModEvents.BG3SX.SceneInit:Throw(self)
 
     setStartLocations(self) -- Save start location of each entity to later teleport them back
@@ -430,7 +429,7 @@ function Scene:Destroy()
     for _, entity in pairs(self.entities) do
         sceneEntityReset(entity)
         
-        Osi.PlaySound(entity, ORGASM_SOUNDS[math.random(1, #ORGASM_SOUNDS)]) -- TODO - change this to a generic sound for when we use this for non-sex instead
+        Osi.PlaySound(entity, Data.Sounds.Orgasm[math.random(1, #Data.Sounds.Orgasm)]) -- TODO - change this to a generic sound for when we use this for non-sex instead
 
         Sex:RemoveSexSceneSpells(entity) -- Removes any spells given for the scene
         if Osi.IsPartyMember(entity, 0) == 1 then
@@ -440,9 +439,9 @@ function Scene:Destroy()
     
     Ext.ModEvents.BG3SX.SceneDestroyed:Throw(self)
 
-    for i,scene in ipairs(SAVEDSCENES) do
+    for i,scene in ipairs(Data.SavedScenes) do
         if scene == self then
-            table.remove(SAVEDSCENES, i)
+            table.remove(Data.SavedScenes, i)
         end
     end
 end

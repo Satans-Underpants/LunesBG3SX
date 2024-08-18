@@ -5,8 +5,7 @@
 -- 
 ---------------------------------------------------------------------------------------------------------
 
-Visual = {}
-Visual.__index = Visual
+
 
 function Visual:new()
     local instance = setmetatable({}, Visual)

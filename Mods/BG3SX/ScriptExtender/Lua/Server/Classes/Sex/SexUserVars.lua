@@ -9,8 +9,6 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-SexUserVars = {}
-SexUserVars.__index = Sex
 
 -- TODO - these have to be set to a default
 Ext.Vars.RegisterUserVariable("BG3SX_Flaccid", {})

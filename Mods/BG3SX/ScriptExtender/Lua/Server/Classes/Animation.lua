@@ -8,9 +8,6 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-Animation = {}
-Animation.__index = Animation
-
 local playAnimation
 function Animation:new(actor, animationData, animation)
     local instance = setmetatable({

@@ -10,8 +10,6 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-Genital = {}
-Genital.__index = Genital
 
 -- Saved genitals for better performance
 local allGenitals = {}

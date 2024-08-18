@@ -1,5 +1,7 @@
+Data.Sounds = {}
+
 -- After Sex
-ORGASM_SOUNDS = {
+Data.Sounds.Orgasm = {
     "Player_Races_Voice_Combat_Recover",
     "Player_Races_Voice_Combat_Recover_Chance",
     "Player_Races_Voice_Combat_Recover_Cinematics",
@@ -8,14 +10,14 @@ ORGASM_SOUNDS = {
 }
 
 -- During Sex
-MOANING_SOUNDS = {
+Data.Sounds.Moaning = {
     "BreathLongExhaleOpen_PlayerCharacter_Cine",
     "BreathLongInhaleOpen_PlayerCharacter_Cine",
     "BreathShortInhaleOpen_PlayerCharacter_Cine",
     "LoveMoanClosed_PlayerCharacter_Cine",
     "LoveMoanOpen_PlayerCharacter_Cine"
 }
-KISSING_SOUNDS = {
+Data.Sounds.Kissing = {
     "CAMP_Karlach_CRD_ROM_Date_SexKiss2",
     "CAMP_Karlach_CRD_ROM_Date_SexKiss3",
     "CAMP_Karlach_CRD_ROM_Date_SexKiss6",

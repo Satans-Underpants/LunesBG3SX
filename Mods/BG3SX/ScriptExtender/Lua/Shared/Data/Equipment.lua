@@ -1,5 +1,7 @@
+Data.Equipment = {}
+
 -- Possible slots to iterate over during dressing/undressing
-EQ_SLOTS = {
+Data.Equipment.Slots = {
     --Equipment
     "Boots",
     "Breast",

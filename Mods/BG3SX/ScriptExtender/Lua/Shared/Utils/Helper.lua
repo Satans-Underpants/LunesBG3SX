@@ -7,8 +7,6 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-Helper = {}
-Helper.__index = Helper
 
 -- Options
 --------------------------------------------------------------
@@ -135,7 +133,7 @@ end
 -- Destroys a marker
 ---@param marker    string  - The Marker UUID to destroy 
 function Helper:DestroyMarker(marker)
-    Osi.RequestDelete(marker)
+    Osi.RequestDelete(marker) -- Check if we don't need Osi.RequestDeleteTemporary
 end
 
 

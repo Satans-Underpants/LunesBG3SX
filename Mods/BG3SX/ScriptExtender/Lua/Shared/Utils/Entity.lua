@@ -6,8 +6,7 @@
 
 -- CONSTRUCTOR
 --------------------------------------------------------------
-Entity = {}
-Entity.__index = Entity
+
 
 
 -- Variables
@@ -321,7 +320,7 @@ function Entity:UnequipAll(uuid)
     Osi.SetArmourSet(uuid, 0)
     
     local oldEquipment = {}
-    for _, slotName in ipairs(EQ_SLOTS) do
+    for _, slotName in ipairs(Data.Equipment.Slots) do
         local gearPiece = Osi.GetEquippedItem(uuid, slotName)
         if gearPiece then
             Osi.LockUnequip(gearPiece, 0)
@@ -338,7 +337,7 @@ end
 ---@return currentEquipment table   - Collection of every equipped items
 function Entity:GetEquipment(uuid)    
     local currentEquipment = {}
-    for _, slotName in ipairs(EQ_SLOTS) do
+    for _, slotName in ipairs(Data.Equipment.Slots) do
         local gearPiece = Osi.GetEquippedItem(uuid, slotName)
         if gearPiece then
             currentEquipment[#currentEquipment+1] = gearPiece
@@ -381,7 +380,7 @@ function Entity:PurgeBodyScaleStatuses(entity)
     if entity.CameraScaleDown then
         -- Need to purge all statuses affecting the body scale that could expire during sex,
         -- especially if we're going to scale the body down to bring the camera closer.
-        for _, status in ipairs(BODY_SCALE_STATUSES) do
+        for _, status in ipairs(Data.Statuses.BodyScaleStatuses) do
             if Osi.HasAppliedStatus(entity, status) == 1 then
                 local statusToRemove = status
                 if status == "MAG_GIANT_SLAYER_LEGENDARY_ENLRAGE" then

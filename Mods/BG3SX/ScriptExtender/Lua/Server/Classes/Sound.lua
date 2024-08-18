@@ -7,9 +7,6 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-Sound = {}
-Sound.__index = Sound
-
 local playSound
 
 -- Creates a new sound instance on an actor

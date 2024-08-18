@@ -7,8 +7,6 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-Table = {}
-Table.__index = Table
 
 
 -- METHODS

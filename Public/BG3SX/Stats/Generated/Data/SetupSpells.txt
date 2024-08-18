@@ -33,7 +33,6 @@ data "TargetSound" "Instrument_Bard_Silence"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
-data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_StartMasturbating"
 type "SpellData"
@@ -53,7 +52,6 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
-data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // Ending Spell
@@ -76,7 +74,6 @@ data "Autocast" "Yes"
 data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
-data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // Switch Places Spell
@@ -100,7 +97,6 @@ data "Autocast" "Yes"
 data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
-data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // Teleport/Rotation Spells
@@ -125,7 +121,6 @@ data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 data "PreviewCursor" "Melee"
-data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_RotateScene"
 type "SpellData"
@@ -146,7 +141,6 @@ data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 data "PreviewCursor" "Range"
-data "StatusPropertyFlags" "DisableCombatlog"
 
 //-------------------------------------------------
 // Camera Spells
@@ -167,4 +161,3 @@ data "Autocast" "Yes"
 data "SpellFlags" "Temporary;ImmediateCast"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
-data "StatusPropertyFlags" "DisableCombatlog"

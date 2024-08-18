@@ -4,14 +4,16 @@
 
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
     -- Checks to see if the name of the spell used matches any of the setup spells in SexAnimations.lua
-    for _, spellData in pairs(STARTSEXSPELLS) do
-        if spell == spellData.AnimName then
-            Ext.Timer.WaitFor(200, function() -- Wait for erections
-                Sex:StartSexSpellUsed(caster, {target}, spellData)
-            end)
-            
-            Ext.ModEvents.BG3SX.SexStartSpellUsed:Throw({caster, target, spellData})
-            break
+    if Entity:IsWhitelistedRace(caster) and Entity:IsWhitelistedRace(target) then
+        for _,spellData in pairs(STARTSEXSPELLS) do
+            if spell == spellData.AnimName then
+                Ext.Timer.WaitFor(200, function() -- Wait for erections
+                    Sex:StartSexSpellUsed(caster, {target}, spellData)
+                end)
+                
+                Ext.ModEvents.BG3SX.SexStartSpellUsed:Throw({caster, target, spellData})
+                break
+            end
         end
     end
 end)

@@ -6,7 +6,6 @@ data "Icon" "BG3SX_ICON_TOGGLE_Stripping"
 data "Properties" "IsToggled;ToggledDefaultAddToHotbar"
 data "ToggleOnFunctors" "ApplyStatus(BG3SX_BLOCK_STRIPPING_BOOST,100,-1)"
 data "ToggleOffFunctors" "RemoveStatus(BG3SX_BLOCK_STRIPPING_BOOST)"
-data "StatusPropertyFlags" "DisableCombatlog"
 
 new entry "BG3SX_BLOCK_STRIPPING_BOOST"
 type "StatusData"

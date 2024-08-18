@@ -7,8 +7,6 @@
 -- CONSTRUCTOR
 --------------------------------------------------------------
 
-Sex = {}
-Sex.__index = Sex
 
 -- METHODS
 --------------------------------------------------------------
@@ -18,10 +16,10 @@ Sex.__index = Sex
 
 -- Terminates all running scenes
 function Sex:TerminateAllScenes()
-    for _, scene in pairs(SAVEDSCENES) do
+    for _, scene in pairs(Data.SavedScenes) do
         scene:Destroy()
     end
-    SAVEDSCENES = {}
+    Data.SavedScenes = {}
 end
 
 
@@ -37,7 +35,7 @@ function Sex:DetermineSceneType(scene)
             penises = penises+1
         end
     end
-    for _,entry in pairs(SCENETYPES) do
+    for _,entry in pairs(Data.SceneTypes) do
         if involvedEntities == entry.involvedEntities and penises == entry.penises then
             return entry.sceneType
         end
@@ -48,7 +46,7 @@ end
 -- Removes the sex spells on an entity when scene has ended
 ---@param entity    Entity  - The entity uuid to remove the spells from
 function Sex:RemoveSexSceneSpells(entity)
-    for _, spell in pairs(SEXSCENESPELLS) do -- Configurable in Shared/Data/Spells.lua
+    for _, spell in pairs(Data.Spells.SexSceneSpells) do -- Configurable in Shared/Data/Spells.lua
      Osi.RemoveSpell(entity, spell)
     end
 end
@@ -177,20 +175,15 @@ end
 --- Adds the main sex spells to an entity
 ---@param entity    string  - The entities UUID
 function Sex:AddMainSexSpells(entity)
-    if (Entity:IsPlayable(entity)
-        or Osi.IsTagged(entity, "HUMANOID_7fbed0d4-cabc-4a9d-804e-12ca6088a0a8") == 1
-        or Osi.IsTagged(entity, "FIEND_44be2f5b-f27e-4665-86f1-49c5bfac54ab") == 1)
-        and (Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
-        or Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0
-        or Osi.IsTagged(entity, "KID_ee978587-6c68-4186-9bfc-3b3cc719a835") == 0)
-    then
-        for _, spell in pairs(MAINSEXSPELLS) do -- Configurable in Shared/Data/Spells.lua
+    if Entity:IsPlayable(entity) then
+        Osi.AddPassive(entity, "BG3SX_BLOCK_STRIPPING")
+        for _, spell in pairs(Data.Spells.MainSexSpells) do -- Configurable in Shared/Data/Spells.lua
             Osi.AddSpell(entity, spell)
         end
     end
 end
 function Sex:RemoveMainSexSpells(entity)
-    for _, spell in pairs(MAINSEXSPELLS) do  -- Configurable in Shared/Data/Spells.lua
+    for _, spell in pairs(Data.Spells.MainSexSpells) do  -- Configurable in Shared/Data/Spells.lua
         Osi.RemoveSpell(entity, spell)
     end
 end
@@ -201,7 +194,7 @@ end
 local function addAdditionalSexActions(entity)
     local scene = Scene:FindSceneByEntity(entity)
     local spellCount = 1
-    for _,spell in pairs(ADDITIONALSEXACTIONS) do  -- Configurable in Shared/Data/Spells.lua
+    for _,spell in pairs(Data.Spells.AdditionalSexActions) do  -- Configurable in Shared/Data/Spells.lua
         -- If iteration lands on SwitchPlaces spell, check which scene type the entity is in and only add it if its not a solo one
         if spell == "BG3SX_SwitchPlaces" then
             local sceneType = Sex:DetermineSceneType(scene)
@@ -228,7 +221,7 @@ function Sex:InitSexSpells(scene)
     local sceneType = Sex:DetermineSceneType(scene)
     for _, entity in pairs(scene.entities) do -- For each entity involved
         if Entity:IsPlayable(entity) then -- Check if they are playable to not do this with NPCs
-            for _, entry in pairs(SCENETYPES) do
+            for _, entry in pairs(Data.SceneTypes) do
                 if sceneType == entry.sceneType then
                     Osi.AddSpell(entity, entry.container) -- Add correct spellcontainer based on sceneType
                 end
