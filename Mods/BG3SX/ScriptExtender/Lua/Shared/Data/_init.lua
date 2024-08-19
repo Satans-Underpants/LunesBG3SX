@@ -8,5 +8,4 @@ Ext.Require("Shared/Data/Origins.lua")
 Ext.Require("Shared/Data/Spells.lua")
 Ext.Require("Shared/Data/SceneTypes.lua")
 -- Initialize White-/Blacklists
-Ext.Require("Shared/Data/RaceWhitelist.lua")
-Ext.Require("Shared/Data/NPCBlacklist.lua")
+Ext.Require("Shared/Data/Whitelist.lua")

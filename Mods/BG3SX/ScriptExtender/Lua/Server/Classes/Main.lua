@@ -15,7 +15,7 @@ function OnSessionLoaded()
     Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_, _)
         local party = Osi.DB_PartyMembers:Get(nil)
         for i = #party, 1, -1 do
-            if Entity:IsWhitelistedRace(party[i][1]) then
+            if Entity:IsWhitelisted(party[i][1]) then
                 Sex:AddMainSexSpells(party[i][1])
                 Genital:AddGenitalIfHasNone(party[i][1])
             end
@@ -25,7 +25,7 @@ function OnSessionLoaded()
     -- TODO: Check if CharacterCreationDummy might cause issues with "Make NPC into Partymember" mods
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(character)
         if string.find(character, "CharacterCreationDummy") == nil then
-            if Entity:IsWhitelistedRace(character) then
+            if Entity:IsWhitelisted(character) then
                 Sex:AddMainSexSpells(character)
                 Genital:AddGenitalIfHasNone(character)
             end
