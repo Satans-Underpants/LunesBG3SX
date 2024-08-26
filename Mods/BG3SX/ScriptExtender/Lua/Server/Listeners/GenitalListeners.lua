@@ -60,8 +60,8 @@ end)
 -- TODO - access Scene/PairsData instead
 local sexPairs = {}
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
-    if Entity:IsWhitelisted(caster) and Entity:IsWhitelisted(target) then
-        if spell == "BG3SX_AskForSex" then
+    if spell == "BG3SX_AskForSex" then
+        -- if Entity:IsWhitelisted(caster) and Entity:IsWhitelisted(target) then
             local casterGenital = Genital:GetCurrentGenital(caster)
             local targetGenital
                 if not Entity:IsNPC(target) then
@@ -83,7 +83,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         --        Osi.UseSpell(target, "BG3SX_SimpleErections", target)
         --     end
         -- end
-        end
+        -- end
     end
 end)
 
@@ -114,8 +114,8 @@ end)
 -- Auto-Erection handling for masturbating
 -- TODO - access Scene/PairsData instead
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
-    if Entity:IsWhitelisted(caster) then
-        if spell == "BG3SX_StartMasturbating" then
+    if spell == "BG3SX_StartMasturbating" then
+        if Entity:IsWhitelisted(caster) then
             local casterGenital = Genital:GetCurrentGenital(caster)
             local pair = {caster = caster; casterGenital = casterGenital}
             table.insert(sexPairs, pair)

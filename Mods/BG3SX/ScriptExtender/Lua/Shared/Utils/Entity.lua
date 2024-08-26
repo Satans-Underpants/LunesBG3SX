@@ -434,13 +434,13 @@ local function getRace(character)
     local raceTags = Ext.Entity.Get(character):GetAllComponents().ServerRaceTag.Tags
     local race
     for _, tag in pairs(raceTags) do
-        if RACETAGS[tag] then
-            race = Table:GetKey(RACES, RACETAGS[tag])
+        if Data.BodyLibrary.RaceTags[tag] then
+            race = Table:GetKey(Data.BodyLibrary.Races, Data.BodyLibrary.RaceTags[tag])
             break
         end
     end
     -- fallback for modded races - mark them as humanoid
-    if not RACES[race] then
+    if not Data.BodyLibrary.Races[race] then
         race = "0eb594cb-8820-4be6-a58d-8be7a1a98fba"
     end
     return race
@@ -533,10 +533,10 @@ local function getAllowedAnimations(character)
     -- General works for everyone. Origins get their special ones + general
     -- Everyone else gets General
     local allowedAnimations
-    local generics = ANIMATIONS["any"]
+    local generics = Data.Animations["any"]
 
     -- Origin animations
-    for uuid, animationList in pairs(ANIMATIONS) do
+    for uuid, animationList in pairs(Data.Animations) do
         if uuid == character then
             allowedAnimations = Concat(generics, animationList)
         end
@@ -553,10 +553,10 @@ local function getAllowedAnimations(character)
 
     -- some animations are bodytype & race locked
     if prayingAllowed(cc_bodytype, race) then
-        allowedAnimations = Concat(allowedAnimations, ANIMATIONS["pray"])
+        allowedAnimations = Concat(allowedAnimations, Data.Animations["pray"])
     end
     if thinkingAllowed(cc_bodytype, race) then
-        allowedAnimations = Concat(allowedAnimations, ANIMATIONS["think"])
+        allowedAnimations = Concat(allowedAnimations, Data.Animations["think"])
     end
     return allowedAnimations
 end

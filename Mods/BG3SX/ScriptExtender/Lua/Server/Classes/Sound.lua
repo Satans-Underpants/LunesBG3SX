@@ -14,13 +14,12 @@ local playSound
 ---@param soundTable    Table   - A list of sounds to use
 ---@param minRepeatTime Time    - Minimum Repeat Time
 ---@param maxRepeatTime Time    - Maximum Repeat Time
-function Sound:new(actor, soundTable, duration)
-    local instance      = setmetatable({
+function Sound:new(actor, animSpell)
+    local instance = setmetatable({
         actor = actor,
-        soundTable = soundTable,
-        duration = duration
+        soundTable = animSpell.SoundTop or animSpell.SoundBottom,
+        duration = animSpell.AnimLength
     }, Animation)
-
     playSound(instance) -- Automatically calls this function on creation
 
     return instance
@@ -32,7 +31,6 @@ end
 
 playSound = function(self)
     local scene = Scene:FindSceneByEntity(self.actor.parent)
-
     if scene then
         local minRepeatTime = self.duration - 200
         local maxRepeatTime = self.duration + 200
@@ -43,8 +41,7 @@ playSound = function(self)
         
         -- Will be an infinite loop until registered timer gets canceled on Scene:Destroy()
         local newSoundTimer = Ext.Timer.WaitFor(math.random(minRepeatTime, maxRepeatTime), function()
-            for i = #scene.timerHandles, 1, -1 do
-                local handle = scene.timerHandles[i]
+            for i = #scene.timerHandles, 1, -1 do -- Remove oldest timerHandle before creating a new one
                 table.remove(scene.timerHandles, i)
             end
             -- _D(scene.timerHandles)

@@ -9,16 +9,36 @@
 --------------------------------------------------------------
 
 local playAnimation
-function Animation:new(actor, animationData, animation)
+function Animation:new(actor, animSpell)
     local instance = setmetatable({
         actor = actor,
-        animationData = animationData,
-        animation = animation
+        animationData = animSpell, -- Somehow animSpell is a table instead of just the name
+        animation = ""
     }, Animation)
+   
+    local hmInstance = animSpell.Heightmatching
+    local scene = Scene:FindSceneByEntity(actor.parent)
+    local hmAnim
+    local hmAnim2
+    if hmInstance then
+        if #scene.actors == 1 then
+            instance.animation = hmInstance:getAnimation(actor.parent)
+        else
+            hmAnim, hmAnim2 = hmInstance:getAnimation(scene.actors[1].parent, scene.actors[2].parent)
+            if scene.actors[1].parent == instance.actor.parent then
+                instance.animation = hmAnim
+            elseif scene.actors[2].parent == instance.actor.parent then
+                instance.animation = hmAnim2
+            else
+                _P("[BG3SX][Animation.lua] Something went wrong! Contact mod author! [Error 1]")
+            end
+        end
+        playAnimation(instance) -- Automatically calls this function on creation
 
-    playAnimation(instance) -- Automatically calls this function on creation
-
-    return instance
+        return instance
+    else
+        _P("[BG3SX][Animation.lua] Something went wrong! Contact mod author! [Error 2]")
+    end
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -34,6 +54,7 @@ end
 playAnimation = function(self)
   --  Osi.PlayAnimation(self.actor.uuid, "") -- First, stop current animation on actor
     if self.animationData.Loop == true then
+        -- _P("Playing ", self.animation, " for ", self.actor.parent)
         Osi.PlayLoopingAnimation(self.actor.uuid, "", self.animation, "", "", "", "", "")
     else
         Osi.PlayAnimation(self.actor.uuid, self.animation)

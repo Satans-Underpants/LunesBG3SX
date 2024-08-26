@@ -79,14 +79,14 @@ end
 ---@param default	any	- TODO
 ---@return result		- Table of requested genitals
 local function getVanillaGenitals(TYPE, default)
-    local tableToSearch = (TYPE == "PENIS" and PENIS) or (TYPE == "VULVA" and VULVA)
+    local tableToSearch = (TYPE == "PENIS" and Data.BodyLibrary.PENIS) or (TYPE == "VULVA" and Data.BodyLibrary.VULVA)
     if not tableToSearch then
 		_P("[BG3SX][Genital.lua] - getVanillaGenitals(TYPE, default) - Invalid type specified. Please use 'PENIS', 'VULVA'.")
         return {}
     end
 
     local result = {}
-    for _, entry in ipairs(tableToSearch) do -- Collect all genitalIDs from the selected table
+	for _, entry in ipairs(tableToSearch) do -- Collect all genitalIDs from the selected table
         if default and entry.name == "Default" then
             table.insert(result, entry.genitalID)
         elseif not default and entry.name ~= "Default" then
@@ -101,7 +101,7 @@ end
 ---@return result - Table of MrFunSize erections
 local function collectFunErections()
     local result = {}
-    for _, entry in ipairs(FUNERECTION) do -- Collect all genitalIDs from the selected table
+    for _, entry in ipairs(Data.BodyLibrary.FunErections) do -- Collect all genitalIDs from the selected table
         table.insert(result, entry.genitalID)
     end
     return result
@@ -181,10 +181,10 @@ end
 -- 	local modName = string.match(sourceFile, ".-([^/]+)/[^/]+/[^/]+/[^/]+$")
 
 -- 	-- Quick error handling in case author places modfile too low
--- 	-- Check if value from RACES is contained within modName
+-- 	-- Check if value from Data.BodyLibrary.Races is contained within modName
 
 -- 	if modName then
---         for _, race in pairs(RACES) do
+--         for _, race in pairs(Data.BodyLibrary.Races) do
 -- 			if Helper:StringContains(modName, race) then
 --                 _P("Error: Mod name matches a race name, which suggests improper directory structure.")
 -- 				_P("Error: Spell will be added to \"Other Genitals\"")
@@ -278,7 +278,7 @@ local function raceAllowedToHaveGenitals(uuid)
 	local name = ""	
 
 	if race then
-		for _,entry in pairs(MODDED_RACES) do
+		for _,entry in pairs(Data.BodyLibrary.ModdedRaces) do
 			if entry.uuid == race then
 				name = entry.name
 			end
@@ -317,15 +317,15 @@ local function getPermittedGenitals(uuid)
 	local raceTags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
 	local race
 	for _, tag in pairs(raceTags) do
-		if RACETAGS[tag] then
-			race = Table:GetKey(RACES, RACETAGS[tag])
+		if Data.BodyLibrary.RaceTags[tag] then
+			race = Table:GetKey(Data.BodyLibrary.Races, Data.BodyLibrary.RaceTags[tag])
 			break
 		end
 	end
 
 	-- Failsafe for modded races - assign human race
 	-- TODO - add support for modded genitals for modded races
-	if not RACES[race] then
+	if not Data.BodyLibrary.Races[race] then
 		_P("[BG3SX][Genital.lua] You are currently not using a default currently, some genitals may be misaligned.")
 		-- _P(race, " is not Vanilla and does not have a Vanilla parent, " ..  
 		-- " these custom races are currently not supported")

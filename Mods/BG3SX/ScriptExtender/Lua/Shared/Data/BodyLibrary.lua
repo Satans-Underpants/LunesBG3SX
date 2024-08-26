@@ -1,26 +1,32 @@
 ----------------------------------------------------------------------------------------------------
 -- Library of Vanilla genitals for easy access (resource made available on BG3 modding) 
--------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+Data.BodyLibrary = {}
+Data.BodyLibrary.__index = Data.BodyLibrary
+
 
 -- Masc/Femme
-BODYTYPE = {
-	MALE = 0,
-	FEMALE = 1
+Data.BodyLibrary.BodyType = {
+    [0] = "M", -- Male
+    [1] = "F" -- Female
 }
 
 -- Strong is only for humanoids
-BODYSHAPE = {
-	NORMAL = 0,
-	STRONG = 1,
+Data.BodyLibrary.BodyShape = {
+    [0] = "Med",
+    [1] = "Tall",
+    [2] = "Small", -- Custom
+    [3] = "Tiny" -- Custom
 }
 
-GENITALS = {
+Data.BodyLibrary.Genitals = {
     ["VULVA"] = "a0738fdf-ca0c-446f-a11d-6211ecac3291",
     ["PENIS"] = "d27831df-2891-42e4-b615-ae555404918b"
 }
 
--- Define RACES dictionary
-RACES = {
+-- Define Data.BodyLibrary.Races dictionary
+Data.BodyLibrary.Races = {
     ["899d275e-9893-490a-9cd5-be856794929f"] = "HUMANOID",
     ["0eb594cb-8820-4be6-a58d-8be7a1a98fba"] = "HUMAN",
     ["bdf9b779-002c-4077-b377-8ea7c1faa795"] = "GITHYANKI",
@@ -35,8 +41,7 @@ RACES = {
     ["5c39a726-71c8-4748-ba8d-f768b3c11a91"] = "HALF-ORC",
 }
 
-RACETAGS = {
-
+Data.BodyLibrary.RaceTags = {
     ["69fd1443-7686-4ca9-9516-72ec0b9d94d7"] = "HUMAN",
     ["677ffa76-2562-4217-873e-2253d4720ba4"] = "GITHYANKI",
     ["aaef5d43-c6f3-434d-b11e-c763290dbe0c"] = "TIEFLING",
@@ -48,13 +53,13 @@ RACETAGS = {
     ["a672ac1d-d088-451a-9537-3da4bf74466c"] = "DROW",
     ["3311a9a9-cdbc-4b05-9bf6-e02ba1fc72a3"] = "HALF-ORC",
     ["02e5e9ed-b6b2-4524-99cd-cb2bc84c754a"] = "DRAGONBORN",
-
 }
 
+
 --TODO: overhaul modded races support with new race and bodytype system 
--- TODO WHITELIST SPECIFIC CUSTOM RACES TO ALLOW SEX
+-- TODO WHITELIST SPECIFIC CUSTOM Data.BodyLibrary.Races TO ALLOW SEX
 -- bt3 / bt4 are bodyshape overrdes - TODO - check if this can be automated
-MODDED_RACES = {
+Data.BodyLibrary.ModdedRaces = {
     {
         uuid = "ca1c9216-a0cf-44e7-811a-2f9081c536ed",
         name = "GITHZERAI",
@@ -102,7 +107,7 @@ MODDED_RACES = {
 
 ---------------------------------------------------------------------------------------------------------
 
-VULVA = {
+Data.BodyLibrary.VULVA = {
 
     -- Dwarves
     {   index = 1, name = "Vulva", race = "Dwarf", visual = "DWR_F_NKD_Body_Genital_A",
@@ -666,7 +671,7 @@ VULVA = {
         visualID = "5327907a-36dd-7c0a-a4c5-328f4fe1e558"
     }
 }
-PENIS = {
+Data.BodyLibrary.PENIS = {
 
     -- Dwarves
     {   index = 1, name = "Penis", race = "Dwarf", visual = "DWR_F_NKD_Body_Genital_B",
@@ -1522,7 +1527,7 @@ PENIS = {
 
 ---------------------------------------------------------------------------------------------------------
 
-FUNERECTION = {
+Data.BodyLibrary.FunErections = {
 
     -- Dwarves
     {   index = 1, name = "Erect", race = "Dwarf", visual = "DWR_F_Erect",

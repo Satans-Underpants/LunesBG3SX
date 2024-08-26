@@ -206,8 +206,8 @@ function Visual:getCharacterProperties(uuid)
 
 	local race
 	for _, tag in pairs(raceTags) do
-		if RACETAGS[tag] then
-			race = Table:GetKey(RACES, RACETAGS[tag])
+		if Data.BodyLibrary.RaceTags[tag] then
+			race = Table:GetKey(Data.BodyLibrary.Races, Data.BodyLibrary.RaceTags[tag])
 			break
 		end
 	end
@@ -217,7 +217,7 @@ function Visual:getCharacterProperties(uuid)
 
 	local bodyShapeOverride = false
 
-	if not RACES[race] then
+	if not Data.BodyLibrary.Races[race] then
 		-- print(race, " is not Vanilla and does not have a Vanilla parent, " ..  
 		-- " these custom races are currently not supported")
 		-- print("using default human genitals")

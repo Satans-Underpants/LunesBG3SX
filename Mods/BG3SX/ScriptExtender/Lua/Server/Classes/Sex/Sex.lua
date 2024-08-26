@@ -29,7 +29,7 @@ end
 function Sex:DetermineSceneType(scene)
     local involvedEntities = 0
     local penises = 0
-    for _, entity in pairs(scene.entities) do
+    for _,entity in pairs(scene.entities) do
         involvedEntities = involvedEntities+1
         if Entity:HasPenis(entity) then
             penises = penises+1
@@ -46,7 +46,7 @@ end
 -- Removes the sex spells on an entity when scene has ended
 ---@param entity    Entity  - The entity uuid to remove the spells from
 function Sex:RemoveSexSceneSpells(entity)
-    for _, spell in pairs(Data.Spells.SexSceneSpells) do -- Configurable in Shared/Data/Spells.lua
+    for _,spell in pairs(Data.Spells.SexSceneSpells) do -- Configurable in Shared/Data/Spells.lua
      Osi.RemoveSpell(entity, spell)
     end
 end
@@ -61,22 +61,12 @@ end
 -- @param actor         Actor   - The actor to play an animation and sound on
 -- @param animationData table   - The chosen animations data table
 -- @param position      string  - Specifies the actor's position (either "Top" or "Bottom") to determine the correct animation and sound
-local function playAnimationAndSound(actor, animationData, position)
-    local animation
+local function playAnimationAndSound(scene, animSpell)
     local newAnimation
     local newSound
-    if position == "Top" then
-        animation = animationData.FallbackTopAnimationID
-        newAnimation = Animation:new(actor, animationData, animation) 
-        newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)       
-    elseif position == "Bottom" then
-        animation = animationData.FallbackTopAnimationID
-        newAnimation = Animation:new(actor, animationData, animationData.FallbackBottomAnimationID)
-        if animationData.SoundBottom then
-            newSound = Sound:new(actor, animationData.SoundBottom, animationData.AnimLength)
-        else
-            newSound = Sound:new(actor, animationData.SoundTop, animationData.AnimLength)
-        end
+    for _,actor in pairs(scene.actors) do
+        newAnimation = Animation:new(actor, animSpell)
+        newSound = Sound:new(actor, animSpell)
     end
 
     Ext.ModEvents.BG3SX.AnimationChange:Throw(newAnimation)
@@ -86,42 +76,32 @@ end
 
 -- TODO: This might need to become its own class
 -- Determines which type of scene the entity is part of and assigns the appropriate animations and sounds to the actors involved
----@param entity         Entity  - The entity which used a new animation spell
----@param animationData  table   - The chosen animations data table
-function Sex:PlayAnimation(entity, animationData)
+---@param entity    Entity  - The entity which used a new animation spell
+---@param spell     string   - The chosen animations data table
+function Sex:PlayAnimation(entity, animSpell)
     local scene = Scene:FindSceneByEntity(entity)
     local sceneType = Sex:DetermineSceneType(scene)
-    if sceneType == "MasturbateFemale" then
-        playAnimationAndSound(scene.actors[1], animationData, "Bottom")
 
-    elseif sceneType == "MasturbateMale" then
-        playAnimationAndSound(scene.actors[1], animationData, "Top")
-
-    elseif sceneType == "Lesbian" or sceneType == "Gay" then
-        playAnimationAndSound(scene.actors[1], animationData, "Top")
-        playAnimationAndSound(scene.actors[2], animationData, "Bottom")
-
+    if sceneType == "MasturbateMale" or sceneType == "MasturbateFemale" then
     elseif sceneType == "Straight" then -- Handle this in a different way to enable actor swapping even for straight animations
-        local actor1 = scene.actors[1]
-        local actor2 = scene.actors[2]
         -- In case of actor1 not being male, swap them around to still assign correct animations
         if not Entity:HasPenis(scene.actors[1].parent) then
-            actor1 = scene.actors[2]
-            actor2 = scene.actors[1]
-        end
-        playAnimationAndSound(actor1, animationData, "Top")
-        playAnimationAndSound(actor2, animationData, "Bottom")
-        
+            local savedActor = scene.actors[1]
+            scene.actors[1] = scene.actors[2]
+            scene.actors[2] = savedActor
+        end        
     elseif sceneType == "FFF" then
     elseif sceneType == "FFM" then
     elseif sceneType == "MMF" then
     elseif sceneType == "MMM" then
     end
 
+    playAnimationAndSound(scene, animSpell)
+
     -- Prop handling
-    if animationData ~= scene.currentAnimation then
+    if animSpell ~= scene.currentAnimation then
         -- Since animation is not the same as before save the new animationData table to the scene to use for prop management, teleporting or rotating
-        scene.currentAnimation = animationData
+        scene.currentAnimation = animSpell
         scene:DestroyProps() -- Props rely on scene.currentAnimation
         scene:CreateProps()
     end

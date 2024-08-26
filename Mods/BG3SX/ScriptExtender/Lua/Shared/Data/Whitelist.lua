@@ -4,18 +4,18 @@ Data.AllowedTagsAndRaces = {
     },
     ["GOBLIN_KID"] = {TAG = "88730ec2-439e-4172-95f4-b7f1875169fa", Allowed = false
     },
-    ["AASIMAR"] = {TAG = "41c6cdc9-aff5-46ae-afc4-aa0ccd9cd201", Allowed = false,
+    ["AASIMAR"] = {TAG = "41c6cdc9-aff5-46ae-afc4-aa0ccd9cd201", Allowed = true,
         racesUsingTag = {
-        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = nil},
-        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = nil},
-        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = nil},
-        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = nil},
-        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = nil},
-        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = nil},
-        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = nil},
-        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = nil},
-        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = nil},
-        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = nil},
+        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = true},
+        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = true},
+        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = true},
+        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = true},
+        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = true},
+        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = true},
+        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = true},
+        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = true},
+        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = true},
+        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
         },
     },
     ["ABERRATION"] = {TAG = "f6fd70e6-73d3-4a12-a77e-f24f30b3b424", Allowed = false,
@@ -34,7 +34,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Bat", RACE = "7c3f65e7-e463-425a-b7a8-9cb65323e469", Allowed = nil},
         },
     },
-    ["ASMODEUSTIEFLING"] = {TAG = "c3fd1fc3-2edf-4d17-935d-44ab92406df1", Allowed = nil,
+    ["ASMODEUSTIEFLING"] = {TAG = "c3fd1fc3-2edf-4d17-935d-44ab92406df1", Allowed = true,
         racesUsingTag = {
         {Name = "AsmodeusTiefling", RACE = "3f30547c-248c-4781-b0e3-6ef2ab99426b", Allowed = nil},
         },
@@ -137,7 +137,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "RedDragonborn", RACE = "61a2c59d-fe8d-4644-8d04-6fae2b239eaf", Allowed = true},
         {Name = "SilverDragonborn", RACE = "dff74c31-2ddc-4270-9615-01a1438ee61c", Allowed = true},
         {Name = "WhiteDragonborn", RACE = "cbe10ab9-11a6-450e-844a-175bcca25de7", Allowed = true},
-        {Name = "Aasimar", RACE = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = false},
+        {Name = "Aasimar", RACE = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = true},
         },
     },
     ["DROWELF"] = {TAG = "a672ac1d-d088-451a-9537-3da4bf74466c", Allowed = true,
@@ -314,7 +314,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "WhiteDragonborn", RACE = "cbe10ab9-11a6-450e-844a-175bcca25de7", Allowed = true},
         {Name = "Meazel", RACE = "00c7ee76-58d0-429c-ae4d-ecc3d653da06", Allowed = false},
         {Name = "ShadarKai", RACE = "1881d9c3-5654-491b-868d-14b6af8b79af", Allowed = true}, -- Should just be "He Who Was" with a regular elf rig
-        {Name = "Aasimar", RACE = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = false},
+        {Name = "Aasimar", RACE = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = true},
         {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = false},
         {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = false},
         {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = false},
@@ -577,7 +577,7 @@ Data.AllowedTagsAndRaces = {
         },
     },
     ----------------------------Races without their own tags--------------------------
-    ["Aasimar"] = {UUID = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = false},
+    ["Aasimar"] = {UUID = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = true},
     ["AdamantineGolem"] = {UUID = "84ddccc7-653e-4236-84c4-ca2f5aac719a", Allowed = false},
     ["Alioramus"] = {UUID = "33923433-64bd-446d-b028-af6d5afe3ee0", Allowed = false},
     ["AnimatedArmor"] = {UUID = "5577163c-d258-4e12-ab0e-f2e32f0437ae", Allowed = false},
@@ -656,8 +656,8 @@ Data.AllowedTagsAndRaces = {
 }
 
 Data.BlacklistedEntities = {
-    "58a69333-40bf-8358-1d17-fff240d7fb11", -- "Placeholder"
-    "3ed74f06-3c60-42dc-83f6-f034cb47c671", -- "Placeholder"
+    "58a69333-40bf-8358-1d17-fff240d7fb11", -- "Placeholder" - Doesn't exist
+    "3ed74f06-3c60-42dc-83f6-f034cb47c671", -- "Placeholder" - Doesn't exist
 }
 
 -- TODO: Move functions over into their own classes and keep white/blacklist in their own data class
