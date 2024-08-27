@@ -102,6 +102,8 @@ function Helper:StringContains(str, sub)
     return (string.find(str, sub, 1, true) ~= nil)
 end
 
+function Helper:ResetWhitelistToDefault()
+end
 
 -- Retrieves the value of a specified property from an object or returns a default value if the property doesn't exist.
 ---@param obj           - The object from which to retrieve the property value.

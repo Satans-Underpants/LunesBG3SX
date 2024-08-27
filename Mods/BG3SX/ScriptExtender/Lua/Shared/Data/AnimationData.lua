@@ -1,7 +1,8 @@
+-- TODO: Clean these up - Maybe have the tables first in general, then afterwards create a section with the additional heightmatching entries
+
 -- Heightmatching.lua needs to be loaded before AnimationData.lua to allow the functions to already exist.
 Ext.Require("Shared/Data/Heightmatching.lua")
 local hm = Data.Heightmatching
--- TODO: Clean these up - Maybe have the tables first in general, then afterwards create a section with the additional heightmatching entries
 
 -- Additional data thats included when using a spell equal to the entry name
 -- Seperated from the other table because these 2 are the start spells which are handled differently and will create a scene
@@ -20,10 +21,10 @@ Data.StartSexSpells = {
 
 -- Additional entries need to be done seperately, we only create the instance per animation - We can't do this in the table belonging to the animation itself
 local hmi = hm:getInstanceByAnimName("BG3SX_StartMasturbating")
-if hmi then -- Solo animation only needs specify one bodytype/gender and one fallback animation
+if hmi then -- Solo animation only needs to specify one bodytype/gender and one animation UUID
     hmi:setAnimation("M",  nil, "49497bdc-d901-4f60-9e4e-3d31a06f9002")
     hmi:setAnimation("F",  nil, "9d8c5992-55ab-4c2f-8d97-28b68eb50a8b")
-    hmi:setAnimation("TallF",  nil, "2c60a233-b669-4b94-81dc-280e98238fd0") -- TallF specific animation - Tall is the "Strong" identifier for bodytype because its more about height than beefyness
+    hmi:setAnimation("TallF",  nil, "2c60a233-b669-4b94-81dc-280e98238fd0") -- TallF specific animation - Tall is what we call the "Strong" bodytype identifier
 end
 local hmi = hm:getInstanceByAnimName("BG3SX_AskForSex")
 if hmi then -- Instead of a specific bodytype/gender combo, just the bodytype matchup also works

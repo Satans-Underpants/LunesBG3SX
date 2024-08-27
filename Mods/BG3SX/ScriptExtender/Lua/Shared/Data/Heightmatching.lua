@@ -152,7 +152,7 @@ function Data.Heightmatching:getBodyType(uuid)
     local entity = Ext.Entity.Get(uuid)
     local raceTags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
     local bt = entity.BodyType.BodyType
-    local bs
+    local bs = 0 -- Default Medium bodytype
     if Entity:IsNPC(uuid) == false then
         bs = entity.CharacterCreationStats.BodyShape
     end

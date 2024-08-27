@@ -1,5 +1,8 @@
+-- Premade list of all tags that belong to races
+-- Edited to either allow or disallow certain tags
 Data.AllowedTagsAndRaces = {
     ------------------------------------TAGS------------------------------------
+    --#region Tags
     ["KID"] = {TAG = "ee978587-6c68-4186-9bfc-3b3cc719a835", Allowed = false
     },
     ["GOBLIN_KID"] = {TAG = "88730ec2-439e-4172-95f4-b7f1875169fa", Allowed = false
@@ -576,7 +579,9 @@ Data.AllowedTagsAndRaces = {
         {Name = "Githzerai", RACE = "ca1c9216-a0cf-44e7-811a-2f9081c536ed", Allowed = true},
         },
     },
+    --#endregion
     ----------------------------Races without their own tags--------------------------
+    --#region Races
     ["Aasimar"] = {UUID = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = true},
     ["AdamantineGolem"] = {UUID = "84ddccc7-653e-4236-84c4-ca2f5aac719a", Allowed = false},
     ["Alioramus"] = {UUID = "33923433-64bd-446d-b028-af6d5afe3ee0", Allowed = false},
@@ -653,19 +658,23 @@ Data.AllowedTagsAndRaces = {
     ["Wraith"] = {UUID = "90fb2456-c6c9-40b8-9753-e4d9bc7d7165", Allowed = false},
     ["Zombie"] = {UUID = "56b3ae88-2b72-4838-9f3b-00929aeae6e1", Allowed = false},
     ["|Raven|"] = {UUID = "40a08350-5795-44d9-a19f-b7c9ce4a70cb", Allowed = false},
+    --#endregion
 }
 
+-- Table to add specific entity UUID's to, to disallow interactions
 Data.BlacklistedEntities = {
     "58a69333-40bf-8358-1d17-fff240d7fb11", -- "Placeholder" - Doesn't exist
     "3ed74f06-3c60-42dc-83f6-f034cb47c671", -- "Placeholder" - Doesn't exist
 }
 
 -- TODO: Move functions over into their own classes and keep white/blacklist in their own data class
-
 local function saveTheKids()
     Ext.Timer.WaitFor(10000, function()
-        if Data.AllowedTagsAndRaces["Kid"].allowed == true then
-            Data.AllowedTagsAndRaces["Kid"].allowed = false
+        if Data.AllowedTagsAndRaces["KID"].allowed == true then
+            Data.AllowedTagsAndRaces["KID"].allowed = false
+        end
+        if Data.AllowedTagsAndRaces["GOBLIN_KID"].allowed == true then
+            Data.AllowedTagsAndRaces["GOBLIN_KID"].allowed = false
         end
         saveTheKids()
     end)
@@ -691,26 +700,27 @@ end
 
 -- Checks if an entity is part of our whitelisted tags/races table
 ---@param uuid string - UUID of an entity
-function Entity:IsWhitelistedRace(uuid)
+function Entity:IsWhitelistedTagOrRace(uuid)
     _P("-------------------------------------CHECKING " .. uuid .. " IF WHITELISTED-------------------------------------")
     local tags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
     local hasAllowedTag = false
-    _P("Checking entity with UUID:", uuid)
+    _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
     local function checkParentTags(raceUUID) -- Helper function to recursively check race parent tags
         local raceData = Ext.StaticData.Get(raceUUID, "Race")
         if raceData and raceData.ParentGuid then
             for _, parentUUID in ipairs(raceData.ParentGuid) do
                 local parentData = Ext.StaticData.Get(parentUUID, "Race")
                 if parentData then
-                    _P("Checking parent race: " .. parentData.Name .. " (UUID: " .. parentUUID .. ")")
+                    _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " (UUID: " .. parentUUID .. ")")
                     for _, parentTag in ipairs(parentData.Tags) do
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
                         if tagInfo then
                             if tagInfo.Allowed == false then
-                                _P("Found disallowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
+                                _P("[BG3SX][Whitelist.lua] Found disallowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
+                                _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
                                 return false
                             elseif tagInfo.Allowed == true then
-                                _P("Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
+                                _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
                                 hasAllowedTag = true
                             end
                         end
@@ -727,35 +737,38 @@ function Entity:IsWhitelistedRace(uuid)
     for _, tag in ipairs(tags) do
         local tagData = Ext.StaticData.Get(tag, "Tag")
         if tagData then
-            _P("Tag Name: " .. tagData.Name, " UUID: " .. tag)
+            _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
             local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
             if tagInfo then -- Check if the tag is in the allowed/disallowed list
                 if tagInfo.Allowed == false then -- If disallowed, return false immediately
-                    _P("Disallowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
+                    _P("[BG3SX][Whitelist.lua] Disallowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
+                    _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
                     return false
                 elseif tagInfo.Allowed == true then -- If allowed, set hasAllowedTag to true
-                    _P("Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
+                    _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
                     hasAllowedTag = true
                     for _, race in ipairs(tagInfo.racesUsingTag) do -- Check the races using this tag
                         local raceAllowed = true -- Assume race is allowed unless proven otherwise
-                        _P("Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
+                        _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
                         raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
                         if not raceAllowed then
-                            _P("Disallowed race found: " .. race.Name)
+                            _P("[BG3SX][Whitelist.lua] Disallowed race found: " .. race.Name)
+                            _P("[BG3SX][Whitelist.lua] If this is a race you think should be added to be allowed, please contact the mod authors!")
                             return false
                         end
                     end
                 end
             end
         else
-            _P("Unknown Tag UUID: " .. tag)
+            _P("[BG3SX][Whitelist.lua] Unknown Tag UUID: " .. tag)
+            _P("[BG3SX][Whitelist.lua] If this happens please contact the mod authors with a screenshot of the tag!")
         end
     end -- If no disallowed tags were found and at least one allowed tag was found, return true
     if hasAllowedTag then
-        _P("Entity is allowed.")
+        _P("[BG3SX][Whitelist.lua] Entity is allowed.")
         return true
     else
-        _P("No allowed tags found. Entity is not allowed.")
+        _P("[BG3SX][Whitelist.lua] No allowed tags found. Entity is not allowed.")
         return false
     end
 end
@@ -768,14 +781,13 @@ function Entity:IsWhitelisted(uuid)
     if Entity:IsBlacklistedEntity(uuid) then -- If YES it is NOT allowed - return false
         return false -- Entity not allowed
     else -- Entity allowed or not found in entity whitelist, check Race/Tags whitelist now
-        if Entity:IsWhitelistedRace(uuid) then
+        if Entity:IsWhitelistedTagOrRace(uuid) then
             return true -- Entity allowed by race/tags
         else
             return false -- Entity not allowed by race/tags
         end
     end
 end
-
 
 --------------------------------------------------------------
 -- HELPER FUNCTIONS TO GET ALL CURRENTLY LOADED TAGS/Races
@@ -913,7 +925,7 @@ local function tagsandraces()
 end
 Ext.RegisterConsoleCommand("tagsandraces", tagsandraces);
 local function racewhitelist()
-    Entity:IsWhitelistedRace(Osi.GetHostCharacter())
+    Entity:IsWhitelistedTagOrRace(Osi.GetHostCharacter())
 end
 Ext.RegisterConsoleCommand("racewhitelist", racewhitelist);
 local function blacklist()
