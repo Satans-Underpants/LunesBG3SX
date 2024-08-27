@@ -295,9 +295,6 @@ initialize = function(self)
         Entity:ToggleWalkThrough(entity)        -- To prevent interactions with other entities even while invisible and untargetable
         self:ToggleCampFlags(entity)            -- Toggles camp flags so companions don't return to tents
         Sex:RemoveMainSexSpells(entity)         -- Removes the regular sex spells
-        
-        local entityBodyShape = Entity:GetBodyShape(entity)         -- TODO: Implement Animation Heightmatching
-        local entityHeightClass = Entity:GetHeightClass(entity)     -- Save the entities body heightclass for animation matching
     end
 
     for _, entity in pairs(self.entities) do

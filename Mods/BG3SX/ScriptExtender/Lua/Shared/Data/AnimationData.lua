@@ -19,16 +19,16 @@ Data.StartSexSpells = {
 }
 
 -- Additional entries need to be done seperately, we only create the instance per animation - We can't do this in the table belonging to the animation itself
-local instance = hm:getInstanceByAnimName("BG3SX_StartMasturbating")
-if instance then -- Solo animation only needs specify one bodytype/gender and one fallback animation
-    instance:setAnimation("M",  nil, "49497bdc-d901-4f60-9e4e-3d31a06f9002")
-    instance:setAnimation("F",  nil, "9d8c5992-55ab-4c2f-8d97-28b68eb50a8b")
-    instance:setAnimation("TallF",  nil, "2c60a233-b669-4b94-81dc-280e98238fd0") -- TallF specific animation - Tall is the "Strong" identifier for bodytype because its more about height than beefyness
+local hmi = hm:getInstanceByAnimName("BG3SX_StartMasturbating")
+if hmi then -- Solo animation only needs specify one bodytype/gender and one fallback animation
+    hmi:setAnimation("M",  nil, "49497bdc-d901-4f60-9e4e-3d31a06f9002")
+    hmi:setAnimation("F",  nil, "9d8c5992-55ab-4c2f-8d97-28b68eb50a8b")
+    hmi:setAnimation("TallF",  nil, "2c60a233-b669-4b94-81dc-280e98238fd0") -- TallF specific animation - Tall is the "Strong" identifier for bodytype because its more about height than beefyness
 end
-local instance = hm:getInstanceByAnimName("BG3SX_AskForSex")
-if instance then -- Instead of a specific bodytype/gender combo, just the bodytype matchup also works
-    instance:setAnimation("Tall", "Med", "04922882-0a2d-4945-8790-cef50276373d", "392073ca-c6e0-4f7d-848b-ffb0b510500b")
-    instance:setAnimation("Med", "Tall", "392073ca-c6e0-4f7d-848b-ffb0b510500b", "04922882-0a2d-4945-8790-cef50276373d")
+local hmi = hm:getInstanceByAnimName("BG3SX_AskForSex")
+if hmi then -- Instead of a specific bodytype/gender combo, just the bodytype matchup also works
+    hmi:setAnimation("Tall", "Med", "04922882-0a2d-4945-8790-cef50276373d", "392073ca-c6e0-4f7d-848b-ffb0b510500b")
+    hmi:setAnimation("Med", "Tall", "392073ca-c6e0-4f7d-848b-ffb0b510500b", "04922882-0a2d-4945-8790-cef50276373d")
     -- The reverse entry makes it play the same animation; It would also be possible to add reverse specific animations like this
 end
 
@@ -99,6 +99,29 @@ local hmi = hm:getInstanceByAnimName("BG3SX_MasturbateStanding")
 if hmi then
     hmi:setAnimation("TallF",  nil, "2c60a233-b669-4b94-81dc-280e98238fd0")
 end
+
+
+
+
+-- How to use
+
+-- local BG3SXAnims = Mods.BG3SX.Data.Animations
+-- local BG3SXSounds = Mods.BG3SX.Sounds
+-- local BG3SXHM = Mods.BG3SX.Data.Heightmatching
+
+-- table.insert(BG3SXAnims["BG3SX_Pegging"], {
+--     AnimLength = 3600, Loop = true, Fade = true, Sound = true,
+--     SoundTop = BG3SXSounds.Kissing, SoundBottom = BG3SXSounds.Kissing,
+--     Heightmatching = BG3SXHM:new("BG3SX_Pegging", "49497bdc-d901-4f60-9e4e-3d31a06f9002"),
+-- })
+
+-- local hmi = BG3SXHM:getInstanceByAnimName("BG3SX_Pegging")
+-- if hmi then
+--     hmi:setAnimation("TallF",  nil, "2c60a241-b689-4b94-81dc-280e98238fd0")
+-- end
+
+
+
 
 -- Old Layout
 

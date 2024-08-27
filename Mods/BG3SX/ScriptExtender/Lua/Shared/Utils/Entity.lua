@@ -113,38 +113,6 @@ end
 -- Return Component
 -------------------------------
 
---- Get an entities bodyshape
----@param   uuid    string  - The entity uuid to check
----@return          string  - The entities bodyshape UUID | Can be found in EntityScale.lua
-function Entity:GetBodyShape(uuid)
-    local entity = Ext.Entity.Get(uuid)
-    local equipmentRace = (entity.ServerCharacter.Template.EquipmentRace)
-    for bodyShape, bodyID in pairs(BODYSHAPES) do
-        if bodyID == equipmentRace then
-            return bodyShape
-        end
-    end
-    -- return default value if unknown (modded) bodyshape
-    -- _P("[ActorScale.lua] Failed BodyType check on actor: ", actor)
-    return BODYSHAPES['HumanMale']
-end
-
-
---- Get the heightclass associated with a given entities bodyshape
----@param   uuid    string      - The entity UUID to check
----@return          HeightClass - The bodyshapes heightclass | Can be found in EntityScale.lua
-function Entity:GetHeightClass(uuid)
-    local entityBodyShape = Entity:GetBodyShape(uuid)
-    for bodyShape, heightclass in pairs(ACTORHEIGHTS) do
-        if bodyShape == entityBodyShape then
-            return heightclass
-        end
-    end
-    -- Return default value if unknown (modded) bodyshape
-    return "Med"
-end
-
-
 -- NPCs don't have CharacterCreationStats
 function Entity:IsNPC(uuid)
     local E = Helper:GetPropertyOrDefault(Ext.Entity.Get(uuid),"CharacterCreationStats", nil)
