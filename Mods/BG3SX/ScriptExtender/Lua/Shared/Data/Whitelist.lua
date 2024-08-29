@@ -1,6 +1,9 @@
 -- Premade list of all tags that belong to races
 -- Edited to either allow or disallow certain tags
--- For custom race modders, please check the very bottom of this file, we created custom console commands to help you figure out how to add your race yourself
+-- Custom race modder can add their own race tag like this:
+-- local bg3sxWhitelist = Mods.BG3SX.Data.AllowedTagsAndRaces
+-- bg3sxWhitelist["YourRaceTagName"] = {TAG = "YourRaceTagUUID", Allowed = nil} -- set Allowed to true or false
+-- If your race has an out of the ordinary bodyshape please check our comments in Heightmatching.lua above our BodyShapeOverrides table (Ctrl+F is your friend)
 Data.AllowedTagsAndRaces = {
     ------------------------------------TAGS------------------------------------
     --#region Tags
@@ -940,20 +943,3 @@ local function whitelist()
     Entity:IsWhitelisted(Osi.GetHostCharacter())
 end
 Ext.RegisterConsoleCommand("whitelist", whitelist);
-
---------------------------------------------------------------
--- Use !tagsandraces to get a list of all currently found racetags and tags being involved with races
--- The console should automatically print everything in the correct format
-
--- Find yours
--- It may print like this:
--- ["YourRaceTag"] = {TAG = "YourRaceTagUUID", Allowed = nil
--- },
-
--- What you need to do is adding this to your mod:
--- local bg3sxWhitelist = Mods.BG3SX.Data.AllowedTagsAndRaces
--- bg3sxWhitelist["YourRaceTag"] = {TAG = "YourRaceTagUUID", Allowed = nil} -- set Allowed to true or false
-
--- And you should be done
--- If your race has an out of the ordinary bodyshape please check our comments in Heightmatching.lua above our BodyShapeOverrides table
--- Find with ctrl+f

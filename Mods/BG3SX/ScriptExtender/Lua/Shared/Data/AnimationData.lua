@@ -123,7 +123,7 @@ end
 -- BG3SXAnims["MyMod_Pegging"] = {
 --     AnimLength = 3600, Loop = true, Fade = true, Sound = true, -- AnimLength currently only gets used to loop the sound, just keep it as 3600
 --     SoundTop = BG3SXSounds.Kissing, SoundBottom = BG3SXSounds.Kissing,
---     Heightmatching = BG3SXHM:new("MyMod_Pegging", "YourFallbackAnimationUUID"),
+--     Heightmatching = BG3SXHM:new("MyMod_Pegging", "YourFallbackAnimationUUID", "YourFallbackAnimationUUID"),
 -- }
 
 -- local hmi = BG3SXHM:getInstanceByAnimName("MyMod_Pegging")
@@ -147,5 +147,5 @@ end
 
 -- Or sort all animations like we do first, then the heightmatching instances 
 -- You still need to create spells with the same name as the animations you add
--- As long as scene exist, they should work - Please report back if they don't
--- Props get spawned automatically on scene root position
+-- As long as a scene exist, they should work - Please report back if they don't
+-- Props get spawned automatically on scene root position per prop UUID listed
