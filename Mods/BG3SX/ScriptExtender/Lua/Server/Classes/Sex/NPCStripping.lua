@@ -190,7 +190,7 @@ local sexPairs = {}
 
 -- Sex
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
-	if spell == "BG3SX_AskForSex" and Entity:IsNPC(target) then
+	if spell == "BG3SX_AskForSex" and Entity:IsNPC(target) and Entity:IsWhitelisted(target) then
 		local pair = {caster = caster; target = target}
 		table.insert(sexPairs, pair)
         saveVisualSet_Slots(target)
@@ -202,9 +202,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
             if Entity:HasPenis(target) then
                 removeGenitals(target)
             end
-
         end)
-
 	end
 end)
 

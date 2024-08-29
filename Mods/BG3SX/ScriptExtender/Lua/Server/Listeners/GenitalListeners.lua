@@ -74,7 +74,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
             Genital:GiveErection(target)
 
         -- if casterErection and (spell == "BG3SX_AskForSex")  then
-        
+
         --     if Entity:HasPenis(caster) then
         --        Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
         --     end
