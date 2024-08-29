@@ -1,3 +1,4 @@
+-- Initialize Data
 Ext.Require("Shared/Data/Sounds.lua") -- Initialize before AnimationData so it actually gets its soundTables
 Ext.Require("Shared/Data/AnimationData.lua")
 Ext.Require("Shared/Data/BodyLibrary.lua")

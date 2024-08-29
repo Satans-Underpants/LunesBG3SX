@@ -15,7 +15,7 @@ Ext.Vars.RegisterUserVariable("BG3SX_Flaccid", {})
 Ext.Vars.RegisterUserVariable("BG3SX_Erect", {})
 Ext.Vars.RegisterUserVariable("BG3SX_AutoErection", {})
 
-_P("[BG3SX - SEXUSERVARS] Registered AutoErection")
+-- _P("[BG3SX - SEXUSERVARS] Registered AutoErection")
 
 ---@param type string - either "BG3SX_Flaccid" or "BG3SX_Erect"
 ---@param genital string - uuid

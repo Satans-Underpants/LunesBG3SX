@@ -12,7 +12,7 @@ local playAnimation
 function Animation:new(actor, animSpell)
     local instance = setmetatable({
         actor = actor,
-        animationData = animSpell, -- Somehow animSpell is a table instead of just the name
+        animationData = animSpell, -- The chosen animations data table
         animation = ""
     }, Animation)
    

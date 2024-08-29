@@ -110,13 +110,13 @@ local function stripNPC(uuid)
     Ext.Resource.Get(resource,"CharacterVisual").VisualSet.Slots = naked
 
     local payload = {naked = naked, resource = resource}
-    Ext.ModEvents.BG3SX.NPCStrip:Throw(payload)
+    Ext.Net.BroadcastMessage("BG3SX_NPCStrip",Ext.Json.Stringify(payload))
+    -- Ext.ModEvents.BG3SX.NPCStrip:Throw(payload) -- No mod Events here, only NetMessages work to distribute to all clients
 end
 
 
 -- Redress the NPC (give original template)
 ---@param uuid  string  -UUID of NPC
----@return           - list of player uuids 
 local function redress(uuid)
     local dressed
     for _,entry in pairs(OriginalTemplates) do
@@ -127,7 +127,8 @@ local function redress(uuid)
             table.remove(OriginalTemplates, Table:GetIndex(OriginalTemplates, entry))
 
             local payload = {dressed = dressed, resource = resource}
-            Ext.ModEvents.BG3SX.NPCDress:Throw(payload)
+            Ext.Net.BroadcastMessage("BG3SX_NPCDress",Ext.Json.Stringify(payload))
+            -- Ext.ModEvents.BG3SX.NPCDress:Throw(payload) -- No mod Events here, only NetMessages work to distribute to all clients
             return
         end
     end
@@ -190,6 +191,7 @@ local sexPairs = {}
 
 -- Sex
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
+    -- if spell == "BG3SX_AskForSex" and Entity:IsWhitelisted(target) then
 	if spell == "BG3SX_AskForSex" and Entity:IsNPC(target) and Entity:IsWhitelisted(target) then
 		local pair = {caster = caster; target = target}
 		table.insert(sexPairs, pair)

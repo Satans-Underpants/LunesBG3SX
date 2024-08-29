@@ -1,5 +1,6 @@
 -- Premade list of all tags that belong to races
 -- Edited to either allow or disallow certain tags
+-- For custom race modders, please check the very bottom of this file, we created custom console commands to help you figure out how to add your race yourself
 Data.AllowedTagsAndRaces = {
     ------------------------------------TAGS------------------------------------
     --#region Tags
@@ -662,6 +663,8 @@ Data.AllowedTagsAndRaces = {
 }
 
 -- Table to add specific entity UUID's to, to disallow interactions
+-- Anyone can add specific entities to it via:
+-- table.insert(Mods.BG3SX.Data.BlacklistedEntities, "An Entity UUID")
 Data.BlacklistedEntities = {
     "58a69333-40bf-8358-1d17-fff240d7fb11", -- "Placeholder" - Doesn't exist
     "3ed74f06-3c60-42dc-83f6-f034cb47c671", -- "Placeholder" - Doesn't exist
@@ -691,27 +694,28 @@ end
 --- @param uuid any - The UUID of the entity to check.
 --- @return boolean|string - Returns false for allowed entities, true for blacklisted entities, and "not found" if not listed.
 function Entity:IsBlacklistedEntity(uuid)
-    if Data.BlacklistedEntities[uuid] then
-        return true -- YES it IS blacklisted
-    else
-        return false -- NO is IS NOT
+    for _, blacklistedUUID in ipairs(Data.BlacklistedEntities) do
+        if blacklistedUUID == uuid then
+            return true -- The UUID is blacklisted
+        end
     end
+    return false -- The UUID is not blackliste
 end
 
 -- Checks if an entity is part of our whitelisted tags/races table
 ---@param uuid string - UUID of an entity
 function Entity:IsWhitelistedTagOrRace(uuid)
-    _P("-------------------------------------CHECKING " .. uuid .. " IF WHITELISTED-------------------------------------")
+    -- _P("[BG3SX][Whitelist.lua] -----------CHECKING " .. uuid .. " IF WHITELISTED-----------")
     local tags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
     local hasAllowedTag = false
-    _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
+    -- _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
     local function checkParentTags(raceUUID) -- Helper function to recursively check race parent tags
         local raceData = Ext.StaticData.Get(raceUUID, "Race")
         if raceData and raceData.ParentGuid then
             for _, parentUUID in ipairs(raceData.ParentGuid) do
                 local parentData = Ext.StaticData.Get(parentUUID, "Race")
                 if parentData then
-                    _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " (UUID: " .. parentUUID .. ")")
+                    -- _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " (UUID: " .. parentUUID .. ")")
                     for _, parentTag in ipairs(parentData.Tags) do
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
                         if tagInfo then
@@ -720,7 +724,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                                 _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
                                 return false
                             elseif tagInfo.Allowed == true then
-                                _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
+                                -- _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
                                 hasAllowedTag = true
                             end
                         end
@@ -737,7 +741,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
     for _, tag in ipairs(tags) do
         local tagData = Ext.StaticData.Get(tag, "Tag")
         if tagData then
-            _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
+            -- _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
             local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
             if tagInfo then -- Check if the tag is in the allowed/disallowed list
                 if tagInfo.Allowed == false then -- If disallowed, return false immediately
@@ -745,11 +749,11 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                     _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
                     return false
                 elseif tagInfo.Allowed == true then -- If allowed, set hasAllowedTag to true
-                    _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
+                    -- _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
                     hasAllowedTag = true
                     for _, race in ipairs(tagInfo.racesUsingTag) do -- Check the races using this tag
                         local raceAllowed = true -- Assume race is allowed unless proven otherwise
-                        _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
+                        -- _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
                         raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
                         if not raceAllowed then
                             _P("[BG3SX][Whitelist.lua] Disallowed race found: " .. race.Name)
@@ -765,7 +769,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
         end
     end -- If no disallowed tags were found and at least one allowed tag was found, return true
     if hasAllowedTag then
-        _P("[BG3SX][Whitelist.lua] Entity is allowed.")
+        -- _P("[BG3SX][Whitelist.lua] Entity is allowed.")
         return true
     else
         _P("[BG3SX][Whitelist.lua] No allowed tags found. Entity is not allowed.")
@@ -936,3 +940,20 @@ local function whitelist()
     Entity:IsWhitelisted(Osi.GetHostCharacter())
 end
 Ext.RegisterConsoleCommand("whitelist", whitelist);
+
+--------------------------------------------------------------
+-- Use !tagsandraces to get a list of all currently found racetags and tags being involved with races
+-- The console should automatically print everything in the correct format
+
+-- Find yours
+-- It may print like this:
+-- ["YourRaceTag"] = {TAG = "YourRaceTagUUID", Allowed = nil
+-- },
+
+-- What you need to do is adding this to your mod:
+-- local bg3sxWhitelist = Mods.BG3SX.Data.AllowedTagsAndRaces
+-- bg3sxWhitelist["YourRaceTag"] = {TAG = "YourRaceTagUUID", Allowed = nil} -- set Allowed to true or false
+
+-- And you should be done
+-- If your race has an out of the ordinary bodyshape please check our comments in Heightmatching.lua above our BodyShapeOverrides table
+-- Find with ctrl+f

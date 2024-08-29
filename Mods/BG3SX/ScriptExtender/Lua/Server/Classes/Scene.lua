@@ -39,7 +39,6 @@ function Scene:new(entities)
         timerHandles    = {},
         cameraZoom      = {},
         props           = {},
-        switchPlaces    = "false",
         campFlags       = {},
         summons         = {},
     }, Scene)

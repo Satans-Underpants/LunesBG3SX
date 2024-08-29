@@ -89,18 +89,19 @@ function Sex:PlayAnimation(entity, animSpell)
             local savedActor = scene.actors[1]
             scene.actors[1] = scene.actors[2]
             scene.actors[2] = savedActor
-        end        
-    elseif sceneType == "FFF" then
-    elseif sceneType == "FFM" then
-    elseif sceneType == "MMF" then
-    elseif sceneType == "MMM" then
+        end
+    -- Might need to switch to free-form animation choosing because Heightmatching already is pretty complicated with 2 entities
+    -- elseif sceneType == "FFF" then
+    -- elseif sceneType == "FFM" then
+    -- elseif sceneType == "MMF" then
+    -- elseif sceneType == "MMM" then
     end
 
     playAnimationAndSound(scene, animSpell)
 
     -- Prop handling
     if animSpell ~= scene.currentAnimation then
-        -- Since animation is not the same as before save the new animationData table to the scene to use for prop management, teleporting or rotating
+        -- If animation is not the same as before save the new animationData table to the scene to use for prop management, teleporting or rotating
         scene.currentAnimation = animSpell
         scene:DestroyProps() -- Props rely on scene.currentAnimation
         scene:CreateProps()

@@ -1,6 +1,7 @@
 ------------------------------------
         -- Mod Events --
 ------------------------------------
+-- These might change with future versions
 
 -- Available Events to listen to:
 ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -22,6 +23,9 @@ Ext.RegisterModEvent("BG3SX", "CameraHeightChange")         --(entity)          
 Ext.RegisterModEvent("BG3SX", "ActorDressed")               --({actor, equipmentTable})                 - Actor.lua
 Ext.RegisterModEvent("BG3SX", "GenitalChange")              --({entity, newGenital})                    - Genital.lua
 
+-- Clientside NPC Template functions need to be handled via NetMessages, not ModEvents - Please look at Client/NPCSync.lua
+-- Ext.RegisterModEvent("BG3SX", "NPCStrip")                   --({naked = naked, resource = resource})    - NPCStripping.lua
+-- Ext.RegisterModEvent("BG3SX", "NPCDress")                   --({dressed = dressed, resource = resource})- NPCStripping.lua
 
 -- To subscribe to events:
 -- ----------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,16 +1,19 @@
 Data.Heightmatching = {}
 Data.Heightmatching.__index = Data.Heightmatching
-Data.Heightmatching.Instances = {}
--- TODO: Check if :new() instances don't have a table of every current .Instances in them, otherwise move .Instances somewhere else
+Data.HeightmatchingInstances = {} -- Don't create it as Data.Heightmatching.Instance so we don't replicate all instances for every instance:new()
+
 -- TODO: Move some table functions over to Table:
 
 ---Retrieves a Heightmatching instance by its animation name.
 ---@param animName string - The animation name used as the unique identifier for the instance.
 ---@return table|nil - The Heightmatching instance if found, or nil if not found.
 function Data.Heightmatching:getInstanceByAnimName(animName)
-    return Data.Heightmatching.Instances[animName]
+    return Data.HeightmatchingInstances[animName]
 end
 
+-- TODO: Maybe keep or remove - This was used to pre-create the table structure we now create dynamically during testing
+------------------------------------------------------------------------------
+--#region Old code
 -- -- Overarching table for body types, agnostic types, etc.
 -- Data.Heightmatching.Keys = {
 --     BodyTypes = {"TallM", "TallF", "MedM", "MedF", "SmallM", "SmallF", "TinyM", "TinyF"},
@@ -90,14 +93,8 @@ end
 --         self.matchingTable[key].Solo = self.fallbackTop
 --     end
 -- end
-
-
--- For :new()
--- TODO: Add the 3 tables used by :new into a single overarching table called Data.Heightmatching.Keys["BodyTypes"], ["AgnosticTypes"], etc. so we can have other modders control a (for us empty) ["ModdedBodyTypes"]
--- TODO: Create a code snippet for other modders to add their own keys into it
--- TODO: Make initializeTable be automatic until all types of combinations of Data.Heightmatching.Keys are used so we have any type of combination covered including custom ones
--- TODO: Get Entity BodyType and translate it to Data.Heightmatching bodyTypes/agnosticTypes/gender by splitting up HUM_FS into TallF, Tall, F 
--- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+--#endregion
+------------------------------------------------------------------------------
 
 --- Creates a new `Heightmatching` instance with initialized entries.
 -- Initializes all possible body type combinations and gender-agnostic types.
@@ -112,10 +109,9 @@ function Data.Heightmatching:new(animName, fallbackTop, fallbackBottom) -- TODO:
     instance.fallbackBottom = fallbackBottom or nil
     instance.matchingTable = {}
 
-    -- instance:initializeTable()
-    -- May not need this because we update/generate new entries via :setAnimation or create automatic fallbacks when we use _getAnimation
+    -- instance:initializeTable() -- This was used to pre-create the table structure based on all the code above which we now do dynamically
 
-    Data.Heightmatching.Instances[animName] = instance
+    Data.HeightmatchingInstances[animName] = instance
     return instance
 end
 
@@ -141,6 +137,34 @@ function Data.Heightmatching:setAnimation(bodyType1, bodyType2, topAnimation, bo
 end
 
 
+-- For custom race modders, if you have a race that has a special bodyshape, but gets reconized as another one, you can add your tags by just typing this somewhere in your mod:
+-- local bsOverrides = Mods.BG3SX.Data.Heightmatching.BodyShapeOverrides
+-- bsOverrides["Your Custom Race Tag"] = 0
+-- 0 is Med - 1 is Tall - 2 is Small - 3 is Tiny
+Data.Heightmatching.BodyShapeOverrides = {
+    ["02e5e9ed-b6b2-4524-99cd-cb2bc84c754a"] = 1,   -- Dragonborn Tall -- May need to remove this tag if someone ever does medium Dragonborn or Orcs
+    ["3311a9a9-cdbc-4b05-9bf6-e02ba1fc72a3"] = 1,   -- Half-Orc Tall
+    ["486a2562-31ae-437b-bf63-30393e18cbdd"] = 2,   -- Dwarf Small
+    ["1f0551f3-d769-47a9-b02b-5d3a8c51978c"] = 3,   -- Gnome Tiny
+    ["b99b6a5d-8445-44e4-ac58-81b2ee88aab1"] = 3,   -- Halfling Tiny
+    ["7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67"] = 0,   -- Githzerai Medium
+    -- BodyShape Tags - Always list as last
+    -- ["d3116e58-c55a-4853-a700-bee996207397"] = 1,   -- BodyShape Strong Tag -- TODO: Check if we need this at all, apparently only this tag exist
+}
+
+-- Checks a list of raceTags against any BodyShapeOverrides and returns an override if it finds one
+---@param raceTags table -- Table of raceTags to check against Table of BodyShapeOverrides
+---@return bs - BodyShapeOverride
+local function bodyShapeOverrides(raceTags)
+    local bs 
+    for tag,value in pairs(Data.Heightmatching.BodyShapeOverrides) do
+        if Table:Contains(raceTags, tag) then
+            bs = value
+        end
+    end
+    -- Resolve loop first to pick potential direct bodyshape tags last and use these instead of race specific ones
+    return bs
+end
 
 --- Retrieves the body type and shape of an entity based on its UUID.
 -- Considers the entity's race and certain overrides to determine the correct body type and shape.
@@ -156,14 +180,11 @@ function Data.Heightmatching:getBodyType(uuid)
     if Entity:IsNPC(uuid) == false then
         bs = entity.CharacterCreationStats.BodyShape
     end
-    if Table:Contains(raceTags, "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67") then -- If Githzerai override
-        bs = 0 -- Medium
-    end
-    if Table:Contains(raceTags, "486a2562-31ae-437b-bf63-30393e18cbdd") then -- If Dwarf
-        bs = 2 -- Small
-    end
-    if Table:Contains(raceTags, "1f0551f3-d769-47a9-b02b-5d3a8c51978c") or Table:Contains(raceTags, "b99b6a5d-8445-44e4-ac58-81b2ee88aab1") then -- If Gnome/Halfling
-        bs = 3 -- Tiny
+
+    -- Apply body shape overrides based on race tags
+    local bsOverride = bodyShapeOverrides(raceTags)
+    if bsOverride ~= nil then
+        bs = bsOverride
     end
 
     -- Translate to Human-readable
@@ -226,9 +247,9 @@ function Data.Heightmatching:getAnimation(entity, entity2)
 end
 
 
--- Data.Heightmatching:new, basically creates a table like this
+-- Data.Heightmatching:new, basically creates a table somewhat like this
+-- Technically the table structure is completely empty and always defaults to the fallbackTop/Bottom if we didn't manually create a match with :setAnimation
 ----------------------------------------------------------------
-
 -- instance.matchingTable = {
 --     TallM = {
 --         TallM = { Top = "fallbackTop", Bottom = "fallbackBottom" },
@@ -239,15 +260,21 @@ end
 --         SmallF = { Top = "fallbackTop", Bottom = "fallbackBottom" },
 --         TinyM = { Top = "fallbackTop", Bottom = "fallbackBottom" },
 --         TinyF = { Top = "fallbackTop", Bottom = "fallbackBottom" },
+--         Solo = "fallbackTop"
+--     },
+--     Tall = {
 --         Tall = { Top = "fallbackTop", Bottom = "fallbackBottom" },
 --         Med  = { Top = "fallbackTop", Bottom = "fallbackBottom" },
 --         Small = { Top = "fallbackTop", Bottom = "fallbackBottom" },
 --         Tiny = { Top = "fallbackTop", Bottom = "fallbackBottom" },
+--         Solo = "fallbackTop"
+--     },
+--     M = {
 --         M = { Top = "fallbackTop", Bottom = "fallbackBottom" },
 --         F = { Top = "fallbackTop", Bottom = "fallbackBottom" },
 --         Solo = "fallbackTop"
 --     },
+--     -- Etc.
 --     -- Repeats for every bodytype, agnostictype and gender
---     -- Can create dynamic new combinations by just using :setAnimation and using parameter 1 or 2 with previously non-existent entry names
---     -- These and all others in general would fallback if not manually instructed to have a different animUUID setup by :setAnimation
+--     -- Can create dynamic new combinations by using :setAnimation and using parameter 1 or 2 with previously non-existent entry names
 -- }

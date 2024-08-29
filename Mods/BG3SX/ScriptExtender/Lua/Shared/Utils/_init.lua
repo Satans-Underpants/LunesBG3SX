@@ -1,5 +1,5 @@
 -- Initialize Events
-Ext.Require("Shared/Utils/ModEvents.lua") -- Register all possible ModEvents
+Ext.Require("Shared/Utils/ModEvents.lua") -- Register all possible ModEvents for our mod
 --Ext.Require("Shared/Utils/ModEventsTester.lua") -- Event Testing (See here how to listen to them)
 
 -- Initialize Utilities

@@ -15,6 +15,7 @@ Scene.__index = Scene
 Sound = {}
 Sound.__index = Sound
 
+-- Main Problem Child on why we did this
 Data = {}
 Data.__index = Data
 
