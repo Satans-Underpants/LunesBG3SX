@@ -43,7 +43,7 @@ end
 -- While creating matches, only use one of these matchups with the same type
 -- Only use Tall + Tall or Tall + Med matchups but never Tall + M or M + TallF
 -- If you want to match TallM against any F do it like this:
--- TallM + TallF
+-- TallM + Tall
 -- TallM + MedF
 -- etc.
 
@@ -145,7 +145,15 @@ end
 --     hmi:setAnimation("TallF",  nil, "ASpecificOtherAnimationUUID")
 -- end
 
--- Or sort all animations like we do first, then the heightmatching instances 
+-- Or sort all animations like we do first, then the heightmatching instances, its a preference thing
+
 -- You still need to create spells with the same name as the animations you add
+-- You can even use:
+-- local scene = Mods.BG3SX.Scene:FindSceneByEntity(someEntity)
+-- local sceneType = Mods.BG3SX.Sex:DetermineSceneType(scene)
+-- To only add your spells when a specific type of scene is running (Types can be found in Shared/Data/SceneTypes.lua)
+-- table.insert(Mods.BG3SX.Data.Spells.SexSceneSpells, yourSpellContainer) - Add this somewhere to have it be removed automatically when a scene ends
+
 -- As long as a scene exist, they should work - Please report back if they don't
 -- Props get spawned automatically on scene root position per prop UUID listed
+-- Props currently have no way of having their own animation so if you do use some it would need to work around that, they are stuck to the ground

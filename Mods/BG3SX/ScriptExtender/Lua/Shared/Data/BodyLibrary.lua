@@ -68,7 +68,6 @@ Data.BodyLibrary.ModdedRaces = {
         default = "bdf9b779-002c-4077-b377-8ea7c1faa795",
         bs3 = 0 , bs4 = 0
     },
-
     {
         -- Emerald asked to exclude them from receiving genitals
         uuid = "cd852310-e3e0-4045-82a9-069bff5e1930",

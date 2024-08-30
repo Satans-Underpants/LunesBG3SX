@@ -220,7 +220,7 @@ initialize = function(self)
     Ext.ModEvents.BG3SX.ActorInit:Throw(self)
     
     Osi.SetDetached(self.uuid, 1)
-    Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1) -- Gives them facial animations
+    Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1) -- Marks them for SweatySex and IdleExpressions - TODO: Change those mods to just get an entities actor and do their thing without the boost
     Entity:ToggleWalkThrough(self.uuid)
     -- Entity:ToggleMovement(self.uuid) -- TODO: fix this
     Osi.AddBoosts(self.uuid, "ActionResourceBlock(Movement)", "", "")

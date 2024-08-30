@@ -404,18 +404,18 @@ Data.AllowedTagsAndRaces = {
         {Name = "Ooze", RACE = "889ca85e-9263-4086-aeab-352dd1eed3a0", Allowed = nil},
         },
     },
-    ["PLANAR"] = {TAG = "bad00ba2-8a49-450c-8387-af47681717f1", Allowed = false,
+    ["PLANAR"] = {TAG = "bad00ba2-8a49-450c-8387-af47681717f1", Allowed = true,
         racesUsingTag = {
-        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = nil},
-        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = nil},
-        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = nil},
-        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = nil},
-        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = nil},
-        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = nil},
-        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = nil},
-        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = nil},
-        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = nil},
-        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = nil},
+        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = true},
+        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = true},
+        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = true},
+        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = true},
+        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = true},
+        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = true},
+        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = true},
+        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = true},
+        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = true},
+        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
         },
     },
     ["PLANT"] = {TAG = "125b3d94-3997-4fc4-8211-1768b67dbe4a", Allowed = false,
@@ -430,18 +430,18 @@ Data.AllowedTagsAndRaces = {
         {Name = "Rat", RACE = "80d7f493-0adb-43e7-a4ad-59095b5d80df", Allowed = nil},
         },
     },
-    ["REALLY_AASIMAR"] = {TAG = "2fddf7dd-f79b-4998-882c-d7257badbfe6", Allowed = false,
+    ["REALLY_AASIMAR"] = {TAG = "2fddf7dd-f79b-4998-882c-d7257badbfe6", Allowed = true,
         racesUsingTag = {
-        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = nil},
-        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = nil},
-        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = nil},
-        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = nil},
-        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = nil},
-        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = nil},
-        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = nil},
-        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = nil},
-        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = nil},
-        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = nil},
+        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = true},
+        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = true},
+        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = true},
+        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = true},
+        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = true},
+        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = true},
+        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = true},
+        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = true},
+        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = true},
+        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
         },
     },
     ["REALLY_GITH"] = {TAG = "e49c027c-6ec6-4158-9afb-8b59236d10fd", Allowed = true,
@@ -460,18 +460,18 @@ Data.AllowedTagsAndRaces = {
         {Name = "Githzerai", RACE = "ca1c9216-a0cf-44e7-811a-2f9081c536ed", Allowed = true},
         },
     },
-    ["REALLY_PLANAR"] = {TAG = "4cb02915-7ad7-4141-907e-93253c6a8644", Allowed = false,
+    ["REALLY_PLANAR"] = {TAG = "4cb02915-7ad7-4141-907e-93253c6a8644", Allowed = true,
         racesUsingTag = {
-        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = nil},
-        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = nil},
-        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = nil},
-        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = nil},
-        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = nil},
-        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = nil},
-        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = nil},
-        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = nil},
-        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = nil},
-        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = nil},
+        {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = true},
+        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = true},
+        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = true},
+        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = true},
+        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = true},
+        {Name = "Trips_Aasimar_Hireling", RACE = "e7351b45-e18e-4b63-b246-49af554b265a", Allowed = true},
+        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = true},
+        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = true},
+        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = true},
+        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
         },
     },
     ["REDCAP"] = {TAG = "ec2ee51e-80de-42a2-9d34-a5c9aa75cf75", Allowed = false,
@@ -673,27 +673,13 @@ Data.BlacklistedEntities = {
     "3ed74f06-3c60-42dc-83f6-f034cb47c671", -- "Placeholder" - Doesn't exist
 }
 
--- TODO: Move functions over into their own classes and keep white/blacklist in their own data class
-local function saveTheKids()
-    Ext.Timer.WaitFor(10000, function()
-        if Data.AllowedTagsAndRaces["KID"].allowed == true then
-            Data.AllowedTagsAndRaces["KID"].allowed = false
-        end
-        if Data.AllowedTagsAndRaces["GOBLIN_KID"].allowed == true then
-            Data.AllowedTagsAndRaces["GOBLIN_KID"].allowed = false
-        end
-        saveTheKids()
-    end)
-end
--- saveTheKids()
-
 
 -- WHITE-/BLACKLIST CHECK
 -- Use !whitelist or !blacklist to check against HostCharacter
 --------------------------------------------------------------
 
 --- Checks if an entity's UUID is blacklisted.
---- Returns false if the UUID is explicitly allowed, true if blacklisted, and "not found" if the UUID isn't listed.
+--- Returns false if the UUID is explicitly allowed, true if blacklisted, and false if the UUID isn't listed.
 --- @param uuid any - The UUID of the entity to check.
 --- @return boolean|string - Returns false for allowed entities, true for blacklisted entities, and "not found" if not listed.
 function Entity:IsBlacklistedEntity(uuid)
@@ -708,26 +694,27 @@ end
 -- Checks if an entity is part of our whitelisted tags/races table
 ---@param uuid string - UUID of an entity
 function Entity:IsWhitelistedTagOrRace(uuid)
-    -- _P("[BG3SX][Whitelist.lua] -----------CHECKING " .. uuid .. " IF WHITELISTED-----------")
+    _P("[BG3SX][Whitelist.lua] -----------CHECKING " .. uuid .. " IF WHITELISTED-----------")
     local tags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
     local hasAllowedTag = false
-    -- _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
+    _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
     local function checkParentTags(raceUUID) -- Helper function to recursively check race parent tags
         local raceData = Ext.StaticData.Get(raceUUID, "Race")
         if raceData and raceData.ParentGuid then
             for _, parentUUID in ipairs(raceData.ParentGuid) do
                 local parentData = Ext.StaticData.Get(parentUUID, "Race")
                 if parentData then
-                    -- _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " (UUID: " .. parentUUID .. ")")
+                    _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " (UUID: " .. parentUUID .. ")")
                     for _, parentTag in ipairs(parentData.Tags) do
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
                         if tagInfo then
                             if tagInfo.Allowed == false then
                                 _P("[BG3SX][Whitelist.lua] Found disallowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
                                 _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
+                                _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
                                 return false
                             elseif tagInfo.Allowed == true then
-                                -- _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
+                                _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
                                 hasAllowedTag = true
                             end
                         end
@@ -744,23 +731,25 @@ function Entity:IsWhitelistedTagOrRace(uuid)
     for _, tag in ipairs(tags) do
         local tagData = Ext.StaticData.Get(tag, "Tag")
         if tagData then
-            -- _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
+            _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
             local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
             if tagInfo then -- Check if the tag is in the allowed/disallowed list
                 if tagInfo.Allowed == false then -- If disallowed, return false immediately
                     _P("[BG3SX][Whitelist.lua] Disallowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
                     _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
+                    _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
                     return false
                 elseif tagInfo.Allowed == true then -- If allowed, set hasAllowedTag to true
-                    -- _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
+                    _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
                     hasAllowedTag = true
-                    for _, race in ipairs(tagInfo.racesUsingTag) do -- Check the races using this tag
+                    for _, race in pairs(tagInfo.racesUsingTag) do -- Check the races using this tag
                         local raceAllowed = true -- Assume race is allowed unless proven otherwise
-                        -- _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
+                        _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
                         raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
                         if not raceAllowed then
                             _P("[BG3SX][Whitelist.lua] Disallowed race found: " .. race.Name)
                             _P("[BG3SX][Whitelist.lua] If this is a race you think should be added to be allowed, please contact the mod authors!")
+                            _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
                             return false
                         end
                     end
@@ -769,10 +758,12 @@ function Entity:IsWhitelistedTagOrRace(uuid)
         else
             _P("[BG3SX][Whitelist.lua] Unknown Tag UUID: " .. tag)
             _P("[BG3SX][Whitelist.lua] If this happens please contact the mod authors with a screenshot of the tag!")
+            _P("[BG3SX][Whitelist.lua] If its from a custom race, please contact that mod author instead, we have ways for them to add them to our whitelist if they want to.")
+            return false
         end
     end -- If no disallowed tags were found and at least one allowed tag was found, return true
     if hasAllowedTag then
-        -- _P("[BG3SX][Whitelist.lua] Entity is allowed.")
+        _P("[BG3SX][Whitelist.lua] Entity is allowed.")
         return true
     else
         _P("[BG3SX][Whitelist.lua] No allowed tags found. Entity is not allowed.")

@@ -434,6 +434,20 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
+-- Function to set Kid Tags to disallowed every 10 seconds
+local function saveTheKids()
+    Ext.Timer.WaitFor(10000, function()
+        if Data.AllowedTagsAndRaces["KID"].Allowed == true then
+            Data.AllowedTagsAndRaces["KID"].Allowed = false
+        end
+        if Data.AllowedTagsAndRaces["GOBLIN_KID"].Allowed == true then
+            Data.AllowedTagsAndRaces["GOBLIN_KID"].Allowed = false
+        end
+        saveTheKids()
+    end)
+end
+saveTheKids()
+
 -- Get the current genital of the entity
 ---@param uuid 	    - uuid of entity that has a genital
 ---@return visual	- ID of CharacterCreationAppearaceVisual
