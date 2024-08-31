@@ -11,7 +11,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
                 Sex:StartSexSpellUsed(caster, {target}, Data.StartSexSpells[spell])
             end)
             
-            Ext.ModEvents.BG3SX.SexStartSpellUsed:Throw({caster = caster, target = target, animData = Data.StartSexSpells[spell]})
+            Ext.ModEvents.BG3SX.StartSexSpellUsed:Throw({caster = caster, target = target, animData = Data.StartSexSpells[spell]})
         end
     end
 end)

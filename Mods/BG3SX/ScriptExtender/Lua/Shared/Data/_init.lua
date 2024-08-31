@@ -1,3 +1,5 @@
+-- Initialize ModEvents List
+Ext.Require("Shared/Data/ModEvents.lua")
 -- Initialize Data
 Ext.Require("Shared/Data/Sounds.lua") -- Initialize before AnimationData so it actually gets its soundTables
 Ext.Require("Shared/Data/AnimationData.lua")

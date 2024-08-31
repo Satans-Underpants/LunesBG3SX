@@ -1,5 +1,5 @@
-Ext.ModEvents.BG3SX.SexStartSpellUsed:Subscribe(function (e)
-    _P("[BG3SX][Events] SexStartSpellUsed received with PayLoad: ")
+Ext.ModEvents.BG3SX.StartSexSpellUsed:Subscribe(function (e)
+    _P("[BG3SX][Events] StartSexSpellUsed received with PayLoad: ")
     _D(e)
 end)
 Ext.ModEvents.BG3SX.SexAnimationChange:Subscribe(function (e)
@@ -63,10 +63,16 @@ end)
 --     _D(e)
 -- end)
 
--- TODO: Test if this works as well to just listen to ANY event of a mod
--- for _,event in pairs(Ext.ModEvents.BG3SX) do
---     event:Subscribe(function (e)
---         _P("Recieved " .. event .. " event!")
---         _D(e)
+-- You can also subscribe to all events and filter them out
+-- Depending on how many mods will use this and how many events there will be over time, this might get laggy
+-- for _,event in pairs(Mods.BG3SX.Data.ModEvents) do
+--     Ext.ModEvents.BG3SX[event]:Subscribe(function (e)
+--         if event == "ActorDressed" then
+--             _P("Recieved " .. event .. " event!")
+--             _D(e[1])
+--         else
+--             _P("Recieved " .. event .. " event!")
+--             _D(e[1])
+--         end
 --     end)
 -- end

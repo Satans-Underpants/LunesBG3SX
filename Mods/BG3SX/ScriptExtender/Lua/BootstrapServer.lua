@@ -29,7 +29,7 @@ Ext.Require("Server/Listeners/_init.lua")
 ------------------------------------------------------------------------------------------------------------------------------------------------
 -- "Channel" (Event Name)                                   - Payload Info                              - Where it Triggers
 
-Ext.RegisterModEvent("BG3SX", "SexStartSpellUsed")          --{caster, target, spellData}               - SexListeners.lua
+Ext.RegisterModEvent("BG3SX", "StartSexSpellUsed")          --{caster, target, spellData}               - SexListeners.lua
 Ext.RegisterModEvent("BG3SX", "SexAnimationChange")         --{caster, animData}                        - SexListeners.lua
 Ext.RegisterModEvent("BG3SX", "SceneInit")                  --{scene}                                   - Scene.lua
 Ext.RegisterModEvent("BG3SX", "SceneCreated")               --{scene}                                   - Scene.lua
