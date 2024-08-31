@@ -692,17 +692,17 @@ end
 -- Checks if an entity is part of our whitelisted tags/races table
 ---@param uuid string - UUID of an entity
 function Entity:IsWhitelistedTagOrRace(uuid)
-    _P("[BG3SX][Whitelist.lua] -----------CHECKING " .. uuid .. " IF WHITELISTED-----------")
+    -- _P("[BG3SX][Whitelist.lua] -----------CHECKING " .. uuid .. " IF WHITELISTED-----------")
     local tags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
     local hasAllowedTag = false
-    _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
+    -- _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
     local function checkParentTags(raceUUID) -- Helper function to recursively check race parent tags
         local raceData = Ext.StaticData.Get(raceUUID, "Race")
         if raceData and raceData.ParentGuid then
             for _, parentUUID in ipairs(raceData.ParentGuid) do
                 local parentData = Ext.StaticData.Get(parentUUID, "Race")
                 if parentData then
-                    _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " with UUID: " .. parentUUID .. ")")
+                    -- _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " with UUID: " .. parentUUID .. ")")
                     for _, parentTag in ipairs(parentData.Tags) do
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
                         if tagInfo then
@@ -712,7 +712,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                                 Osi.OpenMessageBox(uuid, msg)
                                 return false
                             elseif tagInfo.Allowed == true then
-                                _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
+                                -- _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
                                 hasAllowedTag = true
                             end
                         end
@@ -729,7 +729,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
     for _, tag in ipairs(tags) do
         local tagData = Ext.StaticData.Get(tag, "Tag")
         if tagData then
-            _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
+            -- _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
             local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
             if tagInfo then -- Check if the tag is in the allowed/disallowed list
                 if tagInfo.Allowed == false then -- If disallowed, return false immediately
@@ -738,12 +738,12 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                     Osi.OpenMessageBox(uuid, msg)
                     return false
                 elseif tagInfo.Allowed == true then -- If allowed, set hasAllowedTag to true
-                    _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
+                    -- _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
                     hasAllowedTag = true
                     if tagInfo.racesUsingTag then
                         for _, race in pairs(tagInfo.racesUsingTag) do -- Check the races using this tag
                             local raceAllowed = true -- Assume race is allowed unless proven otherwise
-                            _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
+                            -- _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
                             raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
                             if not raceAllowed then
                                 local msg = "[BG3SX][Whitelist.lua]\nDisallowed race found: " .. race.Name .. "\nIf this is a race you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
@@ -768,10 +768,12 @@ function Entity:IsWhitelistedTagOrRace(uuid)
         end
     end -- If no disallowed tags were found and at least one allowed tag was found, return true
     if hasAllowedTag then
-        _P("[BG3SX][Whitelist.lua] Entity is allowed.")
+        -- _P("[BG3SX][Whitelist.lua] Entity is allowed.")
         return true
     else
-        _P("[BG3SX][Whitelist.lua] No allowed tags found. Entity is not allowed.")
+        local msg = "[BG3SX][Whitelist.lua]\n No allowed tags found. Entity is not allowed.\nIf this happens please contact the BG3SX authors on their discord!\nhttps://discord.gg/kDmq7TXME3"
+        _P(msg)
+        Osi.OpenMessageBox(uuid, msg)
         return false
     end
 end
