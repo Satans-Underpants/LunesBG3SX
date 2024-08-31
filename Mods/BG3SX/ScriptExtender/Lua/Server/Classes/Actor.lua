@@ -203,7 +203,7 @@ function Actor:DressActor()
         --end
     end
 
-    Ext.ModEvents.BG3SX.ActorDressed:Throw({self.uuid, self.equipment})
+    Ext.ModEvents.BG3SX.ActorDressed:Throw({uuid = self.uuid, eq = self.equipment})
 
     -- self.armour = nil
     -- self.equipment = nil
@@ -217,7 +217,7 @@ end
 
 -- Set ups the actor like  detaching them from the group etc.
 initialize = function(self)
-    Ext.ModEvents.BG3SX.ActorInit:Throw(self)
+    Ext.ModEvents.BG3SX.ActorInit:Throw({self.uuid})
     
     Osi.SetDetached(self.uuid, 1)
     Osi.ApplyStatus(self.uuid, "BG3SX_SEXACTOR", -1) -- Marks them for SweatySex and IdleExpressions - TODO: Change those mods to just get an entities actor and do their thing without the boost
@@ -238,5 +238,5 @@ initialize = function(self)
 
     Entity:CopyDisplayName(self.parent, self.uuid) -- Keep since shapeshiftrule doesn't actually handle this correctly
     
-    Ext.ModEvents.BG3SX.ActorCreated:Throw(self)
+    Ext.ModEvents.BG3SX.ActorCreated:Throw({self})
 end

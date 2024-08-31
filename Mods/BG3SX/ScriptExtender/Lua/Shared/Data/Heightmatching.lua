@@ -176,17 +176,20 @@ function Data.Heightmatching:getBodyType(uuid)
     local entity = Ext.Entity.Get(uuid)
     local raceTags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
     local bt = entity.BodyType.BodyType
-    local bs = 0 -- Default Medium bodytype
+    local bs = 0 -- Default Medium bodyShape
     if Entity:IsNPC(uuid) == false then
+        if Entity:HasPenis(uuid) then
+            bt = 0
+        else
+            bt = 1
+        end
         bs = entity.CharacterCreationStats.BodyShape
     end
-
     -- Apply body shape overrides based on race tags
     local bsOverride = bodyShapeOverrides(raceTags)
     if bsOverride ~= nil then
         bs = bsOverride
     end
-
     -- Translate to Human-readable
     bt = Data.BodyLibrary.BodyType[bt]
     bs = Data.BodyLibrary.BodyShape[bs]

@@ -19,10 +19,10 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
         local scene = Scene:FindSceneByEntity(caster)
         local savedActor = scene.actors[1]
 
-        Ext.ModEvents.BG3SX.SceneSwitchPlacesBefore:Throw(scene.actors)
+        Ext.ModEvents.BG3SX.SceneSwitchPlacesBefore:Throw({scene.actors})
         scene.actors[1] = scene.actors[2]
         scene.actors[2] = savedActor
-        Ext.ModEvents.BG3SX.SceneSwitchPlacesAfter:Throw(scene.actors)
+        Ext.ModEvents.BG3SX.SceneSwitchPlacesAfter:Throw({scene.actors})
 
         scene:CancelAllSoundTimers() -- Cancel all currently saved soundTimers to not get overlapping sounds
         Sex:PlayAnimation(caster, scene.currentAnimation)

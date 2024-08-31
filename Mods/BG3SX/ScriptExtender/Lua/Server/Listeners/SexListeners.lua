@@ -11,7 +11,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
                 Sex:StartSexSpellUsed(caster, {target}, Data.StartSexSpells[spell])
             end)
             
-            Ext.ModEvents.BG3SX.SexStartSpellUsed:Throw({caster, target, Data.StartSexSpells[spell]})
+            Ext.ModEvents.BG3SX.SexStartSpellUsed:Throw({caster = caster, target = target, animData = Data.StartSexSpells[spell]})
         end
     end
 end)
@@ -24,6 +24,6 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
         scene:CancelAllSoundTimers() -- Cancel all currently saved soundTimers to not get overlapping sounds
         Sex:PlayAnimation(caster, Data.Animations[spell])
 
-        Ext.ModEvents.BG3SX.SexAnimationChange:Throw({caster, Data.Animations[spell]})
+        Ext.ModEvents.BG3SX.SexAnimationChange:Throw({caster = caster, animData = Data.Animations[spell]})
     end
 end)

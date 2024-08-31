@@ -278,7 +278,7 @@ end
 ---@param self instance - The scene instance
 initialize = function(self)
     table.insert(Data.SavedScenes, self)
-    Ext.ModEvents.BG3SX.SceneInit:Throw(self)
+    Ext.ModEvents.BG3SX.SceneInit:Throw({self})
 
     setStartLocations(self) -- Save start location of each entity to later teleport them back
     saveCampFlags(self) -- Saves which entities had campflags applied before
@@ -307,7 +307,7 @@ initialize = function(self)
         Entity:RotateEntity(actor.uuid, startLocation.rotationHelper)
     end
 
-    Ext.ModEvents.BG3SX.SceneCreated:Throw(self)
+    Ext.ModEvents.BG3SX.SceneCreated:Throw({self})
 end
 
 
@@ -351,7 +351,7 @@ function Scene:MoveSceneToLocation(entity, newLocation)
     scene:CancelAllSoundTimers() -- Cancel all currently saved soundTimers to not get overlapping sounds
     Sex:PlayAnimation(entity, scene.currentAnimation) -- Play prior animation again
 
-    Ext.ModEvents.BG3SX.SceneMove:Throw({scene, oldLocation, newLocation})
+    Ext.ModEvents.BG3SX.SceneMove:Throw({scene = scene, oldLoca = oldLocation, newLoca = newLocation})
 end
 
 
@@ -433,7 +433,7 @@ function Scene:Destroy()
         end
     end
     
-    Ext.ModEvents.BG3SX.SceneDestroyed:Throw(self)
+    Ext.ModEvents.BG3SX.SceneDestroyed:Throw({self})
 
     for i,scene in ipairs(Data.SavedScenes) do
         if scene == self then

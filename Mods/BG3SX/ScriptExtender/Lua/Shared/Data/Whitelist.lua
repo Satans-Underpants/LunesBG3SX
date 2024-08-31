@@ -1,8 +1,10 @@
 -- Premade list of all tags that belong to races
 -- Edited to either allow or disallow certain tags
 -- Custom race modder can add their own race tag like this:
--- local bg3sxWhitelist = Mods.BG3SX.Data.AllowedTagsAndRaces
--- bg3sxWhitelist["YourRaceTagName"] = {TAG = "YourRaceTagUUID", Allowed = nil} -- set Allowed to true or false
+-- if Mods.BG3SX then
+--   local bg3sxWhitelist = Mods.BG3SX.Data.AllowedTagsAndRaces
+--   bg3sxWhitelist["YourRaceTagName"] = {TAG = "YourRaceTagUUID", Allowed = nil} -- set Allowed to true or false
+-- end
 -- If your race has an out of the ordinary bodyshape please check our comments in Heightmatching.lua above our BodyShapeOverrides table (Ctrl+F is your friend)
 Data.AllowedTagsAndRaces = {
     ------------------------------------TAGS------------------------------------
@@ -103,8 +105,6 @@ Data.AllowedTagsAndRaces = {
         },
     },
     ["CoinHalberd"] = {TAG = "7026d794-eea8-4cf1-b838-03c6e5a9812a", Allowed = false,
-        racesUsingTag = {
-        },
     },
     ["DEEPGNOME"] = {TAG = "2bbc3217-3d8c-46e6-b599-a0f1c9063f9a", Allowed = true,
         racesUsingTag = {
@@ -182,8 +182,6 @@ Data.AllowedTagsAndRaces = {
         },
     },
     ["EMPTY"] = {TAG = "0fcfa622-a3c9-4a03-aab4-2a74904b62eb", Allowed = false,
-        racesUsingTag = {
-        },
     },
     ["FEY"] = {TAG = "8cac055c-82dd-435c-9496-cf4c4b4581ab", Allowed = false,
         racesUsingTag = {
@@ -391,8 +389,6 @@ Data.AllowedTagsAndRaces = {
         },
     },
     ["MagicalSpecter"] = {TAG = "8317a985-dcd7-4758-b11d-a6b39b170b03", Allowed = false,
-        racesUsingTag = {
-        },
     },
     ["OGRE"] = {TAG = "cb53ec1e-af17-4dc2-bb28-2ac56d7eba96", Allowed = false,
         racesUsingTag = {
@@ -563,6 +559,8 @@ Data.AllowedTagsAndRaces = {
         {Name = "DeepGnome", RACE = "3560f4a2-c0b8-4f8b-baf8-6b6eaef0c160", Allowed = false},
         },
     },
+    ["VO_POSTPROCESS"] = {TAG = "eae44d86-3321-4a0a-811d-4fd8e48b5723",  Allowed = true,
+    },
     ["WOODELF"] = {TAG = "889e0db5-d03e-4b63-86d7-13418f69729f", Allowed = true,
         racesUsingTag = {
         {Name = "WoodElf", RACE = "a459ba68-a9ec-4c8e-b127-602615f5b4c0", Allowed = true},
@@ -642,14 +640,14 @@ Data.AllowedTagsAndRaces = {
     ["SilverDragonborn"] = {UUID = "dff74c31-2ddc-4270-9615-01a1438ee61c", Allowed = true},
     ["Succubus"] = {UUID = "7631ede0-25d5-4d96-9425-3d0ebd536ea5", Allowed = true},
     ["Tressym"] = {UUID = "d5876240-2072-4a51-894b-c53e0866f8d4", Allowed = false},
-    ["Trips_Fallen"] = {UUID = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = false},
-    ["Trips_Fallen_Hireling"] = {UUID = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = false},
-    ["Trips_Harbinger"] = {UUID = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = false},
-    ["Trips_Harbinger_Hireling"] = {UUID = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = false},
-    ["Trips_Protector"] = {UUID = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = false},
-    ["Trips_Protector_Hireling"] = {UUID = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = false},
-    ["Trips_Scourge"] = {UUID = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = false},
-    ["Trips_Scourge_Hireling"] = {UUID = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = false},
+    ["Trips_Fallen"] = {UUID = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = true},
+    ["Trips_Fallen_Hireling"] = {UUID = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = true},
+    ["Trips_Harbinger"] = {UUID = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = true},
+    ["Trips_Harbinger_Hireling"] = {UUID = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
+    ["Trips_Protector"] = {UUID = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = true},
+    ["Trips_Protector_Hireling"] = {UUID = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = true},
+    ["Trips_Scourge"] = {UUID = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = true},
+    ["Trips_Scourge_Hireling"] = {UUID = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = true},
     ["UndeadFace"] = {UUID = "276f2e3b-ce11-4f0f-bfeb-1fb3709c3617", Allowed = false},
     ["Vampire"] = {UUID = "b615c4e0-2157-4878-ab4c-cdacc679a87b", Allowed = true},
     ["VampireSpawn"] = {UUID = "dbb041de-231c-4dc9-9a25-91c81b45976e", Allowed = true},
@@ -742,18 +740,25 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                 elseif tagInfo.Allowed == true then -- If allowed, set hasAllowedTag to true
                     _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
                     hasAllowedTag = true
-                    for _, race in pairs(tagInfo.racesUsingTag) do -- Check the races using this tag
-                        local raceAllowed = true -- Assume race is allowed unless proven otherwise
-                        _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
-                        raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
-                        if not raceAllowed then
-                            _P("[BG3SX][Whitelist.lua] Disallowed race found: " .. race.Name)
-                            _P("[BG3SX][Whitelist.lua] If this is a race you think should be added to be allowed, please contact the mod authors!")
-                            _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
-                            return false
+                    if tagInfo.racesUsingTag then
+                        for _, race in pairs(tagInfo.racesUsingTag) do -- Check the races using this tag
+                            local raceAllowed = true -- Assume race is allowed unless proven otherwise
+                            _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
+                            raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
+                            if not raceAllowed then
+                                _P("[BG3SX][Whitelist.lua] Disallowed race found: " .. race.Name)
+                                _P("[BG3SX][Whitelist.lua] If this is a race you think should be added to be allowed, please contact the mod authors!")
+                                _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
+                                return false
+                            end
                         end
                     end
                 end
+            else
+                _P("[BG3SX][Whitelist.lua] Unknown Tag UUID - Name: " .. tagData.Name,  " UUID: " .. tag)
+                _P("[BG3SX][Whitelist.lua] If this happens please contact the mod authors with a screenshot of the tag!")
+                _P("[BG3SX][Whitelist.lua] If its from a custom race, please contact that mod author instead, we have ways for them to add them to our whitelist if they want to.")
+                return false
             end
         else
             _P("[BG3SX][Whitelist.lua] Unknown Tag UUID: " .. tag)

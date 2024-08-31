@@ -505,7 +505,7 @@ function Genital:OverrideGenital(newGenital, uuid)
 				Osi.AddCustomVisualOverride(uuid, newGenital)
 			end)
 		end
-		Ext.ModEvents.BG3SX.GenitalChange:Throw({uuid, newGenital})
+		Ext.ModEvents.BG3SX.GenitalChange:Throw({uuid = uuid, newGenital = newGenital})
 	end
 
 

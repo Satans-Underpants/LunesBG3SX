@@ -69,8 +69,8 @@ local function playAnimationAndSound(scene, animSpell)
         newSound = Sound:new(actor, animSpell)
     end
 
-    Ext.ModEvents.BG3SX.AnimationChange:Throw(newAnimation)
-    Ext.ModEvents.BG3SX.SoundChange:Throw(newSound)
+    Ext.ModEvents.BG3SX.AnimationChange:Throw({newAnimation})
+    Ext.ModEvents.BG3SX.SoundChange:Throw({newSound})
 end
 
 
@@ -249,5 +249,5 @@ function Sex:ChangeCameraHeight(uuid)
         end
         entity:Replicate("GameObjectVisual")
     end
-    Ext.ModEvents.BG3SX.CameraHeightChange:Throw(entity) 
+    Ext.ModEvents.BG3SX.CameraHeightChange:Throw({uuid}) 
 end
