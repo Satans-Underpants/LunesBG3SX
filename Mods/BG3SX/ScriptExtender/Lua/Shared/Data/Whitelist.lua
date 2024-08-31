@@ -559,7 +559,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "DeepGnome", RACE = "3560f4a2-c0b8-4f8b-baf8-6b6eaef0c160", Allowed = false},
         },
     },
-    ["VO_POSTPROCESS"] = {TAG = "eae44d86-3321-4a0a-811d-4fd8e48b5723",  Allowed = true,
+    ["VO_POSTPROCESS"] = {TAG = "eae44d86-3321-4a0a-811d-4fd8e48b5723",  Allowed = true, -- Technically it has some racesUsingTag but we just allow it to be skipped
     },
     ["WOODELF"] = {TAG = "889e0db5-d03e-4b63-86d7-13418f69729f", Allowed = true,
         racesUsingTag = {
@@ -702,14 +702,14 @@ function Entity:IsWhitelistedTagOrRace(uuid)
             for _, parentUUID in ipairs(raceData.ParentGuid) do
                 local parentData = Ext.StaticData.Get(parentUUID, "Race")
                 if parentData then
-                    _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " (UUID: " .. parentUUID .. ")")
+                    _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " with UUID: " .. parentUUID .. ")")
                     for _, parentTag in ipairs(parentData.Tags) do
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
                         if tagInfo then
                             if tagInfo.Allowed == false then
-                                _P("[BG3SX][Whitelist.lua] Found disallowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
-                                _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
-                                _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
+                                local msg = "BG3SX][Whitelist.lua]\nFound disallowed tag in parent: " .. parentTag .. " with UUID: " .. parentUUID .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
+                                _P(msg)
+                                Osi.OpenMessageBox(uuid, msg)
                                 return false
                             elseif tagInfo.Allowed == true then
                                 _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
@@ -733,9 +733,9 @@ function Entity:IsWhitelistedTagOrRace(uuid)
             local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
             if tagInfo then -- Check if the tag is in the allowed/disallowed list
                 if tagInfo.Allowed == false then -- If disallowed, return false immediately
-                    _P("[BG3SX][Whitelist.lua] Disallowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
-                    _P("[BG3SX][Whitelist.lua] If this is a tag you think should be added to be allowed, please contact the mod authors!")
-                    _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
+                    local msg = "[BG3SX][Whitelist.lua]\nDisallowed tag found: " .. tagData.Name .. " with UUID: " .. tag .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
+                    _P(msg)
+                    Osi.OpenMessageBox(uuid, msg)
                     return false
                 elseif tagInfo.Allowed == true then -- If allowed, set hasAllowedTag to true
                     _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
@@ -746,24 +746,24 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                             _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
                             raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
                             if not raceAllowed then
-                                _P("[BG3SX][Whitelist.lua] Disallowed race found: " .. race.Name)
-                                _P("[BG3SX][Whitelist.lua] If this is a race you think should be added to be allowed, please contact the mod authors!")
-                                _P("[BG3SX][Whitelist.lua] If its from a custom race, that modder manually disallowed it and its not a bug.")
+                                local msg = "[BG3SX][Whitelist.lua]\nDisallowed race found: " .. race.Name .. "\nIf this is a race you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
+                                _P(msg)
+                                Osi.OpenMessageBox(uuid, msg)
                                 return false
                             end
                         end
                     end
                 end
             else
-                _P("[BG3SX][Whitelist.lua] Unknown Tag UUID - Name: " .. tagData.Name,  " UUID: " .. tag)
-                _P("[BG3SX][Whitelist.lua] If this happens please contact the mod authors with a screenshot of the tag!")
-                _P("[BG3SX][Whitelist.lua] If its from a custom race, please contact that mod author instead, we have ways for them to add them to our whitelist if they want to.")
+                local msg = "[BG3SX][Whitelist.lua]\nUnknown Tag UUID - Name: " .. tagData.Name ..  " with UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
+                    _P(msg)
+                Osi.OpenMessageBox(uuid, msg)
                 return false
             end
         else
-            _P("[BG3SX][Whitelist.lua] Unknown Tag UUID: " .. tag)
-            _P("[BG3SX][Whitelist.lua] If this happens please contact the mod authors with a screenshot of the tag!")
-            _P("[BG3SX][Whitelist.lua] If its from a custom race, please contact that mod author instead, we have ways for them to add them to our whitelist if they want to.")
+            local msg = "[BG3SX][Whitelist.lua]\nUnknown Tag UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
+            _P(msg)
+            Osi.OpenMessageBox(uuid, msg)
             return false
         end
     end -- If no disallowed tags were found and at least one allowed tag was found, return true
