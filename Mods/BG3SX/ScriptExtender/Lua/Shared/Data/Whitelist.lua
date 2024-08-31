@@ -202,7 +202,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Succubus", RACE = "7631ede0-25d5-4d96-9425-3d0ebd536ea5", Allowed = true},
         {Name = "Vengeful Imp", RACE = "bd6cb035-8e37-475c-bea6-cca889ffb9d3", Allowed = false},
         {Name = "Vengeful Boar", RACE = "a8745b42-88cc-4eaf-ba0f-8a4b0ba5fa8e", Allowed = false},
-        {Name = "Vengeful Cambion", RACE = "f8767477-8708-4493-8902-c5ac84a2e40b", Allowed = true},t
+        {Name = "Vengeful Cambion", RACE = "f8767477-8708-4493-8902-c5ac84a2e40b", Allowed = true},
         {Name = "Raphaelian Merregon", RACE = "309b0bf4-47ec-4c65-925a-5f944d6353c8", Allowed = false},
         },
     },
