@@ -42,20 +42,20 @@ Ext.RegisterModEvent("BG3SX", "SoundChange")                --{newSound}        
 Ext.RegisterModEvent("BG3SX", "SceneSwitchPlacesBefore")    --{scene.actors}                            - Scene.lua
 Ext.RegisterModEvent("BG3SX", "SceneSwitchPlacesAfter")     --{scene.actors}                            - Scene.lua
 Ext.RegisterModEvent("BG3SX", "CameraHeightChange")         --{uuid}                                    - Sex.lua
-Ext.RegisterModEvent("BG3SX", "ActorDressed")               --{uuid, equipment}                 - Actor.lua
-Ext.RegisterModEvent("BG3SX", "GenitalChange")              --{uuid, newGenital}                    - Genital.lua
+Ext.RegisterModEvent("BG3SX", "ActorDressed")               --{uuid, equipment}                         - Actor.lua
+Ext.RegisterModEvent("BG3SX", "GenitalChange")              --{uuid, newGenital}                        - Genital.lua
 
 -- Clientside NPC Template functions need to be handled via NetMessages, not ModEvents - Please look at Client/NPCSync.lua
 -- Ext.RegisterModEvent("BG3SX", "NPCStrip")                   --({naked = naked, resource = resource})    - NPCStripping.lua
 -- Ext.RegisterModEvent("BG3SX", "NPCDress")                   --({dressed = dressed, resource = resource})- NPCStripping.lua
 
 -- To subscribe to events:
--- ----------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Ext.ModEvents.BG3SX.Channel:Subscribe(function (payload) ... end)
 
 -- Example:
--- -----------------------------------------------------------------
+-------------------------------------------------------------------
 -- Ext.ModEvents.BG3SX.ActorDressed:Subscribe(function (e)
 --     _P("ActorDressed received with PayLoad: ")
 --     _D(e) -- Dumps the entire payload

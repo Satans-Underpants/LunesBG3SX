@@ -195,14 +195,14 @@ Data.AllowedTagsAndRaces = {
         {Name = "Fiend", RACE = "99c33978-f236-4f5b-a8d8-59aeeaf6140f", Allowed = true},
         {Name = "Hellsboar", RACE = "94343b04-974d-44bd-bdd5-34de45d1d058", Allowed = false},
         {Name = "Imp", RACE = "7efb6df1-4f74-4d83-aeba-031b52d003a1", Allowed = false},
-        {Name = "Cambion", RACE = "b278457e-a3ee-45b1-8ff4-620b868c9193", Allowed = false}, -- No Animation Support
+        {Name = "Cambion", RACE = "b278457e-a3ee-45b1-8ff4-620b868c9193", Allowed = true},
         {Name = "Merregon", RACE = "0fff84f9-f614-49a1-81d6-2c9e82eb241e", Allowed = false},
         {Name = "Butler", RACE = "4d50d868-4c03-4c4b-86f3-009a652c8a7f", Allowed = false},
-        {Name = "Incubus", RACE = "9d44d79f-6db0-49da-90b0-0a1573d91098", Allowed = false}, -- No Animation Support
-        {Name = "Succubus", RACE = "7631ede0-25d5-4d96-9425-3d0ebd536ea5", Allowed = false}, -- No Animation Support
+        {Name = "Incubus", RACE = "9d44d79f-6db0-49da-90b0-0a1573d91098", Allowed = true},
+        {Name = "Succubus", RACE = "7631ede0-25d5-4d96-9425-3d0ebd536ea5", Allowed = true},
         {Name = "Vengeful Imp", RACE = "bd6cb035-8e37-475c-bea6-cca889ffb9d3", Allowed = false},
         {Name = "Vengeful Boar", RACE = "a8745b42-88cc-4eaf-ba0f-8a4b0ba5fa8e", Allowed = false},
-        {Name = "Vengeful Cambion", RACE = "f8767477-8708-4493-8902-c5ac84a2e40b", Allowed = false}, -- No Animation Support
+        {Name = "Vengeful Cambion", RACE = "f8767477-8708-4493-8902-c5ac84a2e40b", Allowed = true},t
         {Name = "Raphaelian Merregon", RACE = "309b0bf4-47ec-4c65-925a-5f944d6353c8", Allowed = false},
         },
     },
@@ -663,6 +663,29 @@ Data.AllowedTagsAndRaces = {
     --#endregion
 }
 
+Data.WhitelistedEntities = {
+    -- Origins
+    "3ed74f06-3c60-42dc-83f6-f034cb47c679", -- ShadowHeart
+    "c7c13742-bacd-460a-8f65-f864fe41f255", -- Astarion
+    "ad9af97d-75da-406a-ae13-7071c563f604", -- Gale
+    "58a69333-40bf-8358-1d17-fff240d7fb12", -- Laezel
+    "c774d764-4a17-48dc-b470-32ace9ce447d", -- Wyll
+    "2c76687d-93a2-477b-8b18-8a14b549304c", -- Karlach
+    "7628bc0e-52b8-42a7-856a-13a6fd413323", -- Halsin
+    "25721313-0c15-4935-8176-9f134385451b", -- Minthara
+    "91b6b200-7d00-4d62-8dc9-99e8339dfa1a", -- Jaheira
+    "0de603c5-42e2-4811-9dad-f652de080eba", -- Minsc
+    -- NPC's
+    "bc4b5efc-cbd3-4f8f-a31e-d37f801a038c", -- Ketheric
+    "bf24e0ec-a3a6-4905-bd2d-45dc8edf8101", -- Orin
+    "491a7686-3081-405b-983c-289ec8781e0a", -- Mizora
+    "6c55edb0-901b-4ba4-b9e8-3475a8392d9b", -- Dame Aylin
+    "2f1880e6-1297-4ca3-a79c-9fabc7f179d3", -- Cazador
+    "f65becd6-5cd7-4c88-b85e-6dd06b60f7b8", -- Raphael
+    "25498064-744e-479c-809f-f36ecd5eb264", -- Haarlep
+    "14ac9a0f-02ab-422f-b848-069c717d4203", -- Haarlep (F)
+}
+
 -- Table to add specific entity UUID's to, to disallow interactions
 -- Anyone can add specific entities to it via:
 -- table.insert(Mods.BG3SX.Data.BlacklistedEntities, "An Entity UUID")
@@ -676,10 +699,23 @@ Data.BlacklistedEntities = {
 -- Use !whitelist or !blacklist to check against HostCharacter
 --------------------------------------------------------------
 
+--- Checks if an entity's UUID is whitelisted.
+--- Returns true if whitelisted, and false if the UUID isn't listed.
+--- @param uuid any - The UUID of the entity to check.
+--- @return boolean|string - Returns true for whitelisted entities, false if it is not listed.
+function Entity:IsWhitelistedEntity(uuid)
+    for _, whitelistedUUID in ipairs(Data.WhitelistedEntities) do
+        if whitelistedUUID == uuid then
+            return true -- The UUID is whitelisted
+        end
+    end
+    return false -- The UUID is not whitelisted
+end
+
 --- Checks if an entity's UUID is blacklisted.
 --- Returns false if the UUID is explicitly allowed, true if blacklisted, and false if the UUID isn't listed.
 --- @param uuid any - The UUID of the entity to check.
---- @return boolean|string - Returns false for allowed entities, true for blacklisted entities, and "not found" if not listed.
+--- @return boolean|string - Returns true for blacklisted entities, false if it is not listed.
 function Entity:IsBlacklistedEntity(uuid)
     for _, blacklistedUUID in ipairs(Data.BlacklistedEntities) do
         if blacklistedUUID == uuid then
@@ -707,7 +743,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
                         if tagInfo then
                             if tagInfo.Allowed == false then
-                                local msg = "BG3SX][Whitelist.lua]\nFound disallowed tag in parent: " .. parentTag .. " with UUID: " .. parentUUID .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
+                                local msg = "BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nFound disallowed tag in parent: " .. parentTag .. " with UUID: " .. parentUUID .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
                                 _P(msg)
                                 Osi.OpenMessageBox(uuid, msg)
                                 return false
@@ -733,7 +769,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
             local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
             if tagInfo then -- Check if the tag is in the allowed/disallowed list
                 if tagInfo.Allowed == false then -- If disallowed, return false immediately
-                    local msg = "[BG3SX][Whitelist.lua]\nDisallowed tag found: " .. tagData.Name .. " with UUID: " .. tag .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
+                    local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed tag found: " .. tagData.Name .. " with UUID: " .. tag .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
                     _P(msg)
                     Osi.OpenMessageBox(uuid, msg)
                     return false
@@ -746,7 +782,7 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                             -- _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
                             raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
                             if not raceAllowed then
-                                local msg = "[BG3SX][Whitelist.lua]\nDisallowed race found: " .. race.Name .. "\nIf this is a race you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
+                                local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed race found: " .. race.Name .. "\nIf this is a race you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
                                 _P(msg)
                                 Osi.OpenMessageBox(uuid, msg)
                                 return false
@@ -755,13 +791,13 @@ function Entity:IsWhitelistedTagOrRace(uuid)
                     end
                 end
             else
-                local msg = "[BG3SX][Whitelist.lua]\nUnknown Tag UUID - Name: " .. tagData.Name ..  " with UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
+                local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID - Name: " .. tagData.Name ..  " with UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
                     _P(msg)
                 Osi.OpenMessageBox(uuid, msg)
                 return false
             end
         else
-            local msg = "[BG3SX][Whitelist.lua]\nUnknown Tag UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
+            local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
             _P(msg)
             Osi.OpenMessageBox(uuid, msg)
             return false
@@ -779,13 +815,16 @@ function Entity:IsWhitelistedTagOrRace(uuid)
 end
 
 
---- Checks if an entity is allowed based on its UUID and current settings of Data.AllowedTagsAndRaces and Data.BlacklistedEntities.
+--- Checks if an entity is allowed based on its UUID and current settings of Data.WhitelistedEntities, Data.BlacklistedEntities and Data.AllowedTagsAndRaces.
 --- @param uuid any - The UUID of the entity to check.
 --- @return boolean - Returns true if the entity is allowed, false otherwise.
 function Entity:IsWhitelisted(uuid)
-    if Entity:IsBlacklistedEntity(uuid) then -- If YES it is NOT allowed - return false
+    if Entity:IsWhitelistedEntity(uuid) then -- If true it is allowed - return true
+        return true
+    end
+    if Entity:IsBlacklistedEntity(uuid) then -- If true it is NOT allowed - return false
         return false -- Entity not allowed
-    else -- Entity allowed or not found in entity whitelist, check Race/Tags whitelist now
+    else -- Entity not found in the entity-specific white/blacklist, check Race/Tags whitelist now
         if Entity:IsWhitelistedTagOrRace(uuid) then
             return true -- Entity allowed by race/tags
         else

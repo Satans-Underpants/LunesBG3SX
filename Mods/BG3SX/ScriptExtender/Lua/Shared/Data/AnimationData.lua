@@ -43,7 +43,7 @@ end
 -- While creating matches, only use one of these matchups with the same type
 -- Only use Tall + Tall or Tall + Med matchups but never Tall + M or M + TallF
 -- If you want to match TallM against any F do it like this:
--- TallM + Tall
+-- TallM + TallF
 -- TallM + MedF
 -- etc.
 
@@ -128,7 +128,7 @@ end
 
 -- local hmi = BG3SXHM:getInstanceByAnimName("MyMod_Pegging")
 -- if hmi then
---     hmi:setAnimation("TallF",  MedM, "ASpecificOtherAnimationUUID")
+--     hmi:setAnimation("TallF", "MedM", "ASpecificOtherAnimationUUID")
 -- end
 
 -- BG3SXAnims["MyMod_FuckDonut"] = {
@@ -145,7 +145,7 @@ end
 --     hmi:setAnimation("TallF",  nil, "ASpecificOtherAnimationUUID")
 -- end
 
--- Or sort all animations like we do first, then the heightmatching instances, its a preference thing
+-- Or sort all animation table entries first like we do, then the heightmatching instances, its a preference thing
 
 -- You still need to create spells with the same name as the animations you add
 -- You can even use:
