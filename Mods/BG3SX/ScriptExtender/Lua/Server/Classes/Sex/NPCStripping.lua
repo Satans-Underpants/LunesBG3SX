@@ -191,21 +191,22 @@ local sexPairs = {}
 
 -- Sex
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
-    -- if spell == "BG3SX_AskForSex" and Entity:IsWhitelisted(target) then
-	if spell == "BG3SX_AskForSex" and Entity:IsNPC(target) and Entity:IsWhitelisted(target) then
-		local pair = {caster = caster; target = target}
-		table.insert(sexPairs, pair)
-        saveVisualSet_Slots(target)
-        stripNPC(target)
-        giveGenitals(target)
-        addHairIfNecessary(target)
-        Ext.Timer.WaitFor(100, function() 
-            -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
-            if Entity:HasPenis(target) then
-                removeGenitals(target)
-            end
-        end)
-	end
+	if target ~= caster then
+        if spell == "BG3SX_AskForSex" and Entity:IsNPC(target) and Entity:IsWhitelisted(target) then
+            local pair = {caster = caster; target = target}
+            table.insert(sexPairs, pair)
+            saveVisualSet_Slots(target)
+            stripNPC(target)
+            giveGenitals(target)
+            addHairIfNecessary(target)
+            Ext.Timer.WaitFor(100, function() 
+                -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
+                if Entity:HasPenis(target) then
+                    removeGenitals(target)
+                end
+            end)
+        end
+    end
 end)
 
 

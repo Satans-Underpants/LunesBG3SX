@@ -60,7 +60,8 @@ end)
 -- TODO - access Scene/PairsData instead
 local sexPairs = {}
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
-    if spell == "BG3SX_AskForSex" then
+    if target ~= caster then
+        if spell == "BG3SX_AskForSex" then
         -- if Entity:IsWhitelisted(caster) and Entity:IsWhitelisted(target) then
             local casterGenital = Genital:GetCurrentGenital(caster)
             local targetGenital
@@ -84,6 +85,8 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         --     end
         -- end
         -- end
+    
+        end
     end
 end)
 

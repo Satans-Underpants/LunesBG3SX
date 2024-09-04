@@ -84,10 +84,10 @@ Data.AllowedTagsAndRaces = {
         {Name = "Bugbear", RACE = "241b8b4d-763f-48e6-b1f8-a261ec0ef36b", Allowed = true}, -- Set to true if we ever do add it
         },
     },
-    ["CELESTIAL"] = {TAG = "7cba0bd7-b955-4ac9-95ba-79e75978d9ac", Allowed = false,
+    ["CELESTIAL"] = {TAG = "7cba0bd7-b955-4ac9-95ba-79e75978d9ac", Allowed = true,
         racesUsingTag = {
-        {Name = "Celestial", RACE = "a71d0a73-074d-4859-8b9e-f81c0d90060c", Allowed = nil},
-        {Name = "Hollyphant", RACE = "433ecc79-eae2-467f-81f8-82eb9cd72c5f", Allowed = nil},
+        {Name = "Celestial", RACE = "a71d0a73-074d-4859-8b9e-f81c0d90060c", Allowed = true},
+        {Name = "Hollyphant", RACE = "433ecc79-eae2-467f-81f8-82eb9cd72c5f", Allowed = false},
         },
     },
     ["CONSTRUCT"] = {TAG = "22e5209c-eaeb-40dc-b6ef-a371794110c2", Allowed = false,
@@ -663,6 +663,17 @@ Data.AllowedTagsAndRaces = {
     --#endregion
 }
 
+Data.UnimportantTags = {
+    "00000000-0000-0000-0000-000000000000", -- EMPTY
+    "eae44d86-3321-4a0a-811d-4fd8e48b5723", -- VO_POSTPROCESS
+    "d2f86ec3-c41f-47e1-8acd-984872a4d7d5", -- RARE
+    "d631a9b5-a1f1-4cc8-2583-567e828f69d0", -- Int Modifier
+    "f7e010d8-17ec-4539-229d-fff17036654e", -- Cha Modifier
+    "3b8a887d-7a26-426a-e697-97ec7e3f4d74", -- Wis Modifier
+}
+
+Data.ModdedTags = {}
+
 Data.WhitelistedEntities = {
     -- Origins
     "3ed74f06-3c60-42dc-83f6-f034cb47c679", -- ShadowHeart
@@ -725,34 +736,55 @@ function Entity:IsBlacklistedEntity(uuid)
     return false -- The UUID is not blackliste
 end
 
+--- Gathers and returns the appropriate tag information for a given tag from modded tags.
+--- Prioritizes disallowed tags, and if found, returns false immediately.
+--- @param tagData table - The tag data table containing Name and UUID fields.
+--- @return table|string|boolean, string|nil, string|nil - Returns the tag info, "No Match, use Vanilla", or false and the mod name if disallowed.
+local function getModdedTagsInfo(tagData)
+    local matchedTagInfo = nil
+    if Data.ModdedTags and next(Data.ModdedTags) then
+        for modUUID, modTags in pairs(Data.ModdedTags) do
+            local modName = Ext.Mod.GetMod(modUUID).Info.Name
+            local moddedTagInfo = modTags[tagData.Name]
+            if moddedTagInfo and moddedTagInfo.TAG == tagData.ResourceUUID then
+                if moddedTagInfo.Allowed == false then
+                    return false, modName, moddedTagInfo.Reason -- Disallowed tag found, return false and which mod it checked
+                elseif moddedTagInfo.Allowed == true then
+                    matchedTagInfo = moddedTagInfo -- Store tagInfo
+                end
+            end
+        end
+    end
+    if matchedTagInfo then
+        return matchedTagInfo -- If it found any matches, returns the tagInfo
+    else
+        return "No Match, use Vanilla" -- Return that we shall use vanilla tags instead
+    end
+end
+
 -- Checks if an entity is part of our whitelisted tags/races table
 ---@param uuid string - UUID of an entity
 function Entity:IsWhitelistedTagOrRace(uuid)
-    -- _P("[BG3SX][Whitelist.lua] -----------CHECKING " .. uuid .. " IF WHITELISTED-----------")
     local tags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
     local hasAllowedTag = false
-    -- _P("[BG3SX][Whitelist.lua] Checking entity with UUID:", uuid)
+
     local function checkParentTags(raceUUID) -- Helper function to recursively check race parent tags
         local raceData = Ext.StaticData.Get(raceUUID, "Race")
         if raceData and raceData.ParentGuid then
             for _, parentUUID in ipairs(raceData.ParentGuid) do
                 local parentData = Ext.StaticData.Get(parentUUID, "Race")
                 if parentData then
-                    -- _P("[BG3SX][Whitelist.lua] Checking parent race: " .. parentData.Name .. " with UUID: " .. parentUUID .. ")")
                     for _, parentTag in ipairs(parentData.Tags) do
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
-                        if tagInfo then
-                            if tagInfo.Allowed == false then
-                                local msg = "BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nFound disallowed tag in parent: " .. parentTag .. " with UUID: " .. parentUUID .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
-                                _P(msg)
-                                Osi.OpenMessageBox(uuid, msg)
-                                return false
-                            elseif tagInfo.Allowed == true then
-                                -- _P("[BG3SX][Whitelist.lua] Found allowed tag in parent: " .. parentTag .. " (UUID: " .. parentUUID .. ")")
-                                hasAllowedTag = true
-                            end
+                        if tagInfo and tagInfo.Allowed == false then
+                            local msg = "BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nFound disallowed tag in parent:\n" .. parentTag .. "\nwith UUID:\n" .. parentUUID
+                            _P(msg)
+                            Osi.OpenMessageBox(uuid, msg)
+                            return false
+                        elseif tagInfo and tagInfo.Allowed == true then
+                            hasAllowedTag = true
                         end
-                    end -- Recursively check the parent of the current parent race
+                    end
                     local parentAllowed = checkParentTags(parentUUID)
                     if not parentAllowed then
                         return false
@@ -762,52 +794,78 @@ function Entity:IsWhitelistedTagOrRace(uuid)
         end
         return true
     end
-    for _, tag in ipairs(tags) do
-        local tagData = Ext.StaticData.Get(tag, "Tag")
-        if tagData then
-            -- _P("[BG3SX][Whitelist.lua] Tag Name: " .. tagData.Name, " UUID: " .. tag)
-            local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
-            if tagInfo then -- Check if the tag is in the allowed/disallowed list
-                if tagInfo.Allowed == false then -- If disallowed, return false immediately
-                    local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed tag found: " .. tagData.Name .. " with UUID: " .. tag .. "\nIf this is a tag you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
-                    _P(msg)
-                    Osi.OpenMessageBox(uuid, msg)
-                    return false
-                elseif tagInfo.Allowed == true then -- If allowed, set hasAllowedTag to true
-                    -- _P("[BG3SX][Whitelist.lua] Allowed tag found: " .. tagData.Name .. " (UUID: " .. tag .. ")")
-                    hasAllowedTag = true
-                    if tagInfo.racesUsingTag then
-                        for _, race in pairs(tagInfo.racesUsingTag) do -- Check the races using this tag
-                            local raceAllowed = true -- Assume race is allowed unless proven otherwise
-                            -- _P("[BG3SX][Whitelist.lua] Checking race: " .. race.Name .. " (UUID: " .. race.RACE .. ")")
-                            raceAllowed = checkParentTags(race.RACE) -- Check the race and its parent tags
-                            if not raceAllowed then
-                                local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed race found: " .. race.Name .. "\nIf this is a race you think should be added to be allowed, please contact the BG3SX authors!\nIf it's from a custom race, that modder manually disallowed their race and does not want it to be compatible with BG3SX."
-                                _P(msg)
-                                Osi.OpenMessageBox(uuid, msg)
-                                return false
+
+    for i,tag in ipairs(tags) do
+        local skip = false
+        for _,unimportantTag in pairs(Data.UnimportantTags) do
+            if tag == unimportantTag then
+                skip = true
+            end
+        end 
+        if skip == false then
+            local tagData = Ext.StaticData.Get(tag, "Tag")
+            if tagData then
+                local tagInfo = Data.AllowedTagsAndRaces[tagData.Name]
+
+                -- Use the getModdedTagsInfo function to check for overrides
+                local returnValue, mod, reason = getModdedTagsInfo(tagData)
+                if returnValue == false then
+                    if mod then
+                        local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDuring Check on Mod: " .. mod .. "\nDisallowed modded tag found: " .. tagData.Name .. " with UUID:\n" .. tag .. "\nContact the race author or BG3SX author."
+                        if reason then
+                            msg = msg .. "\nReason: " .. reason
+                        else
+                            msg = msg .. "\nReason: Deliberate by race author or no animation support."
+                        end
+                        _P(msg)
+                        Osi.OpenMessageBox(uuid, msg)
+                        return false
+                    end
+                elseif returnValue == "No Match, use Vanilla" then
+                    -- Do nothing, use the regular vanilla tagInfo
+                elseif returnValue ~= nil then
+                    tagInfo = returnValue
+                end
+
+                if tagInfo then
+                    if tagInfo.Allowed == false then
+                        local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed tag found: " .. tagData.Name .. " with UUID:\n" .. tag
+                        _P(msg)
+                        Osi.OpenMessageBox(uuid, msg)
+                        return false
+                    elseif tagInfo.Allowed == true then
+                        hasAllowedTag = true
+                        if tagInfo.racesUsingTag then
+                            for _, race in pairs(tagInfo.racesUsingTag) do
+                                local raceAllowed = checkParentTags(race.RACE)
+                                if not raceAllowed then
+                                    local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed race found: " .. race.Name
+                                    _P(msg)
+                                    Osi.OpenMessageBox(uuid, msg)
+                                    return false
+                                end
                             end
                         end
                     end
+                else
+                    local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID - Name: " .. tagData.Name ..  " with UUID:\n" .. tag
+                    _P(msg)
+                    Osi.OpenMessageBox(uuid, msg)
+                    return false
                 end
             else
-                local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID - Name: " .. tagData.Name ..  " with UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
-                    _P(msg)
+                local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID:\n" .. tag
+                _P(msg)
                 Osi.OpenMessageBox(uuid, msg)
                 return false
             end
-        else
-            local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID: " .. tag .. "\nIf this happens please contact the BG3SX authors with a screenshot of the tag on their discord!\nhttps://discord.gg/kDmq7TXME3\nIf it's from a custom race, please contact that mod author instead! We have ways for them to add them to our whitelist if they wish to.\nTo the modder: Please keep in mind we generally only support human-based rigs, so disallow it if it's using something else, except if you want to support it yourself of course!"
-            _P(msg)
-            Osi.OpenMessageBox(uuid, msg)
-            return false
         end
-    end -- If no disallowed tags were found and at least one allowed tag was found, return true
+    end
+
     if hasAllowedTag then
-        -- _P("[BG3SX][Whitelist.lua] Entity is allowed.")
         return true
     else
-        local msg = "[BG3SX][Whitelist.lua]\n No allowed tags found. Entity is not allowed.\nIf this happens please contact the BG3SX authors on their discord!\nhttps://discord.gg/kDmq7TXME3"
+        local msg = "[BG3SX][Whitelist.lua]\n No allowed tags found. Entity is not allowed."
         _P(msg)
         Osi.OpenMessageBox(uuid, msg)
         return false
@@ -819,16 +877,18 @@ end
 --- @param uuid any - The UUID of the entity to check.
 --- @return boolean - Returns true if the entity is allowed, false otherwise.
 function Entity:IsWhitelisted(uuid)
-    if Entity:IsWhitelistedEntity(uuid) then -- If true it is allowed - return true
-        return true
-    end
-    if Entity:IsBlacklistedEntity(uuid) then -- If true it is NOT allowed - return false
-        return false -- Entity not allowed
-    else -- Entity not found in the entity-specific white/blacklist, check Race/Tags whitelist now
-        if Entity:IsWhitelistedTagOrRace(uuid) then
-            return true -- Entity allowed by race/tags
-        else
-            return false -- Entity not allowed by race/tags
+    if Entity:IsPlayable(uuid) or Entity.IsNPC(uuid) then
+        if Entity:IsWhitelistedEntity(uuid) then -- If true it is allowed - return true
+            return true
+        end
+        if Entity:IsBlacklistedEntity(uuid) then -- If true it is NOT allowed - return false
+            return false -- Entity not allowed
+        else -- Entity not found in the entity-specific white/blacklist, check Race/Tags whitelist now
+            if Entity:IsWhitelistedTagOrRace(uuid) then
+                return true -- Entity allowed by race/tags
+            else
+                return false -- Entity not allowed by race/tags
+            end
         end
     end
 end

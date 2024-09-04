@@ -326,7 +326,7 @@ local function getPermittedGenitals(uuid)
 	-- Failsafe for modded races - assign human race
 	-- TODO - add support for modded genitals for modded races
 	if not Data.BodyLibrary.Races[race] then
-		_P("[BG3SX][Genital.lua] You are currently not using a default currently, some genitals may be misaligned.")
+		_P("[BG3SX][Genital.lua] You are currently not using a default race, some genitals may be misaligned or miscolored.")
 		-- _P(race, " is not Vanilla and does not have a Vanilla parent, " ..  
 		-- " these custom races are currently not supported")
 		-- _P("using default human genitals")

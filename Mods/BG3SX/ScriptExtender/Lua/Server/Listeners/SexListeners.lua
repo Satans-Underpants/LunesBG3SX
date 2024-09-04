@@ -3,9 +3,9 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
+    -- Checks to see if the name of the spell used matches any of the setup spells in SexAnimations.lua
+    -- _P("---------------------StartSexSpell used Whitelist Check---------------------")
     if Data.StartSexSpells[spell] then
-        -- Checks to see if the name of the spell used matches any of the setup spells in SexAnimations.lua
-        -- _P("---------------------StartSexSpell used Whitelist Check---------------------")
         if Entity:IsWhitelisted(caster) and Entity:IsWhitelisted(target) then
             Ext.Timer.WaitFor(200, function() -- Wait for erections
                 Sex:StartSexSpellUsed(caster, {target}, Data.StartSexSpells[spell])

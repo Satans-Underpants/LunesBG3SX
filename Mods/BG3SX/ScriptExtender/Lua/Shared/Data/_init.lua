@@ -11,3 +11,4 @@ Ext.Require("Shared/Data/Spells.lua")
 Ext.Require("Shared/Data/SceneTypes.lua")
 -- Initialize White-/Blacklists
 Ext.Require("Shared/Data/Whitelist.lua")
+Ext.Require("Shared/Data/Whitelist_FantasticalMultiverse.lua")
