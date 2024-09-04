@@ -1,4 +1,4 @@
-if Ext.Mod.GetMod("128025b9-5168-f4a0-fa19-676f0c244d24") then
+if Ext.Mod.GetMod("128025b9-5168-f4a0-fa19-676f0c244d24") then -- Fantastical Compendium
     _P("[BG3SX][Adding Fantastical Compendium Compatibility...]")
     Data.ModdedTags["128025b9-5168-f4a0-fa19-676f0c244d24"] = {}
     local wList = Data.ModdedTags["128025b9-5168-f4a0-fa19-676f0c244d24"]

@@ -906,7 +906,7 @@ function Entity:IsWhitelisted(uuid)
             end
         end
     else
-        _P("[BG3SX][Whitelist.lua] Neither Playable nor NPC - UUID: ", uuid)
+        _P("[BG3SX][Whitelist.lua] Neither Playable or NPC - UUID: ".. uuid)
         return false
     end
 end
