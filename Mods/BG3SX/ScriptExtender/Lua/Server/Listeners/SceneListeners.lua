@@ -1,3 +1,18 @@
+local function redressAndRemoveGenitalFromNPC(caster)
+    local scene = Scene:FindSceneByEntity(caster)
+    local npcs = {}
+    for _,entity in pairs(scene.entities) do
+        if Entity:IsNPC(entity) then
+            table.insert(npcs, entity)
+        end
+    end
+    for _,npc in pairs(npcs) do
+            Visual:RemoveGenitals(npc)
+            Visual:Redress(npc)
+            -- Remove Hair if necessary? 
+    end
+end
+
 -----------------------------------------------------------------------------------------------------------------------------------------
                                             ---- Scene Functions ----
 ------------------------------------------------------------------------------------------------------------------------------------------
@@ -31,6 +46,7 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
         Sex:ChangeCameraHeight(caster)
     end
     if spell == "BG3SX_StopAction" then
+        redressAndRemoveGenitalFromNPC(caster)
         local scene = Scene:FindSceneByEntity(caster)
         scene:Destroy()
     end

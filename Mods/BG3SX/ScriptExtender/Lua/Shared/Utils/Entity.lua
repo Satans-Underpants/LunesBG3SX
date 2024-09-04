@@ -76,8 +76,10 @@ function Entity:HasPenis(uuid)
     if Osi.HasAppliedStatusOfType(uuid, "POLYMORPHED") == 1 then
         -- As of hotfix #17, "Femme Githyanki" disguise has a dick.
         if Entity:TryGetEntityValue(uuid, nil, {"GameObjectVisual", "RootTemplateId"}) == "7bb034aa-d355-4973-9b61-4d83cf29d510" then
+            -- _P("HasPenis returns GithyankiCheck")
             return true
         end
+        -- _P("HasPenis returns GetGenderCheck")
         return Osi.GetGender(uuid, 1) ~= "Female"
     end
 
@@ -86,14 +88,17 @@ function Entity:HasPenis(uuid)
     -- E.g., Halsin in Act 1 has no GENITAL_PENIS, he gets it only when his story allows him to join the active party in Act 2.
     if Entity:IsPlayable(uuid) then
         if Osi.IsTagged(uuid, "GENITAL_PENIS_d27831df-2891-42e4-b615-ae555404918b") == 1 then
+            -- _P("HasPenis returns Male")
             return true
         end
         if Osi.IsTagged(uuid, "GENITAL_VULVA_a0738fdf-ca0c-446f-a11d-6211ecac3291") == 1 then
+            -- _P("HasPenis returns Female")
             return false
         end
     end
 
     -- Fallback for NPCs, "future" companions, etc.
+    -- _P("HasPenis returns FallbackFemale")
     return Osi.IsTagged(uuid, "FEMALE_3806477c-65a7-4100-9f92-be4c12c4fa4f") ~= 1
 end
 

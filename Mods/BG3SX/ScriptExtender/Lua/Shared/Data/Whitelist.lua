@@ -663,10 +663,16 @@ Data.AllowedTagsAndRaces = {
     --#endregion
 }
 
-Data.UnimportantTags = {
+Data.UnimportantTags = { -- Unimportant for Whitelist
     "00000000-0000-0000-0000-000000000000", -- EMPTY
+    "53c3304c-032d-4c49-86df-00b3b03a6b13", -- AI_BLOCKWEAPONACTIONS
     "eae44d86-3321-4a0a-811d-4fd8e48b5723", -- VO_POSTPROCESS
+    "d27831df-2891-42e4-b615-ae555404918b", -- GENITAL_PENIS
+    "a0738fdf-ca0c-446f-a11d-6211ecac3291", -- GENITAL_VULVA
+    "3806477c-65a7-4100-9f92-be4c12c4fa4f", -- Female
+    "8f74d144-041e-4035-a9ac-72f41fc32de7", -- Male
     "d2f86ec3-c41f-47e1-8acd-984872a4d7d5", -- RARE
+    "7e99123d-6833-4461-9b4a-b5e281586734", -- WEIGHT_SMALL
     "d631a9b5-a1f1-4cc8-2583-567e828f69d0", -- Int Modifier
     "f7e010d8-17ec-4539-229d-fff17036654e", -- Cha Modifier
     "3b8a887d-7a26-426a-e697-97ec7e3f4d74", -- Wis Modifier
@@ -766,6 +772,14 @@ end
 ---@param uuid string - UUID of an entity
 function Entity:IsWhitelistedTagOrRace(uuid)
     local tags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
+    local quickTagCheck = Entity:TryGetEntityValue(uuid, nil, {"Tag", "Tags"})
+    for _,quickTag in pairs(quickTagCheck) do
+        if quickTag == Data.AllowedTagsAndRaces["KID"].TAG or quickTag == Data.AllowedTagsAndRaces["GOBLIN_KID"].TAG then
+            _P("Just don't")
+            return false
+        end
+    end
+
     local hasAllowedTag = false
 
     local function checkParentTags(raceUUID) -- Helper function to recursively check race parent tags
@@ -877,7 +891,8 @@ end
 --- @param uuid any - The UUID of the entity to check.
 --- @return boolean - Returns true if the entity is allowed, false otherwise.
 function Entity:IsWhitelisted(uuid)
-    if Entity:IsPlayable(uuid) or Entity.IsNPC(uuid) then
+    -- _P(uuid)
+    if Entity:IsPlayable(uuid) or Entity:IsNPC(uuid) then
         if Entity:IsWhitelistedEntity(uuid) then -- If true it is allowed - return true
             return true
         end
@@ -890,6 +905,9 @@ function Entity:IsWhitelisted(uuid)
                 return false -- Entity not allowed by race/tags
             end
         end
+    else
+        _P("[BG3SX][Whitelist.lua] Neither Playable nor NPC - UUID: ", uuid)
+        return false
     end
 end
 
