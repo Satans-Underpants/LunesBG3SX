@@ -222,41 +222,41 @@ end
 
 
 -- -- Sex
--- Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
--- 	if target ~= caster then
---         if spell == "BG3SX_AskForSex" and Entity:IsWhitelisted(target) then
---             local pair = {caster = caster; target = target}
---             table.insert(sexPairs, pair)
---             Visual:SaveVisualSet_Slots(target)
---             Visual:StripNPC(target)
---             Visual:GiveGenitals(target)
---             Visual:AddHairIfNecessary(target)
---             Ext.Timer.WaitFor(100, function() 
---                 -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
---                 if Entity:HasPenis(target) then
---                     Visual:RemoveGenitals(target)
---                 end
---             end)
---         end
---     end
--- end)
+Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
+	if target ~= caster then
+        if spell == "BG3SX_AskForSex" and Entity:IsWhitelisted(target) then
+            local pair = {caster = caster; target = target}
+            table.insert(sexPairs, pair)
+            Visual:SaveVisualSet_Slots(target)
+            Visual:StripNPC(target)
+            Visual:GiveGenitals(target)
+            Visual:AddHairIfNecessary(target)
+            Ext.Timer.WaitFor(100, function() 
+                -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
+                if Entity:HasPenis(target) then
+                    Visual:RemoveGenitals(target)
+                end
+            end)
+        end
+    end
+end)
 
 
 -- -- Ending Sex
--- Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
--- 	if spell == "BG3SX_StopAction" then
--- 		local target = ""
---         for i, pair in ipairs(sexPairs) do
---             if pair.caster == caster then
---                 target = pair.target
---                 table.remove(sexPairs, i)
---                 break
---             end
---         end
---         if target ~= "" and Entity:IsNPC(target) then
---             Visual:RemoveGenitals(target)
---             Visual:Redress(target)
---             -- Remove Hair if necessary? 
---         end
--- 	end
--- end)
+Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
+	if spell == "BG3SX_StopAction" then
+		local target = ""
+        for i, pair in ipairs(sexPairs) do
+            if pair.caster == caster then
+                target = pair.target
+                table.remove(sexPairs, i)
+                break
+            end
+        end
+        if target ~= "" and Entity:IsNPC(target) then
+            Visual:RemoveGenitals(target)
+            Visual:Redress(target)
+            -- Remove Hair if necessary? 
+        end
+	end
+end)

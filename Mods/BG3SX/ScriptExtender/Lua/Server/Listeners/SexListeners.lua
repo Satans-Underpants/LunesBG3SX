@@ -1,16 +1,4 @@
-local function stripAndGiveGenital(caster,target)
-    local pair = {caster = caster; target = target}
-    Visual:SaveVisualSet_Slots(target)
-    Visual:StripNPC(target)
-    Visual:GiveGenitals(target)
-    Visual:AddHairIfNecessary(target)
-    Ext.Timer.WaitFor(100, function() 
-        -- Remove flaccid penis, else they suffer from double dicks (flaccid + erect)
-        if Entity:HasPenis(target) then
-            Visual:RemoveGenitals(target)
-        end
-    end)
-end
+
 
 -----------------------------------------------------------------------------------------------------------------------------------------
                                             ---- Sex Listener ----
@@ -24,7 +12,6 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
             Ext.Timer.WaitFor(200, function() -- Wait for erections
                 Sex:StartSexSpellUsed(caster, {target}, Data.StartSexSpells[spell])
             end)
-            stripAndGiveGenital(caster,target)
             Ext.ModEvents.BG3SX.StartSexSpellUsed:Throw({caster = caster, target = target, animData = Data.StartSexSpells[spell]})
         end
     end

@@ -123,6 +123,7 @@ function Actor:TransformAppearance()
     ----------------------------------------------------------------------------
     self:CopyEntityAppearanceOverrides()
     local looksTemplate = self:GetLooks()
+    print("Transforming actor")
     Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
 
     -- Get Equipment
