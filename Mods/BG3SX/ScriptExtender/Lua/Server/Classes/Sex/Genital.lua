@@ -326,7 +326,7 @@ local function getPermittedGenitals(uuid)
 	-- Failsafe for modded races - assign human race
 	-- TODO - add support for modded genitals for modded races
 	if not Data.BodyLibrary.Races[race] then
-		_P("[BG3SX][Genital.lua] You are currently not using a default currently, some genitals may be misaligned.")
+		_P("[BG3SX][Genital.lua] You are currently not using a default race, some genitals may be misaligned or miscolored.")
 		-- _P(race, " is not Vanilla and does not have a Vanilla parent, " ..  
 		-- " these custom races are currently not supported")
 		-- _P("using default human genitals")
@@ -412,16 +412,16 @@ function Genital:GetNextGenital(spell, uuid)
     local permittedGenitals = getPermittedGenitals(uuid)
     local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
 
-	if  not filteredGenitals then
+	if (not filteredGenitals) or (#filteredGenitals == 0) then
         -- _P("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
         return nil
     else
-		if genitalChoice.uuid == uuid and genitalChoice.spell == spell then
-			-- Increment the index, wrap around if necessary
-			genitalChoice.index = (genitalChoice.index % #filteredGenitals) + 1
-		else
-			genitalChoice = {uuid = uuid, spell = spell, index = 1}
-		end
+			if genitalChoice.uuid == uuid and genitalChoice.spell == spell then
+				-- Increment the index, wrap around if necessary
+				genitalChoice.index = (genitalChoice.index % #filteredGenitals) + 1
+			else
+				genitalChoice = {uuid = uuid, spell = spell, index = 1}
+			end
 
         local selectedGenital = filteredGenitals[genitalChoice.index]
         return selectedGenital
