@@ -19,7 +19,7 @@
 ---@param       - items: list of current items in the slots
 ---@param       - slotsToRemove (set)
 ---@return       - the modified Slot (table)
-function Visual:RemoveItemsBySlots(items, slotsToRemove)
+local function removeItemsBySlots(items, slotsToRemove)
     local newItems = {}
     for _, item in ipairs(items) do
         if not slotsToRemove[item.Slot] then
@@ -44,7 +44,7 @@ local OriginalTemplates = {}
  -- get VisualResourceID from uuid
  -- @param            - uuid of the NPC
  ---return            - VisualResourceID
-function Visual:GetVisualResourceID(uuid)
+local function getVisualResourceID(uuid)
    local vrID = Ext.Entity.Get(uuid).ServerCharacter.Template.CharacterVisualResourceID
    return vrID
 end
@@ -54,8 +54,8 @@ end
  -- serialize them because else they expire
  -- @param           - uuid of the NPC
  ---return           - Slots (Table)
-function Visual:SerializeVisualSetSlots(uuid)
-    local visualSet = Ext.Resource.Get(Visual:GetVisualResourceID(uuid), "CharacterVisual").VisualSet.Slots
+local function serializeVisualSetSlots(uuid)
+    local visualSet = Ext.Resource.Get(getVisualResourceID(uuid), "CharacterVisual").VisualSet.Slots
     local serializedSlots = {}
     for _, slot in ipairs(visualSet) do
         -- Only copy the data you need, and ensure it's in a Lua-friendly format
@@ -68,8 +68,8 @@ end
  -- save Slots (contain body, hair, gloves, tails etc.)
  -- @param           - uuid of the NPC
  ---return           - Slots (Table)
-function Visual:SaveVisualSet_Slots(uuid)
-    local slots = Visual:SerializeVisualSetSlots(uuid)
+local function saveVisualSet_Slots(uuid)
+    local slots = serializeVisualSetSlots(uuid)
     local entry = {uuid = uuid, slots = slots}
     table.insert(OriginalTemplates, entry)
 end
@@ -79,8 +79,8 @@ end
  -- get a Slot for the naked NPC [race dependant]
  -- @param           - uuid of the NPC
  ---return           - Slots (Table)
-function Visual:GetNakedTemplate(uuid)
-    local currentTemplate = Visual:SerializeVisualSetSlots(uuid)
+local function getNakedTemplate(uuid)
+    local currentTemplate = serializeVisualSetSlots(uuid)
 
     -- list of slots to be removed 
     -- TODO add when necessary as there does not seem to be a list 
@@ -91,7 +91,7 @@ function Visual:GetNakedTemplate(uuid)
         ["Cloak"] = true,
         ["Underwear"] = true
     }
-    local newTemplate = Visual:RemoveItemsBySlots(currentTemplate, TOBEREMOVED)
+    local newTemplate = removeItemsBySlots(currentTemplate, TOBEREMOVED)
     return newTemplate
 
 end
@@ -104,9 +104,9 @@ end
 
 -- Strip the NPC -> exchange/Delete Slots
 ---@param uuid  string  -UUID of NPC
-function Visual:StripNPC(uuid)
-    local naked = Visual:GetNakedTemplate(uuid)
-    local resource = Visual:GetVisualResourceID(uuid)
+local function stripNPC(uuid)
+    local naked = getNakedTemplate(uuid)
+    local resource = getVisualResourceID(uuid)
     Ext.Resource.Get(resource,"CharacterVisual").VisualSet.Slots = naked
 
     local payload = {naked = naked, resource = resource}
@@ -117,12 +117,12 @@ end
 
 -- Redress the NPC (give original template)
 ---@param uuid  string  -UUID of NPC
-function Visual:Redress(uuid)
+local function redress(uuid)
     local dressed
     for _,entry in pairs(OriginalTemplates) do
         if entry.uuid == uuid then
             dressed = entry.slots
-            local resource = Visual:GetVisualResourceID(uuid)
+            local resource = getVisualResourceID(uuid)
             Ext.Resource.Get(resource,"CharacterVisual").VisualSet.Slots = dressed
             table.remove(OriginalTemplates, Table:GetIndex(OriginalTemplates, entry))
 
@@ -145,7 +145,7 @@ end
 
 -- give NPCs genitals
 -- @param           - uuid of the NPC
-function Visual:GiveGenitals(uuid)
+local function giveGenitals(uuid)
     local spells = {"BG3SX_VanillaVulva", "BG3SX_VanillaFlaccid"}
     local spell
 
@@ -167,7 +167,7 @@ end
 
 -- Remove the genital
 -- @param           - uuid of the NPC
-function Visual:RemoveGenitals(uuid)
+local function removeGenitals(uuid)
     local genital = Genital:GetCurrentGenital(uuid)
     Osi.RemoveCustomVisualOvirride(uuid, genital) 
 end
@@ -176,7 +176,7 @@ end
 -- TODO: function giveHair for helmet havers
 -- When removing helmer slots, NPCs don't have hair anymore
 -- @param           - uuid of the NPC
-function Visual:AddHairIfNecessary(uuid)
+local function addHairIfNecessary(uuid)
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -189,60 +189,27 @@ end
 -- TODO - instead access pairData
 local sexPairs = {}
 
-local function dummyfunction(caster,target)
-    local pair = {caster = caster; target = target}
-    table.insert(sexPairs, pair)
-    Visual:SaveVisualSet_Slots(target)
-    Visual:StripNPC(target)
-    Visual:GiveGenitals(target)
-    Visual:AddHairIfNecessary(target)
-    Ext.Timer.WaitFor(100, function() 
-        -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
-        if Entity:HasPenis(target) then
-            Visual:RemoveGenitals(target)
-        end
-    end)
-end
-
-local function dummyfunction2(caster)
-    local target = ""
-    for i, pair in ipairs(sexPairs) do
-        if pair.caster == caster then
-            target = pair.target
-            table.remove(sexPairs, i)
-            break
-        end
-    end
-    if target ~= "" and Entity:IsNPC(target) then
-        Visual:RemoveGenitals(target)
-        Visual:Redress(target)
-        -- Remove Hair if necessary? 
-    end
-end
-
-
--- -- Sex
+-- Sex
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
-	if target ~= caster then
-        if spell == "BG3SX_AskForSex" and Entity:IsWhitelisted(target) then
-            local pair = {caster = caster; target = target}
-            table.insert(sexPairs, pair)
-            Visual:SaveVisualSet_Slots(target)
-            Visual:StripNPC(target)
-            Visual:GiveGenitals(target)
-            Visual:AddHairIfNecessary(target)
-            Ext.Timer.WaitFor(100, function() 
-                -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
-                if Entity:HasPenis(target) then
-                    Visual:RemoveGenitals(target)
-                end
-            end)
-        end
-    end
+    -- if spell == "BG3SX_AskForSex" and Entity:IsWhitelisted(target) then
+	if spell == "BG3SX_AskForSex" and Entity:IsNPC(target) and Entity:IsWhitelisted(target) then
+		local pair = {caster = caster; target = target}
+		table.insert(sexPairs, pair)
+        saveVisualSet_Slots(target)
+        stripNPC(target)
+        giveGenitals(target)
+        addHairIfNecessary(target)
+        Ext.Timer.WaitFor(100, function() 
+            -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
+            if Entity:HasPenis(target) then
+                removeGenitals(target)
+            end
+        end)
+	end
 end)
 
 
--- -- Ending Sex
+-- Ending Sex
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
 	if spell == "BG3SX_StopAction" then
 		local target = ""
@@ -254,8 +221,8 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
             end
         end
         if target ~= "" and Entity:IsNPC(target) then
-            Visual:RemoveGenitals(target)
-            Visual:Redress(target)
+            removeGenitals(target)
+            redress(target)
             -- Remove Hair if necessary? 
         end
 	end
