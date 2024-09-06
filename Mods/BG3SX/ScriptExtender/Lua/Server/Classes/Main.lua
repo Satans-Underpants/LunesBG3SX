@@ -27,7 +27,7 @@ function OnSessionLoaded()
     Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(character)
         -- _P("---------------------CharacterJoinedParty Whitelist Check---------------------")
         if string.find(character, "CharacterCreationDummy") == nil then
-            if Entity:IsWhitelisted(character) then
+            if not Osi.IsSummon(character) and Entity:IsWhitelisted(character) then
                 Sex:AddMainSexSpells(character)
                 Genital:AddGenitalIfHasNone(character)
             end
@@ -43,4 +43,10 @@ Ext.Events.GameStateChanged:Subscribe(function(e)
     if e.FromState == "Running" and e.ToState == "Save" then
         Sex:TerminateAllScenes()
     end
+end)
+
+
+Ext.Entity.Subscribe("GameObjectVisual", function(entity, _, _)
+    local GOV = entity.GameObjectVisual
+    _P(GOV.Type)
 end)
