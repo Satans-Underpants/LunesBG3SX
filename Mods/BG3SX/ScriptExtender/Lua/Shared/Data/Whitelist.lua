@@ -766,6 +766,8 @@ local function getModdedTagsInfo(tagData)
     end
 end
 
+local popuphandle = "h594ca12dga310g4324ga6f5ge889a614967d"
+local popupkey = "BG3SX_Popup"
 -- Checks if an entity is part of our whitelisted tags/races table
 ---@param uuid string - UUID of an entity
 function Entity:IsWhitelistedTagOrRace(uuid, debug)
@@ -774,9 +776,10 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
     local quickTagCheck = Entity:TryGetEntityValue(uuid, nil, {"Tag", "Tags"})
     for _,quickTag in pairs(quickTagCheck) do
         if quickTag == Data.AllowedTagsAndRaces["KID"].TAG or quickTag == Data.AllowedTagsAndRaces["GOBLIN_KID"].TAG then
-            local msg = "BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nFound disallowed tag with UUID:\n" .. quickTag .. "\nReason: 69"
+            local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nFound disallowed tag with UUID:\n" .. quickTag .. "\nReason: 69"
             _P(msg)
-            Osi.OpenMessageBox(Osi.GetHostCharacter(), msg)
+            Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+            Osi.OpenMessageBox(Osi.GetHostCharacter(), popupkey)
             return false
         end
     end
@@ -793,9 +796,10 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                         local tagInfo = Data.AllowedTagsAndRaces[parentTag]
                         if tagInfo and tagInfo.Allowed == false then
                             if debug == true then
-                                local msg = "BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nFound disallowed tag in parent:\n" .. parentTag .. "\nwith UUID:\n" .. parentUUID
+                                local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nFound disallowed tag in parent:\n" .. parentTag .. "\nwith UUID:\n" .. parentUUID
                                 _P(msg)
-                                Osi.OpenMessageBox(uuid, msg)
+                                Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+                                Osi.OpenMessageBox(uuid, popupkey)
                             end
                             return false
                         elseif tagInfo and tagInfo.Allowed == true then
@@ -836,7 +840,8 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                                 msg = msg .. "\nReason: Deliberate by race author or no animation support."
                             end
                             _P(msg)
-                            Osi.OpenMessageBox(uuid, msg)
+                            Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+                            Osi.OpenMessageBox(uuid, popupkey)
                         end
                         return false
                     end
@@ -851,7 +856,8 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                         if debug == true then
                             local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed tag found: " .. tagData.Name .. " with UUID:\n" .. tag
                             _P(msg)
-                            Osi.OpenMessageBox(uuid, msg)
+                            Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+                            Osi.OpenMessageBox(uuid, popupkey)
                         end
                         return false
                     elseif tagInfo.Allowed == true then
@@ -863,7 +869,8 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                                     if debug == true then
                                         local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed race found: " .. race.Name
                                         _P(msg)
-                                        Osi.OpenMessageBox(uuid, msg)
+                                        Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+                                        Osi.OpenMessageBox(uuid, popupkey)
                                     end
                                     return false
                                 end
@@ -874,7 +881,8 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                     if debug == true then
                         local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID - Name: " .. tagData.Name ..  " with UUID:\n" .. tag
                         _P(msg)
-                        Osi.OpenMessageBox(uuid, msg)
+                        Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+                        Osi.OpenMessageBox(uuid, popupkey)
                     end
                     return false
                 end
@@ -882,7 +890,8 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                 if debug == true then
                     local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nUnknown Tag UUID:\n" .. tag
                     _P(msg)
-                    Osi.OpenMessageBox(uuid, msg)
+                    Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+                    Osi.OpenMessageBox(uuid, popupkey)
                 end
                 return false
             end
@@ -895,7 +904,8 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
         if debug == true then
             local msg = "[BG3SX][Whitelist.lua]\n No allowed tags found. Entity is not allowed."
             _P(msg)
-            Osi.OpenMessageBox(uuid, msg)
+            Ext.Loca.UpdateTranslatedString(popuphandle, msg)
+            Osi.OpenMessageBox(uuid, popupkey)
         end
         return false
     end
