@@ -124,6 +124,7 @@ function Actor:TransformAppearance()
     self:CopyEntityAppearanceOverrides()
     local looksTemplate = self:GetLooks()
     Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
+    -- Osi.Transform(self.uuid, looksTemplate, "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9") -- Invoke Duplicity
 
     -- Get Equipment
     ----------------------------------------------------------------------------

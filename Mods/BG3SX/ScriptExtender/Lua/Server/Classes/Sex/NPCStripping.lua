@@ -16,9 +16,9 @@
 -- TODO - helper functions to UTILS
 
 -- Remove a slot form VisualResources
----@param       - items: list of current items in the slots
----@param       - slotsToRemove (set)
----@return       - the modified Slot (table)
+---@param items string -- list of current items in the slots
+---@param slotsToRemove table
+---@return newItems -- table
 local function removeItemsBySlots(items, slotsToRemove)
     local newItems = {}
     for _, item in ipairs(items) do
@@ -117,7 +117,7 @@ end
 
 -- Redress the NPC (give original template)
 ---@param uuid  string  -UUID of NPC
-local function redress(uuid)
+function NPC:Redress(uuid)
     local dressed
     for _,entry in pairs(OriginalTemplates) do
         if entry.uuid == uuid then
@@ -167,7 +167,7 @@ end
 
 -- Remove the genital
 -- @param           - uuid of the NPC
-local function removeGenitals(uuid)
+function NPC:RemoveGenitals(uuid)
     local genital = Genital:GetCurrentGenital(uuid)
     Osi.RemoveCustomVisualOvirride(uuid, genital) 
 end
@@ -202,7 +202,7 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
         Ext.Timer.WaitFor(100, function() 
             -- remove the flaccid penis, else they suffer from double dicks (flaccid + erect)
             if Entity:HasPenis(target) then
-                removeGenitals(target)
+                NPC:RemoveGenitals(target)
             end
         end)
 	end
@@ -221,8 +221,8 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _,
             end
         end
         if target ~= "" and Entity:IsNPC(target) then
-            removeGenitals(target)
-            redress(target)
+            NPC:RemoveGenitals(target)
+            NPC:Redress(target)
             -- Remove Hair if necessary? 
         end
 	end

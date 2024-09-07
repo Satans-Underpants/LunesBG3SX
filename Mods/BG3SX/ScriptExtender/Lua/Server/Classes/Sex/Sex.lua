@@ -16,10 +16,18 @@
 
 -- Terminates all running scenes
 function Sex:TerminateAllScenes()
-    for _, scene in pairs(Data.SavedScenes) do
-        scene:Destroy()
+    if Data.SavedScenes and #Data.SavedScenes > 0 then
+        for i = #Data.SavedScenes, 1, -1 do
+            local scene = Data.SavedScenes[i]
+            for _,parent in pairs(scene.entities) do
+                if Entity:IsNPC(parent) then
+                    NPC:RemoveGenitals(parent)
+                    NPC:Redress(parent)
+                end
+            end
+            scene:Destroy()
+        end
     end
-    Data.SavedScenes = {}
 end
 
 

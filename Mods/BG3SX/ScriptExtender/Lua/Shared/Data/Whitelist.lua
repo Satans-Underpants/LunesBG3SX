@@ -8,6 +8,7 @@
 -- If your race has an out of the ordinary bodyshape please check our comments in Heightmatching.lua above our BodyShapeOverrides table (Ctrl+F is your friend)
 Data.AllowedTagsAndRaces = {
     ------------------------------------TAGS------------------------------------
+    --- We keep sub-races allowed even when their parent race is disallowed to make it not too difficult for modders but keep them in here to not be unknown
     --#region Tags
     ["KID"] = {TAG = "ee978587-6c68-4186-9bfc-3b3cc719a835", Allowed = false
     },
@@ -43,9 +44,9 @@ Data.AllowedTagsAndRaces = {
         {Name = "Bat", RACE = "7c3f65e7-e463-425a-b7a8-9cb65323e469", Allowed = nil},
         },
     },
-    ["ASMODEUSTIEFLING"] = {TAG = "c3fd1fc3-2edf-4d17-935d-44ab92406df1", Allowed = true,
+    ["ASMODEUSTIEFLING"] = {TAG = "c3fd1fc3-2edf-4d17-935d-44ab92406df1", Allowed = true, -- Subrace allowed by default so people only need to worry about main races
         racesUsingTag = {
-        {Name = "AsmodeusTiefling", RACE = "3f30547c-248c-4781-b0e3-6ef2ab99426b", Allowed = nil},
+        {Name = "AsmodeusTiefling", RACE = "3f30547c-248c-4781-b0e3-6ef2ab99426b", Allowed = true},
         },
     },
     ["AUTOMATON"] = {TAG = "0f9099e9-a4d8-4b17-b2e5-e6f74eeb79b4", Allowed = false, -- No Animation Support
@@ -79,7 +80,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Bird", RACE = "c55c2eb7-81bb-46e1-89d7-9edf7b3788b7", Allowed = nil},
         },
     },
-    ["BUGBEAR"] = {TAG = "dc18a33a-bdd1-41be-8ad5-e6fca917b54e", Allowed = false, -- No Animation Support
+    ["BUGBEAR"] = {TAG = "dc18a33a-bdd1-41be-8ad5-e6fca917b54e", Allowed = false, Reason = "BG3SX - No Animation Support",
         racesUsingTag = {
         {Name = "Bugbear", RACE = "241b8b4d-763f-48e6-b1f8-a261ec0ef36b", Allowed = true}, -- Set to true if we ever do add it
         },
@@ -106,7 +107,7 @@ Data.AllowedTagsAndRaces = {
     },
     ["CoinHalberd"] = {TAG = "7026d794-eea8-4cf1-b838-03c6e5a9812a", Allowed = false,
     },
-    ["DEEPGNOME"] = {TAG = "2bbc3217-3d8c-46e6-b599-a0f1c9063f9a", Allowed = true,
+    ["DEEPGNOME"] = {TAG = "2bbc3217-3d8c-46e6-b599-a0f1c9063f9a", Allowed = true, -- Subrace allowed by default so people only need to worry about main races
         racesUsingTag = {
         {Name = "DeepGnome", RACE = "3560f4a2-c0b8-4f8b-baf8-6b6eaef0c160", Allowed = true},
         },
@@ -116,7 +117,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Demon", RACE = "41b32332-c437-4a45-8e5d-6894fba06791", Allowed = nil},
         },
     },
-    ["DEVIL"] = {TAG = "6abb4b64-51a7-4d63-9359-66f0047a6fe2", Allowed = false, -- Check if Raphael falls under this
+    ["DEVIL"] = {TAG = "6abb4b64-51a7-4d63-9359-66f0047a6fe2", Allowed = true, -- Check if Raphael falls under this
         racesUsingTag = {
         {Name = "Devil", RACE = "490ed21e-07b7-4692-9765-fc526f89c2d6", Allowed = true}, -- Set to true if we ever do add it
         },
@@ -147,27 +148,27 @@ Data.AllowedTagsAndRaces = {
         {Name = "Aasimar", RACE = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = true},
         },
     },
-    ["DROWELF"] = {TAG = "a672ac1d-d088-451a-9537-3da4bf74466c", Allowed = true,
+    ["DROWELF"] = {TAG = "a672ac1d-d088-451a-9537-3da4bf74466c", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "Drow", RACE = "4f5d1434-5175-4fa9-b7dc-ab24fba37929", Allowed = true},
         },
     },
-    ["DROWHALFELF"] = {TAG = "4fa13243-199d-4c9a-b455-d844276a98f5", Allowed = true,
+    ["DROWHALFELF"] = {TAG = "4fa13243-199d-4c9a-b455-d844276a98f5", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "HalfDrow", RACE = "e966f47f-998a-41df-ad86-d83b44299efb", Allowed = true},
         },
     },
-    ["DUERGARDWARF"] = {TAG = "78adf3cd-4741-47a8-94f6-f3d322432591", Allowed = false,
+    ["DUERGARDWARF"] = {TAG = "78adf3cd-4741-47a8-94f6-f3d322432591", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "Duergar", RACE = "fe584d14-71ea-4bee-8ba0-99f780d4c957", Allowed = nil},
         },
     },
-    ["DWARF"] = {TAG = "486a2562-31ae-437b-bf63-30393e18cbdd", Allowed = false,
+    ["DWARF"] = {TAG = "486a2562-31ae-437b-bf63-30393e18cbdd", Allowed = false, Reason = "BG3SX - No Small races",
         racesUsingTag = {
-        {Name = "Dwarf", RACE = "0ab2874d-cfdc-405e-8a97-d37bfbb23c52", Allowed = nil},
+        {Name = "Dwarf", RACE = "0ab2874d-cfdc-405e-8a97-d37bfbb23c52", Allowed = true},
         },
     },
-    ["ELEMENTAL"] = {TAG = "196351e2-ff25-4e2b-8560-222ac6b94a54", Allowed = false, -- I wouldn't be surprised if at some point someone creates sexy elementals
+    ["ELEMENTAL"] = {TAG = "196351e2-ff25-4e2b-8560-222ac6b94a54", Allowed = false, -- I wouldn't be surprised if at some point someone creates sexy fire elementals
         racesUsingTag = {
         {Name = "Elemental", RACE = "24dfab7b-7d7e-4df9-aa23-7212b4ef8980", Allowed = true}, -- Set to true if we ever do add it
         {Name = "Elemental_Mud", RACE = "3b637556-32cd-4831-ac89-acf726df55c5", Allowed = nil},
@@ -181,8 +182,6 @@ Data.AllowedTagsAndRaces = {
         {Name = "Elf", RACE = "6c038dcb-7eb5-431d-84f8-cecfaf1c0c5a", Allowed = true},
         },
     },
-    ["EMPTY"] = {TAG = "0fcfa622-a3c9-4a03-aab4-2a74904b62eb", Allowed = false,
-    },
     ["FEY"] = {TAG = "8cac055c-82dd-435c-9496-cf4c4b4581ab", Allowed = false,
         racesUsingTag = {
         {Name = "Fey", RACE = "632746dc-dcab-4b16-9e7e-029a04aafb59", Allowed = nil},
@@ -190,7 +189,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Meenlock", RACE = "c9479054-6a06-438b-9ab3-0467f70709de", Allowed = nil},
         },
     },
-    ["FIEND"] = {TAG = "44be2f5b-f27e-4665-86f1-49c5bfac54ab", Allowed = true,
+    ["FIEND"] = {TAG = "44be2f5b-f27e-4665-86f1-49c5bfac54ab", Allowed = false, -- Mizora is allowed seperately
         racesUsingTag = {
         {Name = "Fiend", RACE = "99c33978-f236-4f5b-a8d8-59aeeaf6140f", Allowed = true},
         {Name = "Hellsboar", RACE = "94343b04-974d-44bd-bdd5-34de45d1d058", Allowed = false},
@@ -206,7 +205,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Raphaelian Merregon", RACE = "309b0bf4-47ec-4c65-925a-5f944d6353c8", Allowed = false},
         },
     },
-    ["FORESTGNOME"] = {TAG = "09518377-4ea1-4ce2-b8e8-61477c26ebdd", Allowed = true,
+    ["FORESTGNOME"] = {TAG = "09518377-4ea1-4ce2-b8e8-61477c26ebdd", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "ForestGnome", RACE = "0c6f801e-74fc-492a-ab25-3ca9604156b4", Allowed = true},
         },
@@ -232,7 +231,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Githyanki", RACE = "bdf9b779-002c-4077-b377-8ea7c1faa795", Allowed = true},
         },
     },
-    ["GITHZERAI"] = {TAG = "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67", Allowed = true,
+    ["GITHZERAI"] = {TAG = "7fa93b80-8ba5-4c1d-9b00-5dd20ced7f67", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "Githzerai", RACE = "ca1c9216-a0cf-44e7-811a-2f9081c536ed", Allowed = true},
         },
@@ -243,12 +242,12 @@ Data.AllowedTagsAndRaces = {
         {Name = "Gnoll Flind", RACE = "4f2fd01e-fa57-4c3f-81e2-408d6fd4fdd0", Allowed = nil},
         },
     },
-    ["GNOME"] = {TAG = "1f0551f3-d769-47a9-b02b-5d3a8c51978c", Allowed = true,
+    ["GNOME"] = {TAG = "1f0551f3-d769-47a9-b02b-5d3a8c51978c", Allowed = false, Reason = "BG3SX - No Small races",
         racesUsingTag = {
         {Name = "Gnome", RACE = "f1b3f884-4029-4f0f-b158-1f9fe0ae5a0d", Allowed = true},
         },
     },
-    ["GOBLIN"] = {TAG = "608597d9-bf00-4ede-aabe-767457280925", Allowed = false,
+    ["GOBLIN"] = {TAG = "608597d9-bf00-4ede-aabe-767457280925", Allowed = false, Reason = "BG3SX - No Small races",
         racesUsingTag = {
         {Name = "Goblin", RACE = "54fb4eb9-2cb9-4925-a94f-c16d15e20999", Allowed = nil},
         },
@@ -258,7 +257,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "HalfElf", RACE = "45f4ac10-3c89-4fb2-b37d-f973bb9110c0", Allowed = true},
         },
     },
-    ["HALFLING"] = {TAG = "b99b6a5d-8445-44e4-ac58-81b2ee88aab1", Allowed = true,
+    ["HALFLING"] = {TAG = "b99b6a5d-8445-44e4-ac58-81b2ee88aab1", Allowed = false, Reason = "BG3SX - No Small races",
         racesUsingTag = {
         {Name = "Halfling", RACE = "78cd3bcc-1c43-4a2a-aa80-c34322c16a04", Allowed = true},
         },
@@ -273,17 +272,17 @@ Data.AllowedTagsAndRaces = {
         {Name = "Harpy", RACE = "34afb07e-44d1-4d00-b2eb-aff508a87718", Allowed = true}, -- Set to true if we ever do add it
         },
     },
-    ["HIGHELF"] = {TAG = "492c3200-1226-4114-bad1-f6b1ba737f3d", Allowed = true,
+    ["HIGHELF"] = {TAG = "492c3200-1226-4114-bad1-f6b1ba737f3d", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "HighElf", RACE = "4fda6bce-0b91-4427-901f-690c2d091c47", Allowed = true},
         },
     },
-    ["HIGHHALFELF"] = {TAG = "52b71dea-9d4e-402d-9700-fb9c360a44c9", Allowed = true,
+    ["HIGHHALFELF"] = {TAG = "52b71dea-9d4e-402d-9700-fb9c360a44c9", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "HighHalfElf", RACE = "30fafb0b-7c8b-4917-bd2a-536233b35d3c", Allowed = true},
         },
     },
-    ["HILLDWARF"] = {TAG = "534098fa-601d-4f6e-8c4e-b3a8d4b1f141", Allowed = false,
+    ["HILLDWARF"] = {TAG = "534098fa-601d-4f6e-8c4e-b3a8d4b1f141", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "HillDwarf", RACE = "78f5e3e8-a9f8-4249-8007-84dc922640b2", Allowed = true},
         },
@@ -320,14 +319,14 @@ Data.AllowedTagsAndRaces = {
         {Name = "Meazel", RACE = "00c7ee76-58d0-429c-ae4d-ecc3d653da06", Allowed = false},
         {Name = "ShadarKai", RACE = "1881d9c3-5654-491b-868d-14b6af8b79af", Allowed = true}, -- Should just be "He Who Was" with a regular elf rig
         {Name = "Aasimar", RACE = "249e2e66-aece-43d5-b902-9921f7f67c79", Allowed = true},
-        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = false},
-        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = false},
-        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = false},
-        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = false},
-        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = false},
-        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = false},
-        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = false},
-        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = false},
+        {Name = "Trips_Protector", RACE = "dd21fb84-2d6a-4d7d-a418-ca96991d3920", Allowed = true},
+        {Name = "Trips_Scourge", RACE = "4738a422-5abd-41a7-a3f8-a35250a73209", Allowed = true},
+        {Name = "Trips_Fallen", RACE = "f40da0bb-58e0-4b53-8ec5-805bc1533c8c", Allowed = true},
+        {Name = "Trips_Harbinger", RACE = "449f93dd-817f-4870-be6d-fbdb8f0dfb1d", Allowed = true},
+        {Name = "Trips_Protector_Hireling", RACE = "eef353ed-870d-4ac1-8610-4bb0682c6c60", Allowed = true},
+        {Name = "Trips_Scourge_Hireling", RACE = "309b9cc5-0156-4f64-b857-8cf83fa2160b", Allowed = true},
+        {Name = "Trips_Fallen_Hireling", RACE = "519820ce-d715-42ee-885c-f35feb3f7183", Allowed = true},
+        {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
         },
     },
     ["KOBOLD"] = {TAG = "f68151f2-58ee-42e6-98ad-7d858c4a0f13", Allowed = false,
@@ -340,17 +339,17 @@ Data.AllowedTagsAndRaces = {
         {Name = "Kuotoa", RACE = "ef9802b4-e872-4dec-bdb2-1cc0038b6856", Allowed = nil},
         },
     },
-    ["LIGHTFOOTHALFLING"] = {TAG = "57a00605-9e74-477c-bd9d-53c721e25e56", Allowed = true,
+    ["LIGHTFOOTHALFLING"] = {TAG = "57a00605-9e74-477c-bd9d-53c721e25e56", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "LightfootHalfling", RACE = "a8828cb9-589d-489e-8373-6495eb31ffc1", Allowed = true},
         },
     },
-    ["LOLTHDROWELF"] = {TAG = "ef9c5b74-56a8-48cc-b0b9-169ee16bf026", Allowed = true,
+    ["LOLTHDROWELF"] = {TAG = "ef9c5b74-56a8-48cc-b0b9-169ee16bf026", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "LolthDrow", RACE = "c5f8ebdd-f4a5-4d2d-9eab-4a8d1b1dd724", Allowed = true},
         },
     },
-    ["MEPHISTOPHELESTIEFLING"] = {TAG = "ec5bea6b-26f1-4917-919c-375f67ac13d1", Allowed = true,
+    ["MEPHISTOPHELESTIEFLING"] = {TAG = "ec5bea6b-26f1-4917-919c-375f67ac13d1", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "MephistophelesTiefling", RACE = "b03bdf0f-876d-4567-a0a3-28627319c919", Allowed = true},
         },
@@ -378,7 +377,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Drider", RACE = "14360cf2-e8cb-42dc-a02a-1e70b7713ab9", Allowed = false}, -- No Drider Sex
         },
     },
-    ["MOUNTAINDWARF"] = {TAG = "1dc20a7a-00e7-4126-80ad-aa1152a2136c", Allowed = true,
+    ["MOUNTAINDWARF"] = {TAG = "1dc20a7a-00e7-4126-80ad-aa1152a2136c", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "MountainDwarf", RACE = "6e455d3b-293a-420b-baae-74260ed9aebf", Allowed = true},
         },
@@ -426,6 +425,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Rat", RACE = "80d7f493-0adb-43e7-a4ad-59095b5d80df", Allowed = nil},
         },
     },
+    --#region REALLY TAGS
     ["REALLY_AASIMAR"] = {TAG = "2fddf7dd-f79b-4998-882c-d7257badbfe6", Allowed = true,
         racesUsingTag = {
         {Name = "Trips_Aasimar", RACE = "ff2b6894-b03e-4bc6-a3b4-ce16ce405e7e", Allowed = true},
@@ -440,6 +440,86 @@ Data.AllowedTagsAndRaces = {
         {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
         },
     },
+    ["REALLY_DEEPGNOME"] = {TAG = "17d29357-beba-4096-accc-c28bdea88fda", Allowed = true, -- Subrace
+    },
+    ["REALLY_MOUNTAINDWARF"] = {TAG = "18659b46-73ae-49d2-85a8-7e6cc43ce94f", Allowed = true, -- Subrace
+    },
+    ["REALLY_HALFELF"] = {TAG = "277f9609-ad0c-4883-b56d-0850904e88df", Allowed = true, -- Subrace
+    },
+    ["REALLY_HALFLING"] = {TAG = "2b40a033-7a5c-47e9-92f0-7de9b5cd3a42", Allowed = true, -- Subrace
+    },
+    ["REALLY_ZARIELTIEFLING"] = {TAG = "3a5efd84-5925-4a75-83ee-4f336b56f716", Allowed = true, -- Subrace
+    },
+    ["REALLY_DROWHALFELF"] = {TAG = "3dbe23e0-2c9f-4a81-b586-ec6e50f720e1", Allowed = true, -- Subrace
+    },
+    ["REALLY_GNOME"] = {TAG = "42483542-7915-4de5-a7d9-ac0d15fe301c", Allowed = false, Reason = "BG3SX - No Small races",
+    },
+    ["REALLY_DUERGARDWARF"] = {TAG = "45b007f7-f4f6-46e2-9480-395a49b87ef3", Allowed = true, -- Subrace
+    },
+    ["REALLY_ASMODEUSTIEFLING"] = {TAG = "6591a20a-12de-46ff-bf82-b866cd97bb9a", Allowed = true, -- Subrace
+    },
+    ["REALLY_DROWELF"] = {TAG = "676e854b-d74b-44f3-8363-3ef27164a54d", Allowed = true, -- Subrace
+    },
+    ["REALLY_ELF"] = {TAG = "772b1dc6-14be-417f-afa3-c6cf364f45b4", Allowed = true,
+    },
+    ["REALLY_HIGHELF"] = {TAG = "78884c5f-9504-41af-912d-ce212df0ebea", Allowed = true, -- Subrace
+    },
+    ["REALLY_TIEFLING"] = {TAG = "7bf7207f-7406-49c0-b501-eaaa2bb4efd7", Allowed = true,
+    },
+    ["REALLY_WOODHALFELF"] = {TAG = "8ac1b27c-c5c4-4a2c-95dd-256e4349e483", Allowed = true, -- Subrace
+    },
+    ["REALLY_DISPLACER_BEAST"] = {TAG = "8fac3253-331c-4b9f-95fb-e2196fd1bc8d", Allowed = true,
+    },
+    ["REALLY_HILLDWARF"] = {TAG = "9a92ac6d-b7cc-4ccb-8965-074c6b36a342", Allowed = true, -- Subrace
+    },
+    ["REALLY_DWARF"] = {TAG = "ad129444-0f41-4114-9ee5-2b9902d7ca8d", Allowed = false, Reason = "BG3SX - No Small races",
+    },
+    ["REALLY_FORESTGNOME"] = {TAG = "b0401c02-70b3-47f5-998f-8d440ad6954f", Allowed = true, -- Subrace
+    },
+    ["REALLY_WOODELF"] = {TAG = "b12e8dff-c1f0-4e9c-9ec0-1cafd22bb637", Allowed = true, -- Subrace
+    },
+    ["REALLY_HIGHHALFELF"] = {TAG = "bb7c731c-7af7-4c2d-b3d7-b4e8bd86a244", Allowed = true, -- Subrace
+    },
+    ["REALLY_MEPHISTOPHELESTIEFLING"] = {TAG = "c70e1dc2-72d4-44f9-83fd-c63d247edd9b", Allowed = true, -- Subrace
+    },
+    ["REALLY_LOLTHDROWELF"] = {TAG = "c71eb8de-74e3-4d70-9826-22da7e2dc607", Allowed = true, -- Subrace
+    },
+    ["REALLY_SELDARINEDROWELF"] = {TAG = "d2d60a81-688e-4d3d-ba56-3e467cae37fc", Allowed = true, -- Subrace
+    },
+    ["REALLY_LIGHTFOOTHALFLING"] = {TAG = "da1d4f47-8583-49a1-b262-d77d361b2e09", Allowed = true, -- Subrace
+    },
+    ["REALLY_ROCKGNOME"] = {TAG = "df697d73-5469-405a-aa95-6e1e720c5ee6", Allowed = true, -- Subrace
+    },
+    ["REALLY_HUMAN"] = {TAG = "8e288154-e7ca-4277-b2df-e61639b1cce8", Allowed = true,
+    },
+    ["REALLY_STOUTHALFLING"] = {TAG = "058df86a-97b6-4dc4-a246-a1db65ff3c0f", Allowed = true, -- Subrace
+    },
+    ["REALLY_BESTIAL"] = {TAG = "1029b3e3-3ff0-4d73-b4ed-79b622cad4f9", Allowed = false, Reason = "BG3SX - No beasts",
+    },
+    ["REALLY_TRITON"] = {TAG = "2a7e679e-2567-47f7-9645-550471cffcf7", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_TORTLE"] = {TAG = "7839884d-892a-4d60-95cc-b073420d8474", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_AARAKOCRA"] = {TAG = "7e97c590-911f-422a-bdb6-068c137eb2c8", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_FIRBOLG"] = {TAG = "9deae354-0108-40b4-a7db-6eb23fba050f", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_GENASI"] = {TAG = "aa68eccb-7875-436f-881e-c3775eee37f6", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_TABAXI"] = {TAG = "bafc25f8-20b0-4693-a0fe-73967befcf05", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_WARFORGED"] = {TAG = "e30b5b4d-2ceb-4791-914e-b6c6c122f059", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_KENKU"] = {TAG = "ec90a39d-ce0e-4ae1-b74d-0906dfd9a1d2", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_LIZARDFOLK"] = {TAG = "ef8444e2-a240-4cc1-9f57-73db6d99bc96", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_YUANTIPUREBLOOD"] = {TAG = "3d80e0d5-0e28-4363-b153-c1a1076d36d4", Allowed = false, Reason = "BG3SX - Unused Race or wasn't available to test",
+    },
+    ["REALLY_DRAGONBORN"] = {TAG = "39783f17-8484-46a6-aa3b-f3d51122e5f3", Allowed = true,
+    },
+    ["REALLY_HALFORC"] = {TAG = "ab3eff19-d094-4102-88bd-d097b6b6e4f0", Allowed = true,
+    },
     ["REALLY_GITH"] = {TAG = "e49c027c-6ec6-4158-9afb-8b59236d10fd", Allowed = true,
         racesUsingTag = {
         {Name = "Githyanki", RACE = "bdf9b779-002c-4077-b377-8ea7c1faa795", Allowed = true},
@@ -451,7 +531,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "Githyanki", RACE = "bdf9b779-002c-4077-b377-8ea7c1faa795", Allowed = true},
         },
     },
-    ["REALLY_GITHZERAI"] = {TAG = "697b9262-7d3a-4bcd-b5c5-e36cf02b369d", Allowed = true,
+    ["REALLY_GITHZERAI"] = {TAG = "697b9262-7d3a-4bcd-b5c5-e36cf02b369d", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "Githzerai", RACE = "ca1c9216-a0cf-44e7-811a-2f9081c536ed", Allowed = true},
         },
@@ -470,13 +550,14 @@ Data.AllowedTagsAndRaces = {
         {Name = "Trips_Harbinger_Hireling", RACE = "f3104835-8e41-485c-95f8-9035aca64eb1", Allowed = true},
         },
     },
+    --#endregion
     ["REDCAP"] = {TAG = "ec2ee51e-80de-42a2-9d34-a5c9aa75cf75", Allowed = false,
         racesUsingTag = {
         {Name = "Redcap", RACE = "b0957b33-4a99-48d9-9f2e-36b029c91a30", Allowed = nil},
         {Name = "Redcap Pirate", RACE = "da80f25a-fc31-4c47-bef3-276ba3baf10f", Allowed = nil},
         },
     },
-    ["ROCKGNOME"] = {TAG = "664cc044-a0ea-43a1-b21f-d8cad7721102", Allowed = true,
+    ["ROCKGNOME"] = {TAG = "664cc044-a0ea-43a1-b21f-d8cad7721102", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "RockGnome", RACE = "2cf6c770-24ab-4608-9617-d1e46c11ab55", Allowed = true},
         },
@@ -486,12 +567,12 @@ Data.AllowedTagsAndRaces = {
         {Name = "ScryingEye", RACE = "9a2fa9f4-f39f-42f4-b747-82a56a5bd815", Allowed = nil},
         },
     },
-    ["SELDARINEDROWELF"] = {TAG = "6e913b6e-58b1-41bf-8751-89250dd17bff", Allowed = true,
+    ["SELDARINEDROWELF"] = {TAG = "6e913b6e-58b1-41bf-8751-89250dd17bff", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "SeldarineDrow", RACE = "4d30b4f9-7bb2-4fc2-a7bc-080f116e325a", Allowed = true},
         },
     },
-    ["SHORT"] = {TAG = "50e7beca-4e90-43cd-b7c5-c235e236077f", Allowed = false,
+    ["SHORT"] = {TAG = "50e7beca-4e90-43cd-b7c5-c235e236077f", Allowed = false, Reason = "BG3SX - No Small races",
         racesUsingTag = {
         {Name = "Dwarf", RACE = "0ab2874d-cfdc-405e-8a97-d37bfbb23c52", Allowed = nil},
         {Name = "Gnome", RACE = "f1b3f884-4029-4f0f-b158-1f9fe0ae5a0d", Allowed = nil},
@@ -514,7 +595,7 @@ Data.AllowedTagsAndRaces = {
         {Name = "PhaseSpider", RACE = "b7a80e95-eb5a-4602-b235-8ae612ffe09d", Allowed = nil},
         },
     },
-    ["STOUTHALFLING"] = {TAG = "8d545fa1-8416-493f-8325-7d112bceced8", Allowed = true,
+    ["STOUTHALFLING"] = {TAG = "8d545fa1-8416-493f-8325-7d112bceced8", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "StoutHalfling", RACE = "24e075cc-b21e-4639-ac60-fc513083b0e7", Allowed = true},
         },
@@ -559,19 +640,17 @@ Data.AllowedTagsAndRaces = {
         {Name = "DeepGnome", RACE = "3560f4a2-c0b8-4f8b-baf8-6b6eaef0c160", Allowed = false},
         },
     },
-    ["VO_POSTPROCESS"] = {TAG = "eae44d86-3321-4a0a-811d-4fd8e48b5723",  Allowed = true, -- Technically it has some racesUsingTag but we just allow it to be skipped
-    },
-    ["WOODELF"] = {TAG = "889e0db5-d03e-4b63-86d7-13418f69729f", Allowed = true,
+    ["WOODELF"] = {TAG = "889e0db5-d03e-4b63-86d7-13418f69729f", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "WoodElf", RACE = "a459ba68-a9ec-4c8e-b127-602615f5b4c0", Allowed = true},
         },
     },
-    ["WOODHALFELF"] = {TAG = "5ffb703c-3ef4-493b-966d-749bc038f6bd", Allowed = true,
+    ["WOODHALFELF"] = {TAG = "5ffb703c-3ef4-493b-966d-749bc038f6bd", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "WoodHalfElf", RACE = "76057327-da03-4398-aaf0-c59345ef3a8b", Allowed = true},
         },
     },
-    ["ZARIELTIEFLING"] = {TAG = "ab677895-e08a-479f-a043-eac2d8447188", Allowed = true,
+    ["ZARIELTIEFLING"] = {TAG = "ab677895-e08a-479f-a043-eac2d8447188", Allowed = true, -- Subrace
         racesUsingTag = {
         {Name = "ZarielTiefling", RACE = "88d0d219-9dcb-462b-aab6-ccf31eeee2e3", Allowed = true},
         },
@@ -663,23 +742,46 @@ Data.AllowedTagsAndRaces = {
     --#endregion
 }
 
+Data.ModdedTags = {}
+
 Data.UnimportantTags = { -- Unimportant for Whitelist
+    --#region System
     "00000000-0000-0000-0000-000000000000", -- EMPTY
+    "0fcfa622-a3c9-4a03-aab4-2a74904b62eb", -- EMPTY
     "53c3304c-032d-4c49-86df-00b3b03a6b13", -- AI_BLOCKWEAPONACTIONS
     "eae44d86-3321-4a0a-811d-4fd8e48b5723", -- VO_POSTPROCESS
     "d27831df-2891-42e4-b615-ae555404918b", -- GENITAL_PENIS
     "a0738fdf-ca0c-446f-a11d-6211ecac3291", -- GENITAL_VULVA
     "3806477c-65a7-4100-9f92-be4c12c4fa4f", -- Female
     "8f74d144-041e-4035-a9ac-72f41fc32de7", -- Male
-    "d2f86ec3-c41f-47e1-8acd-984872a4d7d5", -- RARE
     "7e99123d-6833-4461-9b4a-b5e281586734", -- WEIGHT_SMALL
     "d631a9b5-a1f1-4cc8-2583-567e828f69d0", -- Int Modifier
     "f7e010d8-17ec-4539-229d-fff17036654e", -- Cha Modifier
     "3b8a887d-7a26-426a-e697-97ec7e3f4d74", -- Wis Modifier
+    "d2f86ec3-c41f-47e1-8acd-984872a4d7d5", -- RARE
+    --#endregion
+    --#region REALLY
+    "264a6880-9a51-429c-a9fc-97f8952baf90", -- REALLY Generic
+    "2d0a73b9-f113-4d35-bdee-a31ab9163d74", -- REALLY Underdark
+    "987a41e3-2482-4c74-8c30-f3843cfdb7f3", -- REALLY_RARE
+    "0c8221b4-43c8-4c9e-aa00-1832f4d9bcb9", -- REALLY Alfira
+    "1a2f70d6-8ead-4eb5-a824-79ee1971764a", -- REALLY Karlach
+    "5f40def5-d3ec-4698-a367-01a339888956", -- REALLY Wyll
+    "642d2aee-e3df-47e3-9f47-bbcd441bb9e0", -- REALLY Shadowheart
+    "ffd08582-7396-4cac-bcd4-8f9cd0fd8ef3", -- REALLY Astarion
+    "2cff7db0-ae50-4267-82ea-84e961d3e3fa", -- REALLY Us
+    "3e84e1cd-2193-4f9f-80b4-c2ededefaea6", -- REALLY Minthara
+    "8457eb5f-036c-4143-b6cf-447a9f555c7a", -- REALLY Jaheira
+    "9b0354c0-56d9-4723-8034-918ac9abab19", -- REALLY Gale
+    "9b8709f9-8d2a-4b4e-a465-8505c561d7f5", -- REALLY Halsin
+    "aeb694fc-83fb-452d-819a-b97ba442dc42", -- REALLY Minsc
+    "cd611d7d-b67d-42b4-a75c-a0c6091ef8a2", -- REALLY Dark Urge
+    "ffd08582-7396-4cac-bcd4-8f9cd0fd8ef3", -- REALLY Astarion
+    --#endregion
 }
 
 Data.WhitelistedEntities = {
-    -- Origins
+    --#region Companions
     "3ed74f06-3c60-42dc-83f6-f034cb47c679", -- ShadowHeart
     "c7c13742-bacd-460a-8f65-f864fe41f255", -- Astarion
     "ad9af97d-75da-406a-ae13-7071c563f604", -- Gale
@@ -690,7 +792,8 @@ Data.WhitelistedEntities = {
     "25721313-0c15-4935-8176-9f134385451b", -- Minthara
     "91b6b200-7d00-4d62-8dc9-99e8339dfa1a", -- Jaheira
     "0de603c5-42e2-4811-9dad-f652de080eba", -- Minsc
-    -- NPC's
+    --#endregion
+    --#region NPC's
     "bc4b5efc-cbd3-4f8f-a31e-d37f801a038c", -- Ketheric
     "bf24e0ec-a3a6-4905-bd2d-45dc8edf8101", -- Orin
     "491a7686-3081-405b-983c-289ec8781e0a", -- Mizora
@@ -699,6 +802,7 @@ Data.WhitelistedEntities = {
     "f65becd6-5cd7-4c88-b85e-6dd06b60f7b8", -- Raphael
     "25498064-744e-479c-809f-f36ecd5eb264", -- Haarlep
     "14ac9a0f-02ab-422f-b848-069c717d4203", -- Haarlep (F)
+    --#endregion
 }
 
 -- Table to add specific entity UUID's to, to disallow interactions
@@ -855,6 +959,9 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                     if tagInfo.Allowed == false then
                         if debug == true then
                             local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed tag found: " .. tagData.Name .. " with UUID:\n" .. tag
+                            if tagInfo.Reason then
+                                msg = msg .. "\nReason: " .. tagInfo.Reason
+                            end
                             _P(msg)
                             Ext.Loca.UpdateTranslatedString(popuphandle, msg)
                             Osi.OpenMessageBox(uuid, popupkey)
@@ -868,6 +975,9 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
                                 if not raceAllowed then
                                     if debug == true then
                                         local msg = "[BG3SX][Whitelist.lua]\nCheck failed on:\n" .. uuid .. "\nDisallowed race found: " .. race.Name
+                                        if race.Reason then
+                                            msg = msg .. "\nReason: " .. race.Reason
+                                        end
                                         _P(msg)
                                         Ext.Loca.UpdateTranslatedString(popuphandle, msg)
                                         Osi.OpenMessageBox(uuid, popupkey)
@@ -927,6 +1037,29 @@ function Entity:IsWhitelisted(uuid, debug)
             return true -- Entity allowed by race/tags
         else
             return false -- Entity not allowed by race/tags
+        end
+    end
+end
+
+-- Input a table of tag names to iterate over every tag in Data.AllowedTagsAndRaces and set them to either true or false
+---@param tableOfTags table -- A table of tag names for the function to iterate over
+---@param allow boolean -- true or false
+function Data:SetAllowedTagsByName(tableOfTags, allow)
+    local wList = Data.AllowedTagsAndRaces
+    for _,tag in pairs(wList) do -- For every entry in our table
+        for _,tagToEdit in pairs(tableOfTags) do -- It checks it against every entry of your table
+            if tag == tagToEdit then -- It checks each iteration if it finds an allowedTag you list in our table of tags -- IF it finds it, then...
+            wList[tag].Allowed = allow -- You set it to whatever your allow parameter is
+                if wList[tag].racesUsingTag and #wList[tag].racesUsingTag > 0 then -- Then it checks if it has a racesUsingTag entry and if it has at least one entry itself
+                    for _,subTag in pairs(wList[tag].racesUsingTag) do -- Not it checks any of those subTags
+                        for _,subTagToEdit in pairs(tableOfTags) do -- Against any of the ones we want to allow
+                            if subTag.Name == subTagToEdit then -- And if we find a match
+                            wList[tag].racesUsingTag[subTag].Allowed = allow -- We set it to whatever your allow parameter is
+                            end -- Now we close all steps
+                        end
+                    end
+                end
+            end
         end
     end
 end

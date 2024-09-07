@@ -298,7 +298,7 @@ end
 
 -- TODO: Check parameters (why is spell listed for the example?)
 -- Get all allowed genitals for entity (Ex: all vulva for human)
----@param spell					- Name of the spell by which the genitals are filtered (vulva, penis, erection)
+---@param spell	string				- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 ---@param uuid string 	    	- uuid of entity that will receive the genital
 ---@return permittedGenitals	- Table of IDs of CharacterCreationAppearaceVisuals
 local function getPermittedGenitals(uuid)
@@ -449,8 +449,8 @@ end
 saveTheKids()
 
 -- Get the current genital of the entity
----@param uuid 	    - uuid of entity that has a genital
----@return visual	- ID of CharacterCreationAppearaceVisual
+---@param uuid string	- uuid of entity that has a genital
+---@return visual		- ID of CharacterCreationAppearaceVisual
 function Genital:GetCurrentGenital(uuid)
 	local entity = Ext.Entity.Get(uuid)
 	local allGenitals = getAllGenitals()

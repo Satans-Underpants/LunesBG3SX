@@ -40,13 +40,17 @@ Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 
 -- Makes it so the game never saves with an active scene to avoid errors/crashes
 Ext.Events.GameStateChanged:Subscribe(function(e)
-    if e.FromState == "Running" and e.ToState == "Save" then
+    -- if e.FromState and e.ToState then
+    -- _P("From " .. tostring(e.FromState) .. " to " .. tostring(e.ToState)) -- Debug
+    -- end
+    if (e.FromState == "Running" and e.ToState == "Save")
+    or (e.FromState == "Running" and e.ToState == "UnloadLevel") then -- Terminate also while loading so it doesn't carry over naked npc's
         Sex:TerminateAllScenes()
     end
 end)
 
 
 Ext.Entity.Subscribe("GameObjectVisual", function(entity, _, _)
-    local GOV = entity.GameObjectVisual
-    _P(GOV.Type)
+    -- local GOV = entity.GameObjectVisual
+    -- _P(GOV.Type) -- This is for testing
 end)
