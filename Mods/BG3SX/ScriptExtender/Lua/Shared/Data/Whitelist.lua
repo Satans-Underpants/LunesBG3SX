@@ -359,11 +359,6 @@ Data.AllowedTagsAndRaces = {
         {Name = "Mindflayer", RACE = "d4361929-70b8-4610-8073-2c827bf6d2fc", Allowed = true}, -- Set to true if we ever do add it
         },
     },
-    ["MONK"] = {TAG = "e1e460bb-d0ae-4452-8529-c9e176558731", Allowed = true, -- Some Githzerai Tag - Made by Kaz
-        racesUsingTag = {
-        {Name = "Githzerai", RACE = "ca1c9216-a0cf-44e7-811a-2f9081c536ed", Allowed = true},
-        },
-    },
     ["MONSTROSITY"] = {TAG = "081a2ef4-dc1b-4d5b-bae3-8db81bef1d06", Allowed = true,
         racesUsingTag = {
         {Name = "Monstrosity", RACE = "31e1a2fe-0322-4540-95c3-9a28ad7fb202", Allowed = false},
@@ -759,6 +754,21 @@ Data.UnimportantTags = { -- Unimportant for Whitelist
     "f7e010d8-17ec-4539-229d-fff17036654e", -- Cha Modifier
     "3b8a887d-7a26-426a-e697-97ec7e3f4d74", -- Wis Modifier
     "d2f86ec3-c41f-47e1-8acd-984872a4d7d5", -- RARE
+    "0006ca6f-28f9-48e9-9f34-3deb32ff0fef", -- WPN_VFX_DAGGER
+    --#endregion
+    --#region Classes
+    "02913f9a-f696-40cf-acdf-32032afab32c", -- Barbarian
+    "d93434bd-6b71-4789-b128-ee24156057cc", -- Bard
+    "1671b4bf-4f47-4bb7-9cb9-80bb1f6009d5", -- Cleric
+    "44ac4317-4d38-4d28-80e2-94024c6e42f0", -- Druid
+    "1ae7017c-4884-4a43-bc4a-742fa0d201c0", -- Fighter
+    "e1e460bb-d0ae-4452-8529-c9e176558731", -- Monk
+    "6d85ab2d-5c23-498c-a61e-98f05a00177a", -- Paladin
+    "37a733c1-a862-4157-b92a-9cff46232c6a", -- Ranger
+    "f8a0608b-666c-4be6-a49c-03b369c10bd2", -- Rogue
+    "18266c0b-efbc-4c80-8784-ada4a37218d7", -- Sorcerer
+    "6fe3ae27-dc6c-4fc9-9245-710c790c396c", -- Wizard
+    "5804f55a-93f7-4281-9512-8d548a9e2a22", -- Warlock
     --#endregion
     --#region REALLY
     "264a6880-9a51-429c-a9fc-97f8952baf90", -- REALLY Generic
