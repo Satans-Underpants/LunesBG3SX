@@ -35,3 +35,32 @@ Data.Spells.SexSceneSpells = {
     "BG3SX_ChangeCameraHeight",
     "BG3SX_RotateScene",
 }
+
+function Data.Spells:AddSpellsToContainerBySceneType(spellsToAdd)
+    local container
+    for spell,sceneType in pairs(spellsToAdd) do
+        if sceneType == "MasturbateMale" then
+            container = Ext.Stats.Get("BG3SX_MaleMasturbationContainer")
+        elseif sceneType == "MasturbateFemale" then
+            container = Ext.Stats.Get("BG3SX_FemaleMasturbationContainer")
+        elseif sceneType == "Straight" then
+            container = Ext.Stats.Get("BG3SX_StraightAnimationsContainer")
+        elseif sceneType == "Gay" then
+            container = Ext.Stats.Get("BG3SX_GayAnimationsContainer")
+        elseif sceneType == "Lesbian" then
+            container = Ext.Stats.Get("BG3SX_LesbianAnimationsContainer")
+        end
+        if string.find(container.ContainerSpells, spell, 1, true) == nil then -- If the spell doesn't already exist in the given spellcontainers list of spells then...
+            container.ContainerSpells = container.ContainerSpells ..";" .. spell
+            container:Sync()
+        end
+    end
+end
+
+-- Example:
+--
+-- local spellsToAdd = {
+--     ["Lewd_Cowgirl"] = "Straight",
+--     ["SomeOtherSpell"] = "Gay",
+--   }
+-- Mods.BG3SX.Data.Spells:AddSpellsToContainerBySceneType(spellsToAdd)

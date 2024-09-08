@@ -739,7 +739,7 @@ Data.AllowedTagsAndRaces = {
 
 Data.ModdedTags = {}
 
-Data.UnimportantTags = { -- Unimportant for Whitelist
+Data.UnimportantTags = { -- These tags will get skipped by Whitelist
     --#region System
     "00000000-0000-0000-0000-000000000000", -- EMPTY
     "0fcfa622-a3c9-4a03-aab4-2a74904b62eb", -- EMPTY
@@ -1039,7 +1039,7 @@ end
 function Entity:IsWhitelisted(uuid, debug)
     local debug = debug or false
     if Entity:IsWhitelistedEntity(uuid) then -- If true it is allowed - return true
-        return true
+        return true -- We do this seperately from the other checks to just immediately return true if they are indeed whitelisted here
     end
     if Entity:IsBlacklistedEntity(uuid) then -- If true it is NOT allowed - return false
         return false -- Entity not allowed
