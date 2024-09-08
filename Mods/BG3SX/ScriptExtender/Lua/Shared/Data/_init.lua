@@ -7,8 +7,8 @@ Ext.Require("Shared/Data/BodyLibrary.lua")
 Ext.Require("Shared/Data/Equipment.lua")
 Ext.Require("Shared/Data/Statuses.lua")
 Ext.Require("Shared/Data/Origins.lua")
-Ext.Require("Shared/Data/Spells.lua")
 Ext.Require("Shared/Data/SceneTypes.lua")
+Ext.Require("Shared/Data/Spells.lua") -- Initialize Spells after SceneTypes to allow usage of Spells:AddSpellsToContainerBySceneType which iterated over SceneTypes
 -- Initialize White-/Blacklists
 Ext.Require("Shared/Data/Whitelist.lua")
 Ext.Require("Shared/Data/WhitelistCompatibility.lua")
