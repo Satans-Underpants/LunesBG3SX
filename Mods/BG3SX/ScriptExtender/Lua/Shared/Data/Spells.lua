@@ -38,15 +38,17 @@ Data.Spells.SexSceneSpells = {
 
 function Data.Spells:AddSpellsToContainerBySceneType(spellsToAdd)
     local container
-    for spell,sType in pairs(spellsToAdd) do
-        for _,entry in pairs(Data.SceneTypes) do
-            if sType == entry.sceneType then
-                container = Ext.Stats.Get(entry.container)
+    for spell,typesToAddTo in pairs(spellsToAdd) do
+        for _,sType in pairs(typesToAddTo) do
+            for _,entry in pairs(Data.SceneTypes) do
+                if sType == entry.sceneType then
+                    container = Ext.Stats.Get(entry.container)
+                end
             end
-        end
-        if string.find(container.ContainerSpells, spell, 1, true) == nil then -- If the spell doesn't already exist in the given spellcontainers list of spells then...
-            container.ContainerSpells = container.ContainerSpells ..";" .. spell
-            container:Sync()
+            if string.find(container.ContainerSpells, spell, 1, true) == nil then -- If the spell doesn't already exist in the given spellcontainers list of spells then...
+                container.ContainerSpells = container.ContainerSpells ..";" .. spell
+                container:Sync()
+            end
         end
     end
 end
