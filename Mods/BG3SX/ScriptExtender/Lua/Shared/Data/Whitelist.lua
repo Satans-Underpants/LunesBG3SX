@@ -804,7 +804,7 @@ Data.WhitelistedEntities = {
     "0de603c5-42e2-4811-9dad-f652de080eba", -- Minsc
     --#endregion
     --#region NPC's
-    "0133f2ad-e121-4590-b5f0-a79413919805", -- Bone Daddy
+    -- "0133f2ad-e121-4590-b5f0-a79413919805", -- Bone Daddy - Broken Model, no fitting Genital, Rig doesn't accept the animations
     "bc4b5efc-cbd3-4f8f-a31e-d37f801a038c", -- Ketheric
     "bf24e0ec-a3a6-4905-bd2d-45dc8edf8101", -- Orin
     "491a7686-3081-405b-983c-289ec8781e0a", -- Mizora
@@ -835,7 +835,7 @@ Data.BlacklistedEntities = {
 --- @return boolean|string - Returns true for whitelisted entities, false if it is not listed.
 function Entity:IsWhitelistedEntity(uuid)
     for _, whitelistedUUID in ipairs(Data.WhitelistedEntities) do
-        if whitelistedUUID == uuid then
+        if Helper:StringContains(uuid, whitelistedUUID) then
             return true -- The UUID is whitelisted
         end
     end
@@ -848,7 +848,7 @@ end
 --- @return boolean|string - Returns true for blacklisted entities, false if it is not listed.
 function Entity:IsBlacklistedEntity(uuid)
     for _, blacklistedUUID in ipairs(Data.BlacklistedEntities) do
-        if blacklistedUUID == uuid then
+        if Helper:StringContains(uuid, blacklistedUUID) then
             return true -- The UUID is blacklisted
         end
     end
