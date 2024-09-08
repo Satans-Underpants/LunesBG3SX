@@ -794,6 +794,7 @@ Data.WhitelistedEntities = {
     "0de603c5-42e2-4811-9dad-f652de080eba", -- Minsc
     --#endregion
     --#region NPC's
+    "0133f2ad-e121-4590-b5f0-a79413919805", -- Bone Daddy
     "bc4b5efc-cbd3-4f8f-a31e-d37f801a038c", -- Ketheric
     "bf24e0ec-a3a6-4905-bd2d-45dc8edf8101", -- Orin
     "491a7686-3081-405b-983c-289ec8781e0a", -- Mizora
