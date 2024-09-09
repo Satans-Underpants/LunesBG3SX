@@ -2,9 +2,6 @@
         -- Init Classes --
 ------------------------------------
 
-
-print("ColdColdCold")
-
 -- Pre-Construct our classes
 Ext.Require("Server/_constructor.lua")
 
