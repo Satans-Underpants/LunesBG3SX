@@ -2,6 +2,9 @@
         -- Init Classes --
 ------------------------------------
 
+
+print("ColdColdCold")
+
 -- Pre-Construct our classes
 Ext.Require("Server/_constructor.lua")
 
@@ -62,3 +65,40 @@ Ext.RegisterModEvent("BG3SX", "GenitalChange")              --{uuid, newGenital}
 -- end)
 
 -- Or check ModEventsTester.lua
+
+
+
+
+
+-- Muffin stats loader
+
+
+-- local modPath = 'Public/RunesOfFaerun/Stats/Generated/Data/'
+-- local filesToReload = {
+--     'Character.txt',
+--     'Object.txt',
+--     'Passive.txt',
+--     'Projectile.txt',
+--     'Shout.txt',
+--     'Status.txt',
+--     'Target.txt',
+-- }
+
+-- local function OnReset()
+--     if filesToReload and #filesToReload then
+--         for _, filename in pairs(filesToReload) do
+--             if filename then
+--                 local filePath = string.format('%s%s', modPath, filename)
+--                 if string.len(filename) > 0 then
+--                     Debug(string.format('RELOADING %s', filePath))
+--                     ---@diagnostic disable-next-line: undefined-field
+--                     Ext.Stats.LoadStatsFile(filePath, false)
+--                 else
+--                     Critical(string.format('Invalid file: %s', filePath))
+--                 end
+--             end
+--         end
+--     end
+-- end
+
+-- Ext.Events.ResetCompleted:Subscribe(OnReset)
