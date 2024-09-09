@@ -85,6 +85,8 @@ Data.AllowedTagsAndRaces = {
         {Name = "Bugbear", RACE = "241b8b4d-763f-48e6-b1f8-a261ec0ef36b", Allowed = true}, -- Set to true if we ever do add it
         },
     },
+    ["CAT"] = {TAG = "a7d28634-e3bf-40c3-8d8c-e1daf4acad74", Allowed = false,
+    },
     ["CELESTIAL"] = {TAG = "7cba0bd7-b955-4ac9-95ba-79e75978d9ac", Allowed = true,
         racesUsingTag = {
         {Name = "Celestial", RACE = "a71d0a73-074d-4859-8b9e-f81c0d90060c", Allowed = true},
