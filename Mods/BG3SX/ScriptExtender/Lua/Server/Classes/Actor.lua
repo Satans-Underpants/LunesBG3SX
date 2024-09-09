@@ -101,8 +101,8 @@ function Actor:CopyEntityAppearanceOverrides()
     if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
         -- Type is special Appearance Edit Enhanced thing?
         Entity:TryCopyEntityComponent(self.parent, self.uuid, "GameObjectVisual")
-        if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 2 then
-            self.uuid.GameObjectVisual.Type = 2
+        if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 0 then
+            self.uuid.GameObjectVisual.Type = 0
             self.uuid:Replicate("GameObjectVisual")
         elseif not self.uuid.GameObjectVisual then
             _P("[BG3SX][Actor.lua] Trying to create Actor for entity without GameObjectVisual Component.")
