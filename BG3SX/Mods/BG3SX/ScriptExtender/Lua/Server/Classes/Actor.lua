@@ -211,10 +211,8 @@ function Actor:DressActor()
 end
 
 -- function Actor:ApplyAnimationSets()
---     for _,animSet in pairs(AnimationSets) do
---         Osi.ApplyStatus(self.uuid, animSet.Name, -1, 1)
---         -- animSet:UpdateWaterfall(self.uuid)
---     end
+--         Osi.ApplyStatus(self.uuid, "BG3SX_AnimSet", -1, 1)
+
 -- end
 
 ----------------------------------------------------------------------------------------------------

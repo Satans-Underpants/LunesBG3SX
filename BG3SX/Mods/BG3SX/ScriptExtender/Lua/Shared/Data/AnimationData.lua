@@ -1,5 +1,6 @@
--- TODO: Clean these up - Maybe have the tables first in general, then afterwards create a section with the additional heightmatching entries
-
+-- AnimationSets.lua needs to be loaded before AnimationData.lua to create and allow reusing of animations by name
+Ext.Require("Shared/Data/AnimationSets.lua")
+local anim = Data.AnimLinks
 -- Heightmatching.lua needs to be loaded before AnimationData.lua to allow the functions to already exist.
 Ext.Require("Shared/Data/Heightmatching.lua")
 local hm = Data.Heightmatching
@@ -9,25 +10,25 @@ Data.StartSexSpells = {
     ["BG3SX_StartMasturbating"] = {
         AnimLength = 3600, Loop = true, Fade = true, Sound = true, -- Fade and Sound currently don't do anything and could technically be left out when creating new entries
         SoundTop = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_StartMasturbating", "49497bdc-d901-4f60-9e4e-3d31a06f9002", "9d8c5992-55ab-4c2f-8d97-28b68eb50a8b"),
+        Heightmatching = hm:new("BG3SX_StartMasturbating", anim["MasturbateWank"], anim["MasturbateStanding_F"]),
     },
     ["BG3SX_AskForSex"] = {
         AnimLength = 3600, Loop = true, Fade = true, Sound = false,
         SoundTop = Data.Sounds.Silence, SoundBottom = Data.Sounds.Silence,
-        Heightmatching = hm:new("BG3SX_AskForSex", "49d78660-5175-4ed2-9853-840bb58cf34a", "10fee5b7-d674-436c-994c-616e01efcb90"),
+        Heightmatching = hm:new("BG3SX_AskForSex", anim["EmbraceTop"], anim["EmbraceBtm"]),
     },
 }
 
 -- Additional entries need to be done seperately, we only create the instance per animation - We can't do this in the table belonging to the animation itself
 local hmi = hm:getInstanceByAnimName("BG3SX_StartMasturbating")
 if hmi then -- Solo animation only needs to specify one bodytype/gender and one animation UUID
-    hmi:setAnimation("M",  nil, "49497bdc-d901-4f60-9e4e-3d31a06f9002")
-    hmi:setAnimation("F",  nil, "9d8c5992-55ab-4c2f-8d97-28b68eb50a8b")
-    hmi:setAnimation("TallF",  nil, "2c60a233-b669-4b94-81dc-280e98238fd0") -- TallF specific animation - Tall is what we call the "Strong" bodytype identifier
+    hmi:setAnimation("M",  nil, anim["MasturbateWank"])
+    hmi:setAnimation("F",  nil, anim["MasturbateStanding_F"])
+    hmi:setAnimation("TallF",  nil, anim["MasturbateStanding_TallF"]) -- TallF specific animation - Tall is what we call the "Strong" bodytype identifier
 end
 local hmi = hm:getInstanceByAnimName("BG3SX_AskForSex")
 if hmi then -- Instead of a specific bodytype/gender combo, just the bodytype matchup also works
-    hmi:setAnimation("Tall", "Med", "04922882-0a2d-4945-8790-cef50276373d", "392073ca-c6e0-4f7d-848b-ffb0b510500b")
+    hmi:setAnimation("Tall", "Med", anim["CarryingTop_Tall"], anim["CarryingBtm_Med"])
     -- hmi:setAnimation("Med", "Tall", "392073ca-c6e0-4f7d-848b-ffb0b510500b", "04922882-0a2d-4945-8790-cef50276373d")
     -- If we'd reverse the entry with the commented out line, the same animation would play even if we use SwitchPlaces
     -- Like this, if we initiate with Tall + Med, the carrying animation plays, if we use SwitchPlaces, the regular fallback plays
@@ -47,71 +48,49 @@ end
 -- TallM + MedF
 -- etc.
 
-local anim = Data.AnimLinks
-Data.Animations = {
-    ["BG3SX_Grinding"] = {
+Data.Animations = {}
+function Data.Animations.new(name, animTop, animBtm, props)
+    animBtm = animBtm or nil
+    props = props or nil
+    Data.Animations[name] = { -- Generic animation setup
         AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_Grinding", "0114c60d-0f82-4827-ae11-9e3c46f7d7b5", "8b9b1bb2-842b-422c-90ff-efbbe84835aa"),
-    },
-    ["BG3SX_EatPussy"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Kissing, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_EatPussy", "5fa5cbe4-1baf-4529-b448-2c53e163626c", "f801ec0d-9fee-4584-bae3-96d7c3e285ff"),
-    },
-    ["BG3SX_FingerFuck"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Kissing, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_FingerFuck", "adf1b790-da1d-4aaf-9ac4-83157c52d5c2", "a79232a2-a498-4689-a5bd-8923e80284d2"),
-    },
-    ["BG3SX_Blowjob"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Kissing, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_Blowjob", "536f0403-c401-4223-bbca-6b807494a527", "b3984708-7664-49ae-b96d-0512497ea036"),
-    },
-    ["BG3SX_Missionary"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_Missionary", "905be226-3edc-4783-9d4e-45d2b57a3d0a", "48a255e9-02ec-4541-b1b7-32275da29206"),
-    },
-    ["BG3SX_Doggy"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_Doggy", "b8f04918-c5b6-4c4a-aee5-390bfaff33bc", "ffdd67e7-7363-46a4-92e2-38260ef0a2e0"),
-    },
-    ["BG3SX_Cowgirl"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_Cowgirl", "ff7a5a30-b661-4192-bd8f-118373e3f4b8", "1b220386-55fa-4d2b-8da4-0e7bf453d928"),
-    },
-    ["BG3SX_MasturbateStanding"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Kissing,
-        Heightmatching = hm:new("BG3SX_MasturbateStanding", anim["MasturbateStanding_F"]),
-    },
-    ["BG3SX_Milking"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Kissing,
-        Heightmatching = hm:new("BG3SX_Milking", "a71ace41-41ce-4876-8f14-4f419b677533", "d2a17851-b51b-4e4f-be1d-30dc86b6466a"),
-    },
-    ["BG3SX_Wanking"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Kissing, SoundBottom = Data.Sounds.Kissing,
-        Heightmatching = hm:new("BG3SX_Wanking", "49497bdc-d901-4f60-9e4e-3d31a06f9002"),
-    },
-    ["BG3SX_BottleSit"] = {
-        AnimLength = 3600, Loop = true, Fade = true, Sound = true,
-        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Moaning,
-        Heightmatching = hm:new("BG3SX_BottleSit", "d0f6cf4a-a418-4640-bf36-87531d55154b"),
-        Props = {
-        "0f2ccca6-3ce8-4271-aec0-820f6581c551", -- Bottle
-        }
-    },
-}
+        SoundTop = Data.Sounds.Moaning, SoundBottom = Data.Sounds.Moaning}
+    if animBtm then
+        Data.Animations[name].Heightmatching = hm:new(name, animTop, animBtm)
+    else
+        Data.Animations[name].Heightmatching = hm:new(name, animTop)
+    end
+    if props then
+        Data.Animations[name].Props = props
+    end
+    return Data.Animations[name]
+end
 
+-- Animation Entries:
+----------------------------------------------------
+local grinding = Data.Animations.new("BG3SX_Grinding", anim["ScissorTop"], anim["ScissorBtm"])
+local eatpussy = Data.Animations.new("BG3SX_EatPussy", anim["EatOutTop"], anim["EatOutBtm"])
+eatpussy.SoundTop = Data.Sounds.Kissing
+local fingerfuck = Data.Animations.new("BG3SX_FingerFuck", anim["FingeringTop"], anim["FingeringBtm"])
+fingerfuck.SoundTop = Data.Sounds.Kissing
+local blowjob = Data.Animations.new("BG3SX_Blowjob", anim["BlowjobTop"], anim["BlowjobBtm"])
+blowjob.SoundTop = Data.Sounds.Kissing
+local laying = Data.Animations.new("BG3SX_Laying", anim["LayingTop"], anim["LayingBtm"])
+local doggy = Data.Animations.new("BG3SX_Doggy", anim["DoggyTop"], anim["DoggyBtm"])
+local cowgirl = Data.Animations.new("BG3SX_Cowgirl", anim["CowgirlTop"], anim["CowgirlBtm"])
+cowgirl.SoundBottom = Data.Sounds.Kissing
+local milking = Data.Animations.new("BG3SX_Milking", anim["MilkingTop"], anim["MilkingBtm"])
+milking.SoundBottom = Data.Sounds.Kissing
+local masturbate = Data.Animations.new("BG3SX_MasturbateStanding", anim["MasturbateStanding_F"])
+local wanking = Data.Animations.new("BG3SX_Wanking", anim["MasturbateWank"])
+wanking.SoundBottom = Data.Sounds.Kissing
+local bottlesit = Data.Animations.new("BG3SX_BottleSit", anim["BottleSit"], nil, "0f2ccca6-3ce8-4271-aec0-820f6581c551") -- Prop: Bottle
+
+-- Heightmatching:
+----------------------------------------------------
 local hmi = hm:getInstanceByAnimName("BG3SX_MasturbateStanding")
 if hmi then
-    hmi:setAnimation("TallF",  nil, "2c60a233-b669-4b94-81dc-280e98238fd0")
+    hmi:setAnimation("TallF",  nil, anim["MasturbateStanding_TallF"])
 end
 
 

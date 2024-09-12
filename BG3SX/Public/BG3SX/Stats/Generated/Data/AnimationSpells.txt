@@ -216,7 +216,7 @@ data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
 
-new entry "BG3SX_Missionary"
+new entry "BG3SX_Laying"
 type "SpellData"
 data "SpellType" "Zone"
 data "SpellProperties" ""
