@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<save>
+	<version major="4" minor="121" revision="84" build="75" lslib_meta="v1,bswap_guids" /> 
+	<region id="AnimationBank">
+		<node id="AnimationBank">
+			<children>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0.5" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2" />
+					<attribute id="ID" type="FixedString" value="930a998f-65ad-487d-bd2a-3711a5b63190" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="PenisTest" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/PenisTest.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/PenisTest.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="213bb548-4870-7c4f-d725-b5f0f005d81c" /> HUM_M_GENITALS
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0.5" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="8.033" />
+					<attribute id="ID" type="FixedString" value="74d770cc-5f39-4a49-92b1-5de873068b93" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_EatOut1_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_EatOut1_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_EatOut1_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2.033" />
+					<attribute id="ID" type="FixedString" value="ade67658-1366-423c-9cd9-33b58c8ca94a" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_EatOut1_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_EatOut1_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_EatOut1_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="4.067" />
+					<attribute id="ID" type="FixedString" value="587dcf9c-b9de-4bb6-937c-e849f21cdf21" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_BlowJob_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_BlowJob_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_BlowJob_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="10.067" />
+					<attribute id="ID" type="FixedString" value="7dcefc5b-85b6-4373-94d0-9eb5224a2e2c" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Cowgirl_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Cowgirl_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Cowgirl_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="10.033" />
+					<attribute id="ID" type="FixedString" value="025720a9-ee9b-4e3c-9b90-d884b847bd9d" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Cowgirl_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Cowgirl_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Cowgirl_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="10.067" />
+					<attribute id="ID" type="FixedString" value="3c6bb4b8-3a74-416f-95d1-2685aba044a9" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Doggy_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Doggy_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Doggy_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="13.4" />
+					<attribute id="ID" type="FixedString" value="96c374fa-0559-4f2c-bc15-d76fda8704c9" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Doggy_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Doggy_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Doggy_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="3.033" />
+					<attribute id="ID" type="FixedString" value="2ef3a003-54a9-4551-be7f-4f5e16d51dd3" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Embrace_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Embrace_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Embrace_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="3.033" />
+					<attribute id="ID" type="FixedString" value="61a83621-65e3-400d-8444-58f3e8db3fb9" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Embrace_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Embrace_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Embrace_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2.033" />
+					<attribute id="ID" type="FixedString" value="8f8014b5-7a2e-44ad-a301-848b310b8a96" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Fingering1_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Fingering1_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Fingering1_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2.033" />
+					<attribute id="ID" type="FixedString" value="ba6b9eda-199c-4f04-bfd7-2b7dc05be633" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Fingering1_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Fingering1_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Fingering1_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="18.4" />
+					<attribute id="ID" type="FixedString" value="5b99ad69-dd48-4e2d-b77f-0ce61deb93aa" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Laying_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Laying_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Laying_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="7.567" />
+					<attribute id="ID" type="FixedString" value="1de1d865-e3f9-4df2-8078-55af4bde7a77" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Laying_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Laying_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Laying_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2.033" />
+					<attribute id="ID" type="FixedString" value="de2af09d-c73a-4288-ad63-fdf8e2c930b9" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Milking_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Milking_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Milking_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2.033" />
+					<attribute id="ID" type="FixedString" value="97544a13-6602-4189-91ff-7302a69cf855" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Milking_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Milking_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Milking_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="11.967" />
+					<attribute id="ID" type="FixedString" value="299ff183-1d48-4ca0-bcce-45f8372322ea" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Scissor_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Scissor_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Scissor_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="11.967" />
+					<attribute id="ID" type="FixedString" value="eb0e9053-f514-49e4-8b13-bcb942934eb0" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Scissor_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Scissor_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Scissor_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="30.033" />
+					<attribute id="ID" type="FixedString" value="1df05dff-b187-42ec-aacd-6ff99bcec62a" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_Rig_Solo_Standing_F" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Solo_Standing_F.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_Rig_Solo_Standing_F.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="30.033" />
+					<attribute id="ID" type="FixedString" value="2de90307-0134-44f7-9306-a019d2de30df" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="Tall_Rig_Solo_Standing_F" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/Tall_Rig_Solo_Standing_F.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/Tall_Rig_Solo_Standing_F.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="957ba883-14f8-5b2d-6d5f-eb9c9ed61584" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="9.333" />
+					<attribute id="ID" type="FixedString" value="fe82152e-4283-43f5-bdb3-214bc64a7fec" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_M_Rig_BlowJob_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_M_Rig_BlowJob_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_M_Rig_BlowJob_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2.033" />
+					<attribute id="ID" type="FixedString" value="be7b9cfa-8a63-4eb8-be20-cc6757b180d3" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_M_Rig_Fingering1_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_M_Rig_Fingering1_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_M_Rig_Fingering1_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="2" />
+					<attribute id="ID" type="FixedString" value="f3613d2c-b652-4dd7-b0f2-600e64afbdf4" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_M_Rig_Wank" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_M_Rig_Wank.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_M_Rig_Wank.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="28.7" />
+					<attribute id="ID" type="FixedString" value="580daac5-3e82-4474-924c-6b7731cab169" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="HUM_F_BottleSit" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_BottleSit.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/HUM_F_BottleSit.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="4.033" />
+					<attribute id="ID" type="FixedString" value="0f6dc57f-a969-4e83-b8dc-212d90a35798" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="TallTop_MedBtm_BTM" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/TallTop_MedBtm_BTM.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/TallTop_MedBtm_BTM.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+				<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="4.033" />
+					<attribute id="ID" type="FixedString" value="516cb2de-500e-4a33-93e9-4339a4353dde" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="TallTop_MedBtm_TOP" />
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/TallTop_MedBtm_TOP.gr2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/TallTop_MedBtm_TOP.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.005555556" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
+				</node>
+			</children>
+		</node>
+	</region>
+</save>
