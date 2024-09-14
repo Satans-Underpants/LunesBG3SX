@@ -1059,7 +1059,7 @@ end
 ---@param allow boolean -- true or false
 function Data:SetAllowedTagsByName(tableOfTags, allow)
     local wList = Data.AllowedTagsAndRaces
-    for _,tag in pairs(wList) do -- For every entry in our table
+    for tag, content in pairs(wList) do -- For every entry in our table
         for _,tagToEdit in pairs(tableOfTags) do -- It checks it against every entry of your table
             if tag == tagToEdit then -- It checks each iteration if it finds an allowedTag you list in our table of tags -- IF it finds it, then...
             wList[tag].Allowed = allow -- You set it to whatever your allow parameter is
