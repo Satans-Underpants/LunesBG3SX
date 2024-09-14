@@ -79,6 +79,8 @@ function Actor:GetLooks()
     local origTemplate = Entity:TryGetEntityValue(self.parent, nil, {"OriginalTemplate", "OriginalTemplate"})
     local looksTemplate = self.parent
 
+    local parentEntity = Ext.Entity.Get(self.parent)
+
     -- If current GameObjectVisual template does not match the original actor's template, apply GameObjectVisual template to the proxy.
     -- This copies the horns of Wyll or the look of any Disguise Self spell applied to the actor. 
     if visTemplate then
@@ -87,8 +89,12 @@ function Actor:GetLooks()
                 looksTemplate = visTemplate
             end
         else -- Else it might be Tav
-            -- For Tavs, copy the look of visTemplate only if they are polymorphed or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
-            if Osi.HasAppliedStatusOfType(self.parent, "POLYMORPHED") == 1 or self.parent.AppearanceOverride then
+            -- For Tavs, copy the look of visTemplate only if they are polymorphed 
+            if Osi.HasAppliedStatusOfType(self.parent, "POLYMORPHED") == 1 then
+                looksTemplate = visTemplate
+            -- or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
+            elseif parentEntity.AppearanceOverride then
+                SatanPrint(GLOBALDEBUG, "is resculpted")
                 looksTemplate = visTemplate
             end
         end
@@ -98,13 +104,14 @@ end
 
 
 function Actor:CopyEntityAppearanceOverrides()
+    local entity = Ext.Entity.Get(self.uuid)
     if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
         -- Type is special Appearance Edit Enhanced thing?
         Entity:TryCopyEntityComponent(self.parent, self.uuid, "GameObjectVisual")
-        if self.uuid.GameObjectVisual and self.uuid.GameObjectVisual.Type ~= 0 then
-            self.uuid.GameObjectVisual.Type = 0
-            self.uuid:Replicate("GameObjectVisual")
-        elseif not self.uuid.GameObjectVisual then
+        if entity.GameObjectVisual and entity.GameObjectVisual.Type ~= 0 then
+            entity.GameObjectVisual.Type = 0
+            entity:Replicate("GameObjectVisual")
+        elseif not entity.GameObjectVisual then
             _P("[BG3SX][Actor.lua] Trying to create Actor for entity without GameObjectVisual Component.")
             _P("[BG3SX][Actor.lua] This can happen with some scenery NPC's.")
             _P("[BG3SX][Actor.lua] Safeguards have been put in place, nothing will break. Please end the Scene and choose another target.")
