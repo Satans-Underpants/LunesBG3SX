@@ -36,11 +36,12 @@ function Actor:new(parent)
         visual           = "",
         equipment        = {},
         armour           = {},
+        isResculpted     = false,
     }, Actor)
     local scene = Scene:FindSceneByEntity(parent) -- Warning: Don't create scene reference in actor metatable or dumps of a scene will infinite loop
     instance.position = scene.rootPosition
     instance.uuid = Osi.CreateAt(Osi.GetTemplate(parent), instance.position.x, instance.position.y, instance.position.z, 1, 0, "")
-
+    SatanPrint(GLOBALDEBUG, "actor uuid ".. instance.uuid)
     initialize(instance)
 
     return instance
@@ -88,16 +89,17 @@ function Actor:GetLooks()
             if origTemplate ~= visTemplate then
                 looksTemplate = visTemplate
             end
-        else -- Else it might be Tav
+        end
+        --else -- Else it might be Tav
             -- For Tavs, copy the look of visTemplate only if they are polymorphed 
             if Osi.HasAppliedStatusOfType(self.parent, "POLYMORPHED") == 1 then
                 looksTemplate = visTemplate
             -- or have AppearanceOverride component (under effect of "Appearance Edit Enhanced" mod)
             elseif parentEntity.AppearanceOverride then
-                SatanPrint(GLOBALDEBUG, "is resculpted")
+                self.isResculpted = true
                 looksTemplate = visTemplate
             end
-        end
+        --end
     end
     return looksTemplate
 end
@@ -105,18 +107,43 @@ end
 
 function Actor:CopyEntityAppearanceOverrides()
     local entity = Ext.Entity.Get(self.uuid)
-    if Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride") then
-        -- Type is special Appearance Edit Enhanced thing?
-        Entity:TryCopyEntityComponent(self.parent, self.uuid, "GameObjectVisual")
-        if entity.GameObjectVisual and entity.GameObjectVisual.Type ~= 0 then
-            entity.GameObjectVisual.Type = 0
-            entity:Replicate("GameObjectVisual")
-        elseif not entity.GameObjectVisual then
-            _P("[BG3SX][Actor.lua] Trying to create Actor for entity without GameObjectVisual Component.")
-            _P("[BG3SX][Actor.lua] This can happen with some scenery NPC's.")
-            _P("[BG3SX][Actor.lua] Safeguards have been put in place, nothing will break. Please end the Scene and choose another target.")
-        end
+
+
+    
+    -- Type is special Appearance Edit Enhanced thing?
+    Entity:TryCopyEntityComponent(self.parent, self.uuid, "GameObjectVisual")
+    if entity.GameObjectVisual and entity.GameObjectVisual.Type ~= 0 then
+        SatanPrint(GLOBALDEBUG, "GameObjectVisual is not 0. It's ".. entity.GameObjectVisual.Type )
+        entity.GameObjectVisual.Type = 0
+        entity:Replicate("GameObjectVisual")
+    elseif not entity.GameObjectVisual then
+        _P("[BG3SX][Actor.lua] Trying to create Actor for entity without GameObjectVisual Component.")
+        _P("[BG3SX][Actor.lua] This can happen with some scenery NPC's.")
+        _P("[BG3SX][Actor.lua] Safeguards have been put in place, nothing will break. Please end the Scene and choose another target.")
     end
+
+
+    Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride")
+    entity:Replicate("AppearanceOverride")
+
+    Ext.Timer.WaitFor(100, function()
+        if self.isResculpted then
+
+            SatanPrint(GLOBALDEBUG, "is rescuplted")
+
+            Entity:TryCopyEntityComponent(self.parent, self.uuid, "AppearanceOverride")
+            entity.GameObjectVisual.Type = 2
+
+            entity:Replicate("AppearanceOverride")
+            entity:Replicate("GameObjectVisual")
+        else
+            SatanPrint(GLOBALDEBUG, "is not resculpted")
+        end
+
+        SatanPrint(GLOBALDEBUG, " changed type to ".. entity.GameObjectVisual.Type)
+
+    end)
+
 end
 
 
@@ -128,8 +155,8 @@ end
 function Actor:TransformAppearance()
     -- Get Looks
     ----------------------------------------------------------------------------
-    self:CopyEntityAppearanceOverrides()
     local looksTemplate = self:GetLooks()
+    self:CopyEntityAppearanceOverrides()
     Osi.Transform(self.uuid, looksTemplate, "8ec4cf19-e98e-465e-8e46-eba3a6204a39") -- Stripped
     -- Osi.Transform(self.uuid, looksTemplate, "296bcfb3-9dab-4a93-8ab1-f1c53c6674c9") -- Invoke Duplicity
 
