@@ -16,7 +16,8 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, t
     end
 end)
 
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)  
+Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
+    _P(caster)  
     -- For changing positions
     if Data.Animations[spell] then
         local scene = Scene:FindSceneByEntity(caster)

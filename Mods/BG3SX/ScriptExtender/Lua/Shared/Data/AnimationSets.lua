@@ -6,7 +6,7 @@
 -- }
 -- Data.AnimSets = {}
 
-
+--function OnSessionLoaded()
 local asm = Mods.BG3AF.ASM
 local as = asm.New() -- Create a new AnimationSet
 
@@ -54,3 +54,7 @@ anim.New("astarionTop", "a856f395-1972-cfa4-9d1a-362f62a67590", "26ea67ff-69ed-4
 anim.New("astarionBtm", "3a38a294-f56c-4d59-90ab-8734b80f3f9f", "44eaa51b-b2e5-405d-80ef-f8e11cc26497")
 anim.New("PenisTest", "930a998f-65ad-487d-bd2a-3711a5b63190", "2f9140db-696e-4eaf-8a7f-d5c3b4b8a6f1")
 --#endregion
+
+--end
+
+--Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)

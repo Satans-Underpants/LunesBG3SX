@@ -551,9 +551,9 @@ end
 -- Give an actor in the scene an erection (if they have a penis)
 ---@param uuid	string	-The character to give an erection to
 function Genital:GiveErection(uuid)
-	-- print("Give erection to character")
+	SatanPrint(GLOBALDEBUG, "Give erection to character ", uuid)
 	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", uuid)
-	-- _P("penis ", visual)
+	_P("penis ", visual)
 	local entity = Ext.Entity.Get(uuid)
 	local autoerection = Entity:TryGetEntityValue(uuid, nil, {"Vars", "BG3SX_AutoErection"})
 	
@@ -563,7 +563,7 @@ function Genital:GiveErection(uuid)
 	-- print("autoerection ", entity.Vars.BG3SX_AutoErection)
 
 	if Entity:HasPenis(uuid) and ((autoerection == nil) or (entity.Vars.BG3SX_AutoErection == 1)) then
-		-- _P("Autoerection allowed for ", uuid)
+		_P("Autoerection allowed for ", uuid)
 
 		-- TODO: Learn what Types there are
 		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?

@@ -6,6 +6,13 @@
 --   bg3sxWhitelist["YourRaceTagName"] = {TAG = "YourRaceTagUUID", Allowed = nil} -- set Allowed to true or false
 -- end
 -- If your race has an out of the ordinary bodyshape please check our comments in Heightmatching.lua above our BodyShapeOverrides table (Ctrl+F is your friend)
+
+
+
+
+
+
+print("Whitelist initialized")
 Data.AllowedTagsAndRaces = {
     ------------------------------------TAGS------------------------------------
     --- We keep sub-races allowed even when their parent race is disallowed to make it not too difficult for modders but keep them in here to not be unknown
@@ -890,6 +897,9 @@ local popupkey = "BG3SX_Popup"
 function Entity:IsWhitelistedTagOrRace(uuid, debug)
     local debug = debug or false
     local tags = Entity:TryGetEntityValue(uuid, nil, {"ServerRaceTag", "Tags"})
+    if Ext.IsClient() then
+        tags = Entity:TryGetEntityValue(uuid, nil, {"Tag", "Tags",})
+    end
     local quickTagCheck = Entity:TryGetEntityValue(uuid, nil, {"Tag", "Tags"})
     for _,quickTag in pairs(quickTagCheck) do
         if quickTag == Data.AllowedTagsAndRaces["KID"].TAG or quickTag == Data.AllowedTagsAndRaces["GOBLIN_KID"].TAG then
@@ -932,7 +942,6 @@ function Entity:IsWhitelistedTagOrRace(uuid, debug)
         end
         return true
     end
-
     for i,tag in ipairs(tags) do
         local skip = false
         for _,unimportantTag in pairs(Data.UnimportantTags) do

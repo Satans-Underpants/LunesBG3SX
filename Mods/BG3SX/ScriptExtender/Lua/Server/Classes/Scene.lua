@@ -96,7 +96,7 @@ end
 function Scene:FindSceneByEntity(entityToSearch)
     for i, scene in ipairs(Data.SavedScenes) do
         for _, entity in pairs(scene.entities) do
-            if entityToSearch == entity then
+            if Helper:StringContains(entityToSearch, entity) then
                 return scene
             end
         end

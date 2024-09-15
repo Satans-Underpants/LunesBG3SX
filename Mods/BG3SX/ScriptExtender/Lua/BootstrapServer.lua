@@ -3,13 +3,13 @@
 ------------------------------------
 
 -- Pre-Construct our classes
-Ext.Require("Server/_constructor.lua")
+Ext.Require("Shared/_constructor.lua")
 
 -- Initialize Data Tables
-Ext.Require("Shared/Data/_init.lua")
+Ext.Require("Shared/_initData.lua")
 
 -- Initialize Utils
-Ext.Require("Shared/Utils/_init.lua")
+Ext.Require("Shared/_initUtils.lua")
 
 -- Initialize Sex Classes
 Ext.Require("Server/Classes/Sex/_init.lua")

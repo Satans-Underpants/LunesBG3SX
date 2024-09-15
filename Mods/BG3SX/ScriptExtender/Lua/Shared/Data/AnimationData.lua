@@ -1,5 +1,4 @@
 -- AnimationSets.lua needs to be loaded before AnimationData.lua to create and allow reusing of animations by name
-Ext.Require("Shared/Data/AnimationSets.lua")
 local anim = Data.AnimLinks
 -- Heightmatching.lua needs to be loaded before AnimationData.lua to allow the functions to already exist.
 Ext.Require("Shared/Data/Heightmatching.lua")

@@ -2,7 +2,7 @@
 Ext.Require("Shared/Data/ModEvents.lua")
 -- Initialize Data
 Ext.Require("Shared/Data/Sounds.lua") -- Initialize before AnimationData so it actually gets its soundTables
--- Ext.Require("Shared/Data/AnimationSets.lua") -- Initialize before ANimationData so links between animations and animationsets can get created, then added to Data.AnimLinks to reuse in AnimationData.lua
+Ext.Require("Shared/Data/AnimationSets.lua") -- Initialize before ANimationData so links between animations and animationsets can get created, then added to Data.AnimLinks to reuse in AnimationData.lua
 Ext.Require("Shared/Data/AnimationData.lua")
 Ext.Require("Shared/Data/BodyLibrary.lua")
 Ext.Require("Shared/Data/Equipment.lua")

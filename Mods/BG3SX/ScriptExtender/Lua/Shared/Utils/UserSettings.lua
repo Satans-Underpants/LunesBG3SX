@@ -83,15 +83,15 @@ end
 -- TODO - move to UI 
 
 -- Save user settings when they are changed
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(_, spell, spellType, _, _) 
+----Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(_, spell, spellType, _, _) 
     -- TODO - call save - check if it's a setting (container)
-end)
+--end)
 
 
 -- Load user settings on level started
-Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_,_) 
+--Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_,_) 
     -- loadSettings()
-end)
+--end)
 
 ------------------------------------------------------
 -- Yoinked from Fallens "Mark books as read"
