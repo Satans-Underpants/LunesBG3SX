@@ -518,7 +518,7 @@ function Genital:OverrideGenital(newGenital, uuid)
 
 	-- TODO - for shapeshifted their "original" genitals return on sex ( vulva Wyll gets a floppy penis )
 
-	if (Ext.Entity.Get(uuid).GameObjectVisual.Type == 4) then 
+	if (Ext.Entity.Get(uuid).GameObjectVisual.Type == 4) or Ext.Entity.Get(uuid).AppearanceOverride then 
 		-- print("Is Shapeshifted")
 		Entity:SwitchShapeshiftedVisual(uuid, newGenital, "Private Parts")
 	end
@@ -614,7 +614,7 @@ function Genital:GiveErectionToActor(actor)
 		-- TODO: Learn what Types there are
 		-- 4 may be Shapeshift - May need to change if we learn about other types -- NPC Type 2?
 		-- For any shapeshifted parent
-		if (parentEntity.GameObjectVisual.Type == 4) then 
+		if (parentEntity.GameObjectVisual.Type == 4) or actor.isResculpted then 
 			-- print("Is SHapeshifted")
 			Ext.Timer.WaitFor(200, function()
 				Entity:SwitchShapeshiftedVisual(actor.uuid, visual, "Private Parts")
@@ -645,7 +645,7 @@ function Genital:GiveGenitalsToActor(actor)
 	local visual = Genital:GetCurrentGenital(parent)
 	-- _P("genital ", visual)
 	local parentEntity = Ext.Entity.Get(actor.parent)
-	if (parentEntity.GameObjectVisual.Type == 4) then 
+	if (parentEntity.GameObjectVisual.Type == 4) or actor.isResculpted then 
 		-- print("Is SHapeshifted")
 		Ext.Timer.WaitFor(200, function()
 			Entity:GiveShapeshiftedVisual(actor.uuid, visual)

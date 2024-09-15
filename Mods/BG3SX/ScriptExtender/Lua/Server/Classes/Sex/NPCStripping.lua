@@ -169,7 +169,9 @@ end
 -- @param           - uuid of the NPC
 function NPC:RemoveGenitals(uuid)
     local genital = Genital:GetCurrentGenital(uuid)
-    Osi.RemoveCustomVisualOvirride(uuid, genital) 
+    if genital then
+        Osi.RemoveCustomVisualOvirride(uuid, genital) 
+    end
 end
 
 
