@@ -7,6 +7,13 @@
         <node id="Dependencies">
           <children>
             <node id="ModuleShortDesc">
+              <attribute id="Folder" type="LSWString" value="BG3MCM" />
+              <attribute id="MD5" type="LSString" value="" />
+              <attribute id="Name" type="FixedString" value="Mod Configuration Menu" />
+              <attribute id="UUID" type="FixedString" value="755a8a72-407f-4f0d-9a33-274ac0f0b53d" />
+              <attribute id="Version64" type="int64" value="37999128298389504" />
+            </node>
+            <node id="ModuleShortDesc">
               <attribute id="Name" type="FixedString" value="BG3AF" />
               <attribute id="Folder" type="LSWString" value="BG3AF" />
               <attribute id="UUID" type="FixedString" value="e641c689-4da2-42d0-a286-aeb962618556" />

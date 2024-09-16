@@ -51,6 +51,8 @@ local function getAdditionalGenitals()
 	return additionalGenitals
 end
 
+
+
 ----------------------------------------------------------------------------------------------------
 -- 
 -- 									XML Handling
@@ -59,7 +61,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 -- Get all CharacterCreationAppearaceVisuals of type Private Parts loaded in the game
----@return	allGenitals	- list of CharacterCreationAppearaceVisual IDs for all genitals
+---@return	table	- list of CharacterCreationAppearaceVisual IDs for all genitals
 local function collectAllGenitals()
 	local allGenitals = {}
 	local allCCAV = Ext.StaticData.GetAll("CharacterCreationAppearanceVisual")
@@ -77,7 +79,7 @@ end
 -- Get all vanilla genitals of specific type
 ---@param TYPE	string	- Type of genital to get
 ---@param default	any	- TODO
----@return result		- Table of requested genitals
+---@return table		- Table of requested genitals
 local function getVanillaGenitals(TYPE, default)
     local tableToSearch = (TYPE == "PENIS" and Data.BodyLibrary.PENIS) or (TYPE == "VULVA" and Data.BodyLibrary.VULVA)
     if not tableToSearch then
@@ -98,7 +100,7 @@ end
 
 
 -- Collect all available MrFunSize erections bundled with the mod
----@return result - Table of MrFunSize erections
+---@return table - Table of MrFunSize erections
 local function collectFunErections()
     local result = {}
     for _, entry in ipairs(Data.BodyLibrary.FunErections) do -- Collect all genitalIDs from the selected table
@@ -111,7 +113,7 @@ end
 -- Get Mod Specific Genitals
 -- Mostly unfinished for now - if Norbyte implements a way to get Mod ID from genitals it can be simplified a lot
 ---@param modName string	- ModName (FolderName)
----@return modGenitals		- Table of CharacterCreationAppearaceVisual IDs genitals
+---@return table		- Table of CharacterCreationAppearaceVisual IDs genitals
 local function getModGenitals(modName)
     local allGenitals = getAllGenitals()
 	local modGenitals = {}
@@ -136,7 +138,7 @@ end
 
 
 -- All genitals that are not part of "Vanilla" BG3SX
----@return additionalGenitals	- Table of CharacterCreationAppearaceVisual IDs genitals htat are not part of Vanilla or MrFunSizeErections
+---@return table	- Table of CharacterCreationAppearaceVisual IDs genitals htat are not part of Vanilla or MrFunSizeErections
 function getAdditionalGenitals(allGenitals)
     -- Default genitals that come with BG3SX
     local setVanilla = {
@@ -450,7 +452,7 @@ saveTheKids()
 
 -- Get the current genital of the entity
 ---@param uuid string	- uuid of entity that has a genital
----@return visual		- ID of CharacterCreationAppearaceVisual
+---@return string		- ID of CharacterCreationAppearaceVisual
 function Genital:GetCurrentGenital(uuid)
 	local entity = Ext.Entity.Get(uuid)
 	local allGenitals = getAllGenitals()
@@ -559,10 +561,8 @@ function Genital:GiveErection(uuid)
 	
 	-- TODO - Even when this evaluates to false they still get an erection - probably has to be called sooner
 
-	-- print("has penis ? ", Entity:HasPenis(uuid))
-	-- print("autoerection ", entity.Vars.BG3SX_AutoErection)
 
-	if Entity:HasPenis(uuid) and ((autoerection == nil) or (entity.Vars.BG3SX_AutoErection == 1)) then
+	if Entity:HasPenis(uuid) and ((autoerection == nil) or (entity.Vars.BG3SX_AutoErection)) then
 		_P("Autoerection allowed for ", uuid)
 
 		-- TODO: Learn what Types there are
@@ -608,7 +608,7 @@ function Genital:GiveErectionToActor(actor)
 
 	-- print("has penis ? ", Entity:HasPenis(parent))
 	-- print("autoerection ", parentEntity.Vars.BG3SX_AutoErection)
-	if Entity:HasPenis(parent) and ((autoerection == nil) or (parentEntity.Vars.BG3SX_AutoErection == 1)) then
+	if Entity:HasPenis(parent) and ((autoerection == nil) or (parentEntity.Vars.BG3SX_AutoErection)) then
 		-- _P("Autoerection allowed for ", parent)
 
 		-- TODO: Learn what Types there are
@@ -652,3 +652,40 @@ function Genital:GiveGenitalsToActor(actor)
 		end)
 	end
 end
+
+
+
+----------------------------------------------------------------------------------------------------
+-- 
+-- 									Erections
+-- 
+----------------------------------------------------------------------------------------------------
+
+
+
+
+-- gives erections to all characters in the list, if applicable
+---@param characters table
+function Genital:GiveErections(characters)
+
+    for _, uuid in pairs(characters) do
+        local personalGenital = Genital:GetCurrentGenital(uuid)
+        if personalGenital then
+            SexUserVars:AssignGenital("BG3SX:Flaccid", personalGenital, uuid)
+        end
+        Genital:GiveErection(uuid)
+    end
+end
+
+
+
+-- removes erections from all characters in the list, if applicable
+---@characters table
+function  Genital:RemoveErections(characters)
+
+    for _, uuid in pairs(characters) do
+        local normalGenital = SexUserVars:GetGenital("BG3SX_Flaccid", uuid)
+        Genital:OverrideGenital(normalGenital, uuid)
+    end
+end
+

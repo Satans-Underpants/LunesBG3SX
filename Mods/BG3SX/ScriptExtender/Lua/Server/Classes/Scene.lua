@@ -105,6 +105,14 @@ function Scene:FindSceneByEntity(entityToSearch)
 end
 
 
+
+-- Returns all entities (parents) from a scene
+---@param sceneToSearch Scene
+function Scene:EntitiesByScene(sceneToSearch)
+    return sceneToSearch.entities
+    -- _P("[BG3SX][Scene.lua] - Scene:FindSceneByEntity - Entity not found in any existing scenes! This shouldn't happen anymore. Contact mod author about what you did.")
+end
+
 -- Campflag Management
 -----------------------------------------------------
 

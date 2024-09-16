@@ -15,6 +15,9 @@ Ext.Vars.RegisterUserVariable("BG3SX_Flaccid", {})
 Ext.Vars.RegisterUserVariable("BG3SX_Erect", {})
 Ext.Vars.RegisterUserVariable("BG3SX_AutoErection", {})
 
+-- This should be a modvars instead, since its global
+Ext.Vars.RegisterUserVariable("BG3SX_AnimationFilter", {})
+
 -- _P("[BG3SX - SEXUSERVARS] Registered AutoErection")
 
 ---@param type string - either "BG3SX_Flaccid" or "BG3SX_Erect"
@@ -33,19 +36,20 @@ end
 
 ---@param type string - either "BG3SX_Flaccid" or "BG3SX_Erect"
 ---@param character string - uuid
+---@return string
 function SexUserVars:GetGenital(type, character)
       local e = Ext.Entity.Get(character)
       if type == "BG3SX_Flaccid" then
-            e.Vars.BG3SX_Flaccid = genital
+            return e.Vars.BG3SX_Flaccid
       elseif type == "BG3SX_Erect" then
-            e.Vars.BG3SX_Erect = genital
+            return e.Vars.BG3SX_Erect
       else
             _P("Invalid type ", type , " please choose ’BG3SX_Flaccid’ or ’BG3SX_Erect’ ")
       end
 end
 
 
----@param BG3SX_AutoErection int -- bools are not possible for UserVars, maybe in a future SE update
+---@param BG3SX_AutoErection boolean
 ---@param character string - uuid
 function SexUserVars:SetAutoErection(autoErection, character)
     local e = Ext.Entity.Get(character)
@@ -53,7 +57,7 @@ function SexUserVars:SetAutoErection(autoErection, character)
 end
 
 
----@param BG3SX_AutoErection bool
+---@param BG3SX_AutoErection boolean
 ---@param character string - uuid
 function SexUserVars:GetAutoErection(character)
     local e = Ext.Entity.Get(character)

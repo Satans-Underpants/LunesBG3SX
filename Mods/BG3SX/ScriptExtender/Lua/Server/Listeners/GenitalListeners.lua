@@ -2,154 +2,74 @@
                                             ---- Genital Functions ----
 -----------------------------------------------------------------------------------------------------------------------------------------
 
--- TODO - make all of the genital spells targeted for absolute control- even over NPCs
 
--- Manual Genital changing
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
-    -- test 
-    --Genital:giveShapeshiftedErection(caster)
+SatanPrint(GLOBALDEBUG, "Registered GenitalListeners")
 
-    -- TODO - change to giveShapeshiftedVisual
-    -- this also has to be used for change genitals (othe rchange genitals spell)
-    -- currently they do not reflect teh change on a shapeshifted entity
 
-    -- If UI is used then use UI listener instead
-    -- Check wether spell is in container Change Genitals
-    local containerID = Ext.Stats.Get(spell).SpellContainerID
-    if containerID == "BG3SX_ChangeGenitals" then
-    -- Transform 
+Ext.Events.NetMessage:Subscribe(function(e)
 
-    local newGenital = Genital:GetNextGenital(spell, caster)
+    if (e.Channel == "BG3SX_AskForSex") then
 
-    --if (Ext.Entity.Get(caster).GameObjectVisual.Type == 4) then  -- check if shapeshifted
-      --  Ext.Timer.WaitFor(200, function()
-     --       Entity:GiveShapeshiftedVisual(caster, newGenital)
-     --   end)
-    --else 
-        Genital:OverrideGenital(newGenital, caster)
-   -- end
+        SatanPrint(GLOBALDEBUG, "Server GenitalListener received BG3SX_AskForSex")
+        local characters = Ext.Json.Parse(e.Payload)
+        Genital:GiveErections(characters)
     end
-end)
 
--- Genital Settings
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell,_,_,_)
-    -- If UI is used then use UI listener instead
-    if spell == "BG3SX_AutoErection" then
-        SexUserVars:SetAutoErection(1, caster)
-        -- print("Set autoerections to ", SexUserVars:GetAutoErection(caster))
-    elseif spell == "BG3SX_ManualErections" then
-        SexUserVars:SetAutoErection(0, caster)
-        -- print("Set autoerections to ", SexUserVars:GetAutoErection(caster))
+
+    if (e.Channel == "BG3SX_StopSex") then
+
+        local scene = Ext.Json.Parse(e.Payload)
+
+        -- TODO - check if the returned entities are the OG parents
+        Scene:EntitiesByScene(scene)
+
+
     end
-end)
 
 
-----------------------------------------------------------------------------------------------------
--- 
--- 									Automatic Erections Assigning
--- 								  Only MrFunSize supported for now
---
-----------------------------------------------------------------------------------------------------
+    if (e.Channel == "BG3SX_ChangeGenitals") then
 
--- TODO - yet those as we are handling the auto erections on the entity now.
--- Add auto erections as entity var
+        local payload = Ext.Json.Parse(e.Payload)
+        local character = payload.character
+        local genital = payload.genital
 
--- TODO - rewrite for variable amount of Sex Havers
-
--- Auto-Erections handling on Sex start
--- TODO - access Scene/PairsData instead
-local sexPairs = {}
-Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(caster, target, spell, _, _, _)
-
-
-    function giveErections(caster, target)
-    --if spell == "BG3SX_AskForSex" then
-        -- if Entity:IsWhitelisted(caster) and Entity:IsWhitelisted(target) then
-            local casterGenital = Genital:GetCurrentGenital(caster)
-            local targetGenital
-                if not Entity:IsNPC(target) then
-                    targetGenital = Genital:GetCurrentGenital(target)
-                end
-            local pair = {caster = caster; casterGenital = casterGenital; target = target, targetGenital = targetGenital}
-            table.insert(sexPairs, pair)
-
-            Genital:GiveErection(caster)
-            Genital:GiveErection(target)
-
-        -- if casterErection and (spell == "BG3SX_AskForSex")  then
-
-        --     if Entity:HasPenis(caster) then
-        --        Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
-        --     end
-
-        --     if Entity:HasPenis(target) then
-        --        Osi.UseSpell(target, "BG3SX_SimpleErections", target)
-        --     end
-        -- end
-        -- end
+        Genital:OverrideGenital(genital, character)
     end
-end)
 
--- Auto-Erections handling on Sex ending
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
-    if spell == "BG3SX_StopAction" then
-        local prevGenCaster = ""
-        local prevGenTarget = ""
-        local target = ""
-        for i, pair in ipairs(sexPairs) do
-            if pair.caster == caster then
-                target = pair.target
-                prevGenCaster = pair.casterGenital
-                prevGenTarget = pair.targetGenital
-                table.remove(sexPairs, i)
-                break
-            end
-        end
-        if caster and prevGenCaster then
-            Genital:OverrideGenital(prevGenCaster, caster)
-        end
-        if target and prevGenTarget then
-            Genital:OverrideGenital(prevGenTarget, target)
+
+    if (e.Channel == "BG3SX_ChangeAutoErection") then
+
+
+        -- payload.setting is "ON" or "OFF"
+        local payload = Ext.Json.Parse(e.Payload)
+        local character = payload.character
+        local setting = payload.setting
+
+        if setting == "ON" then
+            SexUserVars:SetAutoErection(true, character)
+        elseif setting == "OFF" then
+            SexUserVars:SetAutoErection(false, character)
         end
     end
-end)
 
--- Auto-Erection handling for masturbating
--- TODO - access Scene/PairsData instead
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster, spell, _, _, _)
-    if spell == "BG3SX_StartMasturbating" then
-        if Entity:IsWhitelisted(caster) then
-            local casterGenital = Genital:GetCurrentGenital(caster)
-            local pair = {caster = caster; casterGenital = casterGenital}
-            table.insert(sexPairs, pair)
-            Genital:GiveErection(caster)
-        end
 
-        -- local entity = Ext.Entity.Get(caster)
+    if (e.Channel == "BG3SX_ChangeSexGenital") then
 
-        -- if (entity.Vars.BG3SX_AutoErection == 1) and (spell == "BG3SX_StartMasturbating") then
-        --     -- Save previous genitals
-        --     local casterGenital = Genital:GetCurrentGenital(caster)
-        --     local masturbator = {caster = caster; casterGenital = casterGenital}
-        --     table.insert(sexPairs, masturbator)
+        local payload = Ext.Json.Parse(e.Payload)
+        local character = payload.character
+        local genital = payload.genital
 
-        --     if Entity:HasPenis(caster) then
-        --         Osi.UseSpell(caster, "BG3SX_SimpleErections", caster)
-        --     end
-        -- end
-        -- if (entity.Vars.BG3SX_AutoErection == 1) and spell =="BG3SX_StopMasturbating" then
-        --     local previousGenital = ""
-        --     for _, masturbator in ipairs(sexPairs) do
-        --         if masturbator.caster == caster then
-        --             previousGenital= sexPairs.casterGenital
-        --         end
-        --     end
+        SexUserVars:AssignGenital("BG3SX_Flaccid", genital, character)
+    end
 
-        --     if previousGenital then
-        --         Genital:OverrideGenital(previousGenital, caster)
-        --     end
 
-        --     sexPairs[caster] = nil
-        -- end
+    if (e.Channel == "BG3SX_ChangeNormalGenital") then
+
+        local payload = Ext.Json.Parse(e.Payload)
+        local character = payload.character
+        local genital = payload.genital
+        SexUserVars:AssignGenital("BG3SX_Erect", genital, character)
+
     end
 end)
+

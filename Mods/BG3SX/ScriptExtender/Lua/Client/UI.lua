@@ -140,6 +140,9 @@ function UI.DoSexButtonStuff(button)
         local selectedCharacter = UI.GetSelectedCharacter()
         if selectedCharacter ~= nil then
             Ext.Net.PostMessageToServer("BG3SX_Client_Masturbate", Ext.Json.Stringify({selectedCharacter}))
+            -- for genitals
+            SatanPrint(GLOBALDEBUG, "Client sending BG3SX_AskForSex to server")
+            Ext.Net.PostMessageToServer("BG3SX_AskForSex",Ext.Json.Stringify({selectedCharacter}))
         end
     elseif button.Label == "Ask for Sex" then
         UI.SelectingTarget = true
@@ -169,7 +172,8 @@ function UI.CreateSexControls(tBar)
         sexButton.SameLine = true
         sexButton.OnClick = function()
             UI.DoSexButtonStuff(sexButton)
-            noSceneTable.Visible = false
+            -- makes button invisible to replace it with the scene one
+            -- noSceneTable.Visible = false
             sceneTable.Visible = true
         end
     end
@@ -310,6 +314,8 @@ Ext.Events.KeyInput:Subscribe(function (e)
                 local caster = UI.GetSelectedCharacter()
                 local target = getUUIDFromUserdata(getMouseover())
                 Ext.Net.PostMessageToServer("BG3SX_Client_AskForSex", Ext.Json.Stringify({caster = caster, target = target}))
+                -- genitals
+                Ext.Net.PostMessageToServer("BG3SX_AskForSex",Ext.Json.Stringify({caster, target}))
                 UI.SelectingTarget = false
             end
         end
