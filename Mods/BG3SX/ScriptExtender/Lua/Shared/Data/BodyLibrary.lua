@@ -1820,3 +1820,48 @@ Data.BodyLibrary.FunErections = {
         visualID = "274508c8-30ee-43f4-964f-6a264fae13c2"
     },
 }
+
+---------------------------------------------------------------------------------------------------------
+
+--                                           Modded Genitals
+
+---------------------------------------------------------------------------------------------------------
+
+Data.BodyLibrary.ModdedGenitals = {
+}
+
+function Data.AddModdedGenitals(moduleuuid, type, table)
+    local t = Data.BodyLibrary.ModdedGenitals
+    if not t[Ext.Mod.GetMod(moduleuuid).Info.Name] then
+        t[Ext.Mod.GetMod(moduleuuid).Info.Name] = {}
+    end
+    t[moduleuuid][type] = table
+end
+
+-- local myPenisTable = {}
+-- Mods.BG3SX.Data.AddModdedGenitals(ModuleUUID, "Penis", myPenisTable)
+
+---------------------------------------------------------------------------------------------------------
+
+--                                     Client Payload Generation
+
+---------------------------------------------------------------------------------------------------------
+
+function Data.CreateUIGenitalPayload()
+    local payload = {}
+    payload["Vanilla"] = {}
+    payload["Vanilla"]["Vulva"] = Data.BodyLibrary.VULVA
+    payload["Vanilla"]["Penis"] = Data.BodyLibrary.PENIS
+    payload["BG3SX"] = {}
+    payload["BG3SX"]["Erection"] = Data.BodyLibrary.FunErections
+
+    if Data.BodyLibrary.ModdedGenitals and Table:TableSize(Data.BodyLibrary.ModdedGenitals) > 0 then
+        for mod,types in pairs(Data.BodyLibrary.ModdedGenitals) do
+            payload[mod] = {}
+            for type,genitals in pairs(types) do
+                payload[mod][type] = genitals
+            end
+        end
+    end
+    return payload
+end

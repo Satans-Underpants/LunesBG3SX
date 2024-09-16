@@ -10,6 +10,7 @@ function UI.CreateDevMode(parent)
             UI.DevMode = true
         else
             UI.DevMode = false
+        end
     end
     return dev
 end
@@ -80,56 +81,69 @@ end
 ---------------------------------------------------------------------------------------------------
 
 local genitals = {}
-function UI.CreateGenitalSettings(tBar)
-    local tab = tBar:AddTabItem("Genital Settings")
+function UI.GetUIGenitals()
+    return genitals
+end
+local function OnSessionLoaded()
+    Ext.Net.PostMessageToServer("BG3SX_Client_RequestGenitals", "")
+    function UI.CreateGenitalSettings(tBar)
+        local idContextCount = 0
+        local tab = tBar:AddTabItem("Genital Settings")
 
-    local favArea = tab:AddTable("",2)
-    favArea.SizingStretchProp = true
-    local favRow = favArea:AddRow()
-    local inactiveGArea = favRow:AddCell() -- Left
-    local inactiveGInfo = inactiveGArea:AddText("Inactive Genital")
-    local inactiveGSource = inactiveGArea:AddText("Source: ")
-    local inactiveGenital = inactiveGArea:AddText("Genital: ")
-    local activeGArea = favRow:AddCell() -- Right
-    local activeGInfo = activeGArea:AddText("Active Genital")
-    local activeGSource = activeGArea:AddText("Source: ")
-    local activeGenital = activeGArea:AddText("Genital: ")
+        local favArea = tab:AddTable("",2)
+        favArea.SizingStretchProp = true
+        local favRow = favArea:AddRow()
+        local inactiveGArea = favRow:AddCell() -- Left
+        local inactiveGInfo = inactiveGArea:AddText("Inactive Genital")
+        local inactiveGSource = inactiveGArea:AddText("Source: ")
+        local inactiveGenital = inactiveGArea:AddText("Genital: ")
+        local activeGArea = favRow:AddCell() -- Right
+        local activeGInfo = activeGArea:AddText("Active Genital")
+        local activeGSource = activeGArea:AddText("Source: ")
+        local activeGenital = activeGArea:AddText("Genital: ")
 
-    tab:AddSeparator("")
+        tab:AddSeparator("")
 
-    local function addGenitalEntry(parent)
-        local inactiveGButton = parent:AddButton("Inactive")
-        local activeGButton = parent:AddButton("Active")
-        local GText = parent:AddText(genital.name)
-        activeGButton.SameLine = true
-        GText.SameLine = true
-        inactiveGButton.OnClick = function()
-            inactiveGSource.Text = mod
-            inactiveGenital.Text = "Genital: " .. genital.name
+        local function addGenitalEntry(parent, genital, mod)
+            idContextCount = idContextCount + 1
+            local inactiveGButton = parent:AddButton("Inactive")
+            inactiveGButton.IDContext = "Inactive_GButton_" .. idContextCount
+            local activeGButton = parent:AddButton("Active")
+            activeGButton.IDContext = "Active_GButton_" .. idContextCount
+            local GText = parent:AddText(genital.name)
+            activeGButton.SameLine = true
+            GText.SameLine = true
+            inactiveGButton.OnClick = function()
+                inactiveGSource.Label = "Source: " .. mod
+                inactiveGenital.Label = "Genital: " .. genital.visual
+            end
+            activeGButton.OnClick = function()
+                activeGSource.Label = mod
+                activeGenital.Label = "Genital: " .. genital.visual
+            end
         end
-        activeGButton.OnClick = function()
-            activeGSource.Text = mod
-            activeGenital.Text = "Genital: " .. genital.name
-        end
-    end
 
-    local genitalArea = tab:AddTable("",1):AddRow():AddCell()
-    for mod,genital in pairs(Data.Bodylibrary.Genitals) do
-        local modHeader = genitalArea:AddCollapsableHeader(mod)
-        local penisHeader = modHeader:AddCollapsableHeader("Penis")
-        local vulvaHeader = modHeader:AddCollapsableHeader("Vulva")
-        if genital.type == "Penis" then
-            addGenitalEntry(penisHeader)
-        elseif genital.type == "Vulva" then
-            addGenitalEntry(vulvaHeader)
-        else
-            local somethingHeader = modHeader:AddCollapsableHeader(genital.type)
-            addGenitalEntry(somethingHeader)
+        local genitalTable = tab:AddTable("",1)
+        local genitalArea = genitalTable:AddRow():AddCell()
+        genitalTable.SizingStretchProp = true
+        
+        for mod,content in pairs(genitals) do
+            local modHeader = genitalArea:AddCollapsingHeader(tostring(mod))
+            modHeader.DefaultOpen = false
+            for type,genitals in pairs(content) do
+                local typeHeader = modHeader:AddTree(tostring(type))
+                typeHeader.DefaultOpen = false
+                if typeHeader.Label == type then
+                    for _,genital in pairs(genitals) do
+                        addGenitalEntry(typeHeader, genital, tostring(mod))
+                    end
+                end
+            end
         end
+        return tab
     end
 end
-    return tab
-end
+Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)
 
 ---------------------------------------------------------------------------------------------------
 --                                   Handle Sex Controls Tab
@@ -177,8 +191,6 @@ function UI.CreateSexControls(tBar)
             sceneTable.Visible = true
         end
     end
-    
-    
     return tab
 end
 
@@ -277,7 +289,7 @@ local function createModTab(tab)
 
     local tBar = tab:AddTabBar("insertTabBarNameHere")
     local tab1 = UI.CreateSexControls(tBar)
-    --local tab2 = UI.CreateGenitalSettings(tBar)
+    local tab2 = UI.CreateGenitalSettings(tBar)
     local tab3 = UI.CreateSexSettings(tBar)
 
 
@@ -325,6 +337,15 @@ Ext.Events.KeyInput:Subscribe(function (e)
             UI.SelectingTarget = false
         end
     end
+end)
+
+---------------------------------------------------------------------------------------------------
+--                                       NetListener
+---------------------------------------------------------------------------------------------------
+
+Ext.RegisterNetListener("BG3SX_Server_DistributeGenitals", function(e, payload)
+    local payload = Ext.Json.Parse(payload)
+    genitals = payload
 end)
 
 ---------------------------------------------------------------------------------------------------

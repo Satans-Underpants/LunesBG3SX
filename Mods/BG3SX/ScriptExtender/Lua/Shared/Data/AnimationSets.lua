@@ -25,9 +25,9 @@ anim.New("EmbraceBtm", "2ef3a003-54a9-4551-be7f-4f5e16d51dd3", "10fee5b7-d674-43
 anim.New("CarryingTop_Tall", "516cb2de-500e-4a33-93e9-4339a4353dde", "04922882-0a2d-4945-8790-cef50276373d")
 anim.New("CarryingBtm_Med", "0f6dc57f-a969-4e83-b8dc-212d90a35798", "392073ca-c6e0-4f7d-848b-ffb0b510500b")
 --#endregion
---#region Paired Anims
+--#region Paired Anims              Animation ID                              MapKey
 anim.New("BlowjobTop", "fe82152e-4283-43f5-bdb3-214bc64a7fec", "536f0403-c401-4223-bbca-6b807494a527")
-anim.New("BlowJobBtm", "587dcf9c-b9de-4bb6-937c-e849f21cdf21", "b3984708-7664-49ae-b96d-0512497ea036")
+anim.New("BlowjobBtm", "587dcf9c-b9de-4bb6-937c-e849f21cdf21", "b3984708-7664-49ae-b96d-0512497ea036")
 anim.New("EatOutTop", "ade67658-1366-423c-9cd9-33b58c8ca94a", "5fa5cbe4-1baf-4529-b448-2c53e163626c")
 anim.New("EatOutBtm", "74d770cc-5f39-4a49-92b1-5de873068b93", "f801ec0d-9fee-4584-bae3-96d7c3e285ff")
 anim.New("CowgirlTop", "025720a9-ee9b-4e3c-9b90-d884b847bd9d", "ff7a5a30-b661-4192-bd8f-118373e3f4b8")

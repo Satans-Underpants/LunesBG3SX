@@ -1,5 +1,3 @@
-
-
 Ext.RegisterNetListener("BG3SX_Client_Masturbate", function(e, payload)
     local payload = Ext.Json.Parse(payload)
     _D(payload)
@@ -26,7 +24,7 @@ Ext.RegisterNetListener("BG3SX_Client_AskForSex", function(e, payload)
     end
 end)
 
-
-
-
-
+Ext.RegisterNetListener("BG3SX_Client_RequestGenitals", function(e, payload)
+    local payload = Data.CreateUIGenitalPayload()
+    Ext.Net.BroadcastMessage("BG3SX_Server_DistributeGenitals", Ext.Json.Stringify(payload))
+end)
