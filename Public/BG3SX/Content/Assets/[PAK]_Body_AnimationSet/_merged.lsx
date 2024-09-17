@@ -550,6 +550,27 @@
 					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
 					<attribute id="SkeletonResource" type="FixedString" value="edda91cd-d2be-3296-087c-45477f36daaa" />
 				</node>
+					<node id="Resource">
+					<attribute id="AdditiveLoopingAnimationID" type="FixedString" value="" />
+					<attribute id="AdditiveLoopingBlendTime" type="float" value="0" />
+					<attribute id="AdditiveLoopingStart" type="float" value="0" />
+					<attribute id="LeftTransitionAnimation" type="FixedString" value="" />
+					<attribute id="RightTransitionAnimation" type="FixedString" value="" />
+					<attribute id="AnchorHand" type="uint8" value="0" />
+					<attribute id="Duration" type="float" value="3.100" />
+					<attribute id="ID" type="FixedString" value="20df5080-d133-4d50-9652-8b594c98e2a9" />
+					<attribute id="IsPoseBank" type="bool" value="False" />
+					<attribute id="Looping" type="bool" value="False" />
+					<attribute id="Name" type="LSString" value="Elf_M_Thrusting" />   
+					<attribute id="Offset" type="float" value="0" />
+					<attribute id="PreviewVisualResource" type="FixedString" value="5648d41b-5f6b-2e1c-8e1f-9e69e8094264" />
+					<attribute id="SourceFile" type="LSString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/ELF_M_Rig_SCENE_CAMP_ASTBlckMssAft_VampLord_Rom_Loop.GR2" />
+					<attribute id="SupportingLeg" type="uint8" value="0" />
+					<attribute id="Template" type="FixedString" value="Public/BG3SX/Assets/Characters/_Anims/_Cinematic/Act01/TUT/TUT_HelmTransponder/HUM_F_Rig/ELF_M_Rig_SCENE_CAMP_ASTBlckMssAft_VampLord_Rom_Loop.Anim.0" />
+					<attribute id="TimeStep" type="float" value="0.0516666666" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209023" />
+					<attribute id="SkeletonResource" type="FixedString" value="044ab023-7076-77e6-73c2-d0f26fca0776" />
+				</node>
 			</children>
 		</node>
 	</region>

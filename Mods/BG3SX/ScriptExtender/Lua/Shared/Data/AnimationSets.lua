@@ -53,7 +53,11 @@ anim.New("MasturbateWank", "f3613d2c-b652-4dd7-b0f2-600e64afbdf4", "49497bdc-d90
 anim.New("astarionTop", "a856f395-1972-cfa4-9d1a-362f62a67590", "26ea67ff-69ed-42be-88e3-8c63d4602908")
 anim.New("astarionBtm", "3a38a294-f56c-4d59-90ab-8734b80f3f9f", "44eaa51b-b2e5-405d-80ef-f8e11cc26497")
 anim.New("PenisTest", "930a998f-65ad-487d-bd2a-3711a5b63190", "2f9140db-696e-4eaf-8a7f-d5c3b4b8a6f1")
+anim.New("VampireLord", "20df5080-d133-4d50-9652-8b594c98e2a9", "e65aae61-ad31-4450-a1d6-7690627fcecb")
 --#endregion
+
+
+
 
 --end
 

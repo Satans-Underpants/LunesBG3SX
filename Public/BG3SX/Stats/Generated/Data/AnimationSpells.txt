@@ -60,7 +60,7 @@ data "SpellAnimationIntentType" "None"
 new entry "BG3SX_MaleMasturbationContainer"
 type "SpellData"
 data "SpellType" "Shout"
-data "ContainerSpells" "BG3SX_Wanking"
+data "ContainerSpells" "BG3SX_Wanking;YOUR_LAST_THRUST"
 data "Icon" "BG3SX_ICON_MAIN"
 data "DisplayName" "h818a9789g4007g46c6gacd4g27e42b08b4ee;1"
 data "Description" "hdf32ca9bg81bag4282gbd97g92124556b2e4;1"
@@ -88,6 +88,30 @@ data "Autocast" "Yes"
 data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
 data "HitAnimationType" "None"
 data "SpellAnimationIntentType" "None"
+
+
+
+new entry "YOUR_LAST_THRUST"
+type "SpellData"
+data "SpellType" "Zone"
+data "SpellProperties" ""
+data "Requirements" "!Combat"
+data "SpellContainerID" "BG3SX_MaleMasturbationContainer"
+data "Icon" "BG3SX_ICON_MAIN"
+data "DisplayName" "hb32715942ed4499b9ef6a288a729b0483578;1"
+data "Description" ""
+data "ExtraDescription" ""
+data "TargetConditions" ""
+data "PrepareSound" "Instrument_Bard_Silence"
+data "CastSound" "Instrument_Bard_Silence"
+data "TargetSound" "Instrument_Bard_Silence"
+data "Autocast" "Yes"
+data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
+data "HitAnimationType" "None"
+data "SpellAnimationIntentType" "None"
+
+
+
 
 //-------------------------------------------------
 // LESBIAN

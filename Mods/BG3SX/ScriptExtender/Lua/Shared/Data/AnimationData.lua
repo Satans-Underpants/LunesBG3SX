@@ -84,7 +84,7 @@ local masturbate = Data.Animations.new("BG3SX_MasturbateStanding", anim["Masturb
 local wanking = Data.Animations.new("BG3SX_Wanking", anim["MasturbateWank"])
 wanking.SoundBottom = Data.Sounds.Kissing
 local bottlesit = Data.Animations.new("BG3SX_BottleSit", anim["BottleSit"], nil, "0f2ccca6-3ce8-4271-aec0-820f6581c551") -- Prop: Bottle
-
+local vampireThrust = Data.Animations.new("YOUR_LAST_THRUST", anim["VampireLord"])
 -- Heightmatching:
 ----------------------------------------------------
 local hmi = hm:getInstanceByAnimName("BG3SX_MasturbateStanding")
