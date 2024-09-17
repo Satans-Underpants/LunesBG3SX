@@ -1,3 +1,7 @@
+
+
+-- TODO Skiz. I need an autoerection setting  and a Stop Sex button
+
 UI = {}
 UI.__index = UI
 UI.DevMode = false
@@ -85,6 +89,13 @@ function UI.GetUIGenitals()
     return genitals
 end
 local function OnSessionLoaded()
+
+    -- TODO SKIZ 
+    -- The inactive and active gential labels can be populated by
+    -- calling SexUserVars:GetGenital("BG3SX_Flaccid", uuid) and SexUserVars:GetGenital("BG3SX_Erect", uuid)
+
+
+
     Ext.Net.PostMessageToServer("BG3SX_Client_RequestGenitals", "")
     function UI.CreateGenitalSettings(tBar)
         local idContextCount = 0
@@ -115,18 +126,24 @@ local function OnSessionLoaded()
             GText.SameLine = true
             inactiveGButton.OnClick = function()
                 inactiveGSource.Label = "Source: " .. mod
-                inactiveGenital.Label = "Genital: " .. genital.visual
+                inactiveGenital.Label = "Genital: " .. genital.uuid
+                -- TODO Skiz - also send uuid of host
+                local uuid = nil
+                Ext.Net.PostMessageToServer("BG3SX_Client_ChangedInactiveGenital", Ext.Json.Stringify({uuid = uuid, genital = genital.uuid}))
             end
             activeGButton.OnClick = function()
                 activeGSource.Label = mod
-                activeGenital.Label = "Genital: " .. genital.visual
+                activeGenital.Label = "Genital: " .. genital.uuid
+                -- TODO Skiz - also send uuid of host
+                local uuid = nil
+                Ext.Net.PostMessageToServer("BG3SX_Client_ChangedActiveGenital", Ext.Json.Stringify({uuid = uuid, genital = genital.uuid}))
             end
         end
 
         local genitalTable = tab:AddTable("",1)
         local genitalArea = genitalTable:AddRow():AddCell()
         genitalTable.SizingStretchProp = true
-        
+    
         for mod,content in pairs(genitals) do
             local modHeader = genitalArea:AddCollapsingHeader(tostring(mod))
             modHeader.DefaultOpen = false

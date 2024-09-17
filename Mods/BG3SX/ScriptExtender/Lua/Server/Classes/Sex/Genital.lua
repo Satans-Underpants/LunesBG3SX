@@ -272,6 +272,16 @@ end
 -- 
 ----------------------------------------------------------------------------------------------------
 
+
+
+function Genital:GetName(uuid)
+	local stats =  Ext.StaticData.Get(uuid, "CharacterCreationAppearanceVisual")
+	local handle = stats.DisplayName.Handle.Handle
+	local name = Ext.Loca.GetTranslatedString(handle)
+	return name
+end
+
+
 -- Return whether an race is allowed to have genitals - added by modders requests
 ---@param uuid	string	- uuid of entity that will receive the genital
 ---@return bool			- True/False
@@ -298,12 +308,25 @@ local function raceAllowedToHaveGenitals(uuid)
 end
 
 
--- TODO: Check parameters (why is spell listed for the example?)
+
+local function tableContainsNameAlready(tableOfGenitals, genital)
+	local genitalName = Genital:GetName(genital)
+		for _, uuid in pairs(tableOfGenitals) do
+			local name = Genital:GetName(uuid)
+			SatanPrint(false, " comparing " .. name .. " to " .. " genitalName" )
+			if name == genitalName then
+				return true
+			end
+		end
+	SatanPrint(false, " returning true")		
+	return false	
+end
+
+
 -- Get all allowed genitals for entity (Ex: all vulva for human)
----@param spell	string				- Name of the spell by which the genitals are filtered (vulva, penis, erection)
 ---@param uuid string 	    	- uuid of entity that will receive the genital
----@return permittedGenitals	- Table of IDs of CharacterCreationAppearaceVisuals
-local function getPermittedGenitals(uuid)
+---@return table	- Table of IDs of CharacterCreationAppearaceVisuals
+function Genital:getPermittedGenitals(uuid)
 	local permittedGenitals = {}
 	local allGenitals = getAllGenitals()
 
@@ -324,6 +347,8 @@ local function getPermittedGenitals(uuid)
 			break
 		end
 	end
+
+	SatanPrint(GLOBALDEBUG, " race for " .. uuid .. " is " .. race)
 
 	-- Failsafe for modded races - assign human race
 	-- TODO - add support for modded genitals for modded races
@@ -355,9 +380,26 @@ local function getPermittedGenitals(uuid)
 		if bodyShapeOverride then
 			bs = 0
 		end
+
+		-- TODO - check if this is necessary for other races too 
+		-- Elf, Half elf and drow share genitals in vanilla
+		if race == "45f4ac10-3c89-4fb2-b37d-f973bb9110c0" -- Half elf
+		or race == "4f5d1434-5175-4fa9-b7dc-ab24fba37929" --Drow
+		then
+			race = "6c038dcb-7eb5-431d-84f8-cecfaf1c0c5a" -- Elf 
+		end
 		
 		if (bt == G.BodyType) and (bs == G.BodyShape) and (race == G.RaceUUID) then
-			table.insert(permittedGenitals, genital)
+			-- Have to use unique names, since Larian uses the same RaceUUID for different subraces
+			--(╯°□°)╯︵ ┻━┻
+
+
+			if not tableContainsNameAlready(permittedGenitals, genital) then
+				SatanPrint(false,Genital:GetName(genital) .. " is not yet in the table" )
+				table.insert(permittedGenitals, genital)
+			else
+				SatanPrint(false,Genital:GetName(genital) .. " is already in the table" )
+			end
 		end
 	end
 
@@ -371,7 +413,7 @@ end
 -- 									- spell Name has to be the same as Mod folder name
 ---@param listOfGenitals	table	- List of genital Ids prefiltered by race/body
 ---@return filteredGenitals			- List of IDs of CharacterCreationAppearaceVisuals
-local function getFilteredGenitals(spell, listOfGenitals)
+function Genital:getFilteredGenitals(spell, listOfGenitals)
 	local filteredGenitals = {}
 	local spellGenitals = {}
 
@@ -411,8 +453,8 @@ local genitalChoice = {}
 ---@param uuid	string 		- uuid of entity that will receive the genital
 ---@return selectedGenital	- ID of CharacterCreationAppearaceVisual
 function Genital:GetNextGenital(spell, uuid)
-    local permittedGenitals = getPermittedGenitals(uuid)
-    local filteredGenitals = getFilteredGenitals(spell, permittedGenitals)
+    local permittedGenitals = Genital:getPermittedGenitals(uuid)
+    local filteredGenitals = Genital:getFilteredGenitals(spell, permittedGenitals)
 
 	if (not filteredGenitals) or (#filteredGenitals == 0) then
         -- _P("[BG3SX] No " , spell , " genitals available after filtering for this entity.")
@@ -554,7 +596,12 @@ end
 ---@param uuid	string	-The character to give an erection to
 function Genital:GiveErection(uuid)
 	SatanPrint(GLOBALDEBUG, "Give erection to character ", uuid)
-	local visual = Genital:GetNextGenital("BG3SX_SimpleErections", uuid)
+	
+	local visual = SexUserVars:GetGenital("BG3SX_Erect", uuid)
+	-- failsafe if erection has not been set by hand
+	if not visual then
+		visual = Genital:GetNextGenital("BG3SX_SimpleErections", uuid)
+	end
 	_P("penis ", visual)
 	local entity = Ext.Entity.Get(uuid)
 	local autoerection = Entity:TryGetEntityValue(uuid, nil, {"Vars", "BG3SX_AutoErection"})
@@ -562,7 +609,7 @@ function Genital:GiveErection(uuid)
 	-- TODO - Even when this evaluates to false they still get an erection - probably has to be called sooner
 
 
-	if Entity:HasPenis(uuid) and ((autoerection == nil) or (entity.Vars.BG3SX_AutoErection)) then
+	if ((autoerection == nil) or (entity.Vars.BG3SX_AutoErection)) then
 		_P("Autoerection allowed for ", uuid)
 
 		-- TODO: Learn what Types there are
@@ -671,7 +718,7 @@ function Genital:GiveErections(characters)
     for _, uuid in pairs(characters) do
         local personalGenital = Genital:GetCurrentGenital(uuid)
         if personalGenital then
-            SexUserVars:AssignGenital("BG3SX:Flaccid", personalGenital, uuid)
+            SexUserVars:AssignGenital("BG3SX_Flaccid", personalGenital, uuid)
         end
         Genital:GiveErection(uuid)
     end

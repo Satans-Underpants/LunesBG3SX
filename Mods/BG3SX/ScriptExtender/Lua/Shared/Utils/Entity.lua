@@ -586,8 +586,6 @@ function Entity:DeleteCurrentVisualOfType(character, visual, type)
     -- print("Debug: visualType = " .. tostring(visualType))
     local entity = Ext.Entity.Get(character)
 
-    SatanPrint(GLOBALDEBUG, "current AppearanceOverride")
-    SatanDump(GLOBALDEBUG, entity.AppearanceOverride.Visual)
 
     -- all visuals except for the one to be removed
     local allowedVisuals= {}

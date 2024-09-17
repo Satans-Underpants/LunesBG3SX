@@ -25,6 +25,8 @@ Ext.RegisterNetListener("BG3SX_Client_AskForSex", function(e, payload)
 end)
 
 Ext.RegisterNetListener("BG3SX_Client_RequestGenitals", function(e, payload)
-    local payload = Data.CreateUIGenitalPayload()
+    -- TODO - get UUID from client in payload instead, so its MP compatible
+    local uuid = Osi.GetHostCharacter()
+    local payload = Data.CreateUIGenitalPayload(uuid)
     Ext.Net.BroadcastMessage("BG3SX_Server_DistributeGenitals", Ext.Json.Stringify(payload))
 end)

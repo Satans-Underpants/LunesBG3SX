@@ -87,6 +87,10 @@ end
 ---@param entity    Entity  - The entity which used a new animation spell
 ---@param spell     string   - The chosen animations data table
 function Sex:PlayAnimation(entity, animSpell)
+
+    -- TODO - make this dependant on actor instead of entity and refresh when genital has changed
+
+
     local scene = Scene:FindSceneByEntity(entity)
     local sceneType = Sex:DetermineSceneType(scene)
 

@@ -1847,21 +1847,35 @@ end
 
 ---------------------------------------------------------------------------------------------------------
 
-function Data.CreateUIGenitalPayload()
-    local payload = {}
-    payload["Vanilla"] = {}
-    payload["Vanilla"]["Vulva"] = Data.BodyLibrary.VULVA
-    payload["Vanilla"]["Penis"] = Data.BodyLibrary.PENIS
-    payload["BG3SX"] = {}
-    payload["BG3SX"]["Erection"] = Data.BodyLibrary.FunErections
 
-    if Data.BodyLibrary.ModdedGenitals and Table:TableSize(Data.BodyLibrary.ModdedGenitals) > 0 then
-        for mod,types in pairs(Data.BodyLibrary.ModdedGenitals) do
-            payload[mod] = {}
-            for type,genitals in pairs(types) do
-                payload[mod][type] = genitals
-            end
+-- TODO - should probably be moved to genitals 
+function Data.CreateUIGenitalPayload(uuid)
+    local payload = {}
+    local hardCodedGenitalTypesChangeThis =
+    {
+    "BG3SX_VanillaVulva",
+    "BG3SX_VanillaFlaccid",
+    "BG3SX_SimpleErections",
+    "BG3SX_OtherGenitals"
+    }
+  
+
+    local permittedGenitals = Genital:getPermittedGenitals(uuid)
+
+
+
+    for _, mod in pairs(hardCodedGenitalTypesChangeThis) do
+        payload[mod] = {}
+        local genitalContent = {}
+        local genitals = Genital:getFilteredGenitals(mod, permittedGenitals)
+
+        for _, genital in pairs(genitals) do
+            local name = Genital:GetName(genital)
+            table.insert(genitalContent, {name = name, uuid = genital})
         end
+
+        payload[mod][mod] = genitalContent
     end
+
     return payload
 end
